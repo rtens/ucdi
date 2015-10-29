@@ -9,11 +9,16 @@ class CreateGoal implements Command {
     /** @var string */
     private $name;
 
+    /** @var string */
+    private $notes;
+
     /**
      * @param string $name
+     * @param string $notes
      */
-    public function __construct($name) {
+    public function __construct($name, $notes = '') {
         $this->name = $name;
+        $this->notes = $notes;
     }
 
     /**
@@ -35,6 +40,13 @@ class CreateGoal implements Command {
      */
     public function getName() {
         return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNotes() {
+        return $this->notes;
     }
 
 }
