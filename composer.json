@@ -12,6 +12,16 @@
             "email": "Nikolas.M@rtens.org"
         }
     ],
+    "autoload": {
+        "psr-4": {
+            "rtens\\ucdi\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "spec\\rtens\\ucdi\\": "spec/"
+        }
+    },
     "minimum-stability": "dev",
     "require": {}
 }

@@ -1,5 +1,10 @@
 <?php namespace spec\rtens\ucdi;
 
+use rtens\ucdi\app\Application;
+use rtens\ucdi\commands\CreateGoal;
+use rtens\ucdi\events\GoalCreated;
+use rtens\ucdi\store\MemoryEventStore;
+
 /**
  * @property CreateGoalSpec_DomainDriver driver <-
  */
@@ -24,13 +29,19 @@ interface CreateGoalSpec_Driver {
  */
 class CreateGoalSpec_DomainDriver implements CreateGoalSpec_Driver {
 
+    /** @var \rtens\ucdi\app\Event[] */
+    private $events;
+
     public function whenICreateTheGoal($name) {
-//        $this->events = $this->app->execute(new CreateGoal($name));
-        $this->assert->incomplete();
+        $app = new Application(new MemoryEventStore());
+        $this->events = $app->handle(new CreateGoal($name));
     }
 
     public function thenAGoal_ShouldHaveBeenCreated($name) {
-//        $this->assert->contains($this->events, new GoalCreated("$name-ID", $name));
-        $this->assert->incomplete();
+        /** @var GoalCreated $event */
+        $event = $this->events[0];
+
+        $this->assert->isInstanceOf($event, GoalCreated::class);
+        $this->assert->equals($event->getName(), $name);
     }
 }
