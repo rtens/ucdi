@@ -1,0 +1,9 @@
+{
+    "filter": {
+      "class": "/Spec$/"
+    },
+    "suite": {
+        "file": "spec"
+    },
+    "listen": ["Compact", "Time"]
+}

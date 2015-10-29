@@ -1,0 +1,17 @@
+{
+    "name": "rtens/ucdi",
+    "description": "U Can Do It - a time management tool",
+    "type": "app",
+    "require-dev": {
+        "rtens/scrut": "dev-master"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Nikolas Martens",
+            "email": "Nikolas.M@rtens.org"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}

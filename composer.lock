@@ -1,0 +1,300 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "236d11fcf4c1884defb39c606e668ab6",
+    "content-hash": "b3a66cc802e1c7043e1203ad89da5994",
+    "packages": [],
+    "packages-dev": [
+        {
+            "name": "nikic/php-parser",
+            "version": "1.x-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nikic/PHP-Parser.git",
+                "reference": "f78af2c9c86107aa1a34cd1dbb5bbe9eeb0d9f51"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/f78af2c9c86107aa1a34cd1dbb5bbe9eeb0d9f51",
+                "reference": "f78af2c9c86107aa1a34cd1dbb5bbe9eeb0d9f51",
+                "shasum": ""
+            },
+            "require": {
+                "ext-tokenizer": "*",
+                "php": ">=5.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.4-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "lib/bootstrap.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Nikita Popov"
+                }
+            ],
+            "description": "A PHP parser written in PHP",
+            "keywords": [
+                "parser",
+                "php"
+            ],
+            "time": "2015-09-19 14:15:08"
+        },
+        {
+            "name": "rtens/scrut",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/rtens/scrut.git",
+                "reference": "475f5e244fdebea654e05bc28c66ea9138814277"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/rtens/scrut/zipball/475f5e244fdebea654e05bc28c66ea9138814277",
+                "reference": "475f5e244fdebea654e05bc28c66ea9138814277",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5",
+                "watoki/factory": "dev-master"
+            },
+            "bin": [
+                "bin/scrut"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "rtens\\scrut": "src/",
+                    "spec\\rtens\\scrut": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nikolas Martens",
+                    "email": "Nikolas.M@rtens.org",
+                    "homepage": "http://rtens.org"
+                }
+            ],
+            "description": "Light-weight test runner for PHP",
+            "homepage": "http://github.com/rtens/scrut",
+            "keywords": [
+                "BDD",
+                "TDD",
+                "test",
+                "test runner"
+            ],
+            "time": "2015-07-24 10:30:24"
+        },
+        {
+            "name": "watoki/collections",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/watoki/collections.git",
+                "reference": "ff9c866020c7f2daff1b9bc24fe6d64e218af157"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/watoki/collections/zipball/ff9c866020c7f2daff1b9bc24fe6d64e218af157",
+                "reference": "ff9c866020c7f2daff1b9bc24fe6d64e218af157",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2",
+                "watoki/smokey": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "spec\\watoki\\collections": "",
+                    "watoki\\collections": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nikolas Martens",
+                    "email": "Nikolas.M@rtens.org",
+                    "homepage": "http://rtens.org"
+                }
+            ],
+            "description": "Array wrapper for more structured collections for PHP",
+            "homepage": "http://github.com/watoki/collections",
+            "keywords": [
+                "collection",
+                "data structure",
+                "watoki"
+            ],
+            "time": "2015-08-07 08:22:49"
+        },
+        {
+            "name": "watoki/factory",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/watoki/factory.git",
+                "reference": "a34c667fd7b78d951b4572fcdf887e2ec057509d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/watoki/factory/zipball/a34c667fd7b78d951b4572fcdf887e2ec057509d",
+                "reference": "a34c667fd7b78d951b4572fcdf887e2ec057509d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.8",
+                "watoki/reflect": "dev-master"
+            },
+            "require-dev": {
+                "watoki/scrut": "0.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "watoki\\factory": "src/",
+                    "spec\\watoki\\factory": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nikolas Martens",
+                    "email": "Nikolas.M@rtens.org",
+                    "homepage": "http://rtens.org"
+                }
+            ],
+            "description": "A simple dependency injection container for PHP",
+            "homepage": "http://github.com/watoki/factory",
+            "keywords": [
+                "dependency injection",
+                "watoki"
+            ],
+            "time": "2015-07-15 09:56:35"
+        },
+        {
+            "name": "watoki/reflect",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/watoki/reflect.git",
+                "reference": "213f90512ae007004a9f1df775cc64272e556c31"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/watoki/reflect/zipball/213f90512ae007004a9f1df775cc64272e556c31",
+                "reference": "213f90512ae007004a9f1df775cc64272e556c31",
+                "shasum": ""
+            },
+            "require": {
+                "nikic/php-parser": "1.*",
+                "php": ">=5.3.8",
+                "watoki/collections": "*"
+            },
+            "require-dev": {
+                "watoki/scrut": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "watoki\\reflect": "src/",
+                    "spec\\watoki\\reflect": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nikolas Martens",
+                    "email": "Nikolas.M@rtens.org",
+                    "homepage": "http://rtens.org"
+                }
+            ],
+            "description": "Enhanced reflection capabilities for PHP",
+            "homepage": "http://github.com/watoki/reflect",
+            "keywords": [
+                "reflection",
+                "type hints",
+                "watoki"
+            ],
+            "time": "2015-07-25 17:15:14"
+        },
+        {
+            "name": "watoki/smokey",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/watoki/smokey.git",
+                "reference": "dc577b0b043b70b596fe3e4fd2d32591408be417"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/watoki/smokey/zipball/dc577b0b043b70b596fe3e4fd2d32591408be417",
+                "reference": "dc577b0b043b70b596fe3e4fd2d32591408be417",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "spec\\watoki\\smokey": "",
+                    "watoki\\smokey": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nikolas Martens",
+                    "email": "Nikolas.M@rtens.org",
+                    "homepage": "http://rtens.org"
+                }
+            ],
+            "description": "Simple runtime event dispatcher for PHP",
+            "homepage": "http://github.com/watoki/smokey",
+            "keywords": [
+                "event",
+                "event dispatcher",
+                "watoki"
+            ],
+            "time": "2014-10-28 15:29:21"
+        }
+    ],
+    "aliases": [],
+    "minimum-stability": "dev",
+    "stability-flags": {
+        "rtens/scrut": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}
