@@ -1,32 +1,33 @@
 <?php namespace rtens\ucdi\app\events;
 
-use rtens\ucdi\es\Event;
-use rtens\ucdi\app\GoalId;
 
-class GoalNotesChanged implements Event {
+class GoalNotesChanged {
 
-    /** @var GoalId */
+    /** @var string */
     private $goalId;
 
     /** @var string */
     private $notes;
 
     /**
-     * @param GoalId $goalId
+     * @param string $goalId
      * @param string $notes
      */
-    public function __construct(GoalId $goalId, $notes) {
+    public function __construct($goalId, $notes) {
         $this->goalId = $goalId;
         $this->notes = $notes;
     }
 
     /**
-     * @return \rtens\ucdi\es\AggregateId
+     * @return string
      */
-    public function aggregateId() {
+    public function getGoalId() {
         return $this->goalId;
     }
 
+    /**
+     * @return string
+     */
     public function getNotes() {
         return $this->notes;
     }

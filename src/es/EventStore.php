@@ -3,13 +3,12 @@
 interface EventStore {
 
     /**
-     * @param AggregateId $id
-     * @return EventStream
+     * @return object[]
      */
-    public function load(AggregateId $id);
+    public function load();
 
     /**
-     * @param Event[] $events
+     * @param object[] $events
      * @return void
      */
     public function save($events);

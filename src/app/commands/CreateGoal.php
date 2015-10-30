@@ -1,10 +1,6 @@
 <?php namespace rtens\ucdi\app\commands;
 
-use rtens\ucdi\es\Command;
-use rtens\ucdi\es\NoneAggregateId;
-use rtens\ucdi\app\Goal;
-
-class CreateGoal implements Command {
+class CreateGoal {
 
     /** @var string */
     private $name;
@@ -19,20 +15,6 @@ class CreateGoal implements Command {
     public function __construct($name, $notes = '') {
         $this->name = $name;
         $this->notes = $notes;
-    }
-
-    /**
-     * @return \rtens\ucdi\es\AggregateId
-     */
-    public function aggregateId() {
-        return new NoneAggregateId();
-    }
-
-    /**
-     * @return string
-     */
-    public function aggregateClass() {
-        return Goal::class;
     }
 
     /**
