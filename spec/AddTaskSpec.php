@@ -1,10 +1,9 @@
 <?php namespace spec\rtens\ucdi;
 
-use rtens\ucdi\app\Application;
 use rtens\ucdi\app\commands\AddTask;
 use rtens\ucdi\app\events\TaskAdded;
 use rtens\ucdi\app\events\TaskMadeDependent;
-use spec\rtens\ucdi\fakes\FakeUidGenerator;
+use spec\rtens\ucdi\drivers\DomainDriver;
 
 /**
  * @property AddTaskSpec_DomainDriver driver <-
@@ -25,19 +24,12 @@ class AddTaskSpec {
 /**
  * @property \rtens\scrut\Assert assert <-
  */
-class AddTaskSpec_DomainDriver {
+class AddTaskSpec_DomainDriver extends DomainDriver {
 
     private $events;
 
-    /** @var Application */
-    private $app;
-
-    public function __construct() {
-        $this->app = new Application(new FakeUidGenerator());
-    }
-
     public function whenIAdd_To($description, $goalId) {
-        $this->events = $this->app->handleAddTask(new AddTask($goalId, $description));
+        $this->events = $this->handler->handle(new AddTask($goalId, $description));
     }
 
     public function then_ShouldBeAddedTo($description, $goalId) {
@@ -45,7 +37,7 @@ class AddTaskSpec_DomainDriver {
     }
 
     public function whenIAdd_DependingOn($description, $dependencyTaskId) {
-        $this->events = $this->app->handleAddTask(new AddTask('Goal-Foo', $description, $dependencyTaskId));
+        $this->events = $this->handler->handle(new AddTask('Goal-Foo', $description, $dependencyTaskId));
     }
 
     public function then_ShouldBeMadeDependentOn($taskId, $dependencyTaskId) {

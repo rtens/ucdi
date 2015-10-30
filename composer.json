@@ -3,7 +3,8 @@
     "description": "U Can Do It - a time management tool",
     "type": "app",
     "require-dev": {
-        "rtens/scrut": "dev-master"
+        "rtens/scrut": "dev-master",
+        "rtens/mockster": "dev-master"
     },
     "license": "MIT",
     "authors": [

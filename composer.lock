@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "236d11fcf4c1884defb39c606e668ab6",
-    "content-hash": "b3a66cc802e1c7043e1203ad89da5994",
+    "hash": "29dfc1b6dc13b598090ecc096eebb2e5",
+    "content-hash": "0147f77da40a3fa005459754da081fb0",
     "packages": [],
     "packages-dev": [
         {
@@ -52,6 +52,55 @@
                 "php"
             ],
             "time": "2015-09-19 14:15:08"
+        },
+        {
+            "name": "rtens/mockster",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/rtens/mockster.git",
+                "reference": "132f6c0793bb2c8bd15ee29e4b45d21b044e69e7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/rtens/mockster/zipball/132f6c0793bb2c8bd15ee29e4b45d21b044e69e7",
+                "reference": "132f6c0793bb2c8bd15ee29e4b45d21b044e69e7",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6",
+                "watoki/factory": "dev-master",
+                "watoki/reflect": "dev-master"
+            },
+            "require-dev": {
+                "rtens/scrut": "dev-master"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "rtens\\mockster\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nikolas Martens",
+                    "email": "Nikolas.M@rtens.org",
+                    "homepage": "http://rtens.org"
+                }
+            ],
+            "description": "PHP Mocking framework",
+            "homepage": "http://github.com/rtens/mockster",
+            "keywords": [
+                "BDD",
+                "mock",
+                "mocking",
+                "unit testing"
+            ],
+            "time": "2015-10-30 15:57:08"
         },
         {
             "name": "rtens/scrut",
@@ -291,7 +340,8 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "rtens/scrut": 20
+        "rtens/scrut": 20,
+        "rtens/mockster": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
