@@ -2,7 +2,6 @@
 
 use rtens\ucdi\app\Application;
 use rtens\ucdi\es\CommandHandler;
-use rtens\ucdi\es\MemoryEventStore;
 use rtens\ucdi\app\commands\CreateGoal;
 use rtens\ucdi\app\events\GoalCreated;
 use rtens\ucdi\app\events\GoalNotesChanged;
@@ -48,7 +47,7 @@ class CreateGoalSpec_DomainDriver implements CreateGoalSpec_Driver {
     private $events;
 
     public function __construct() {
-        $this->app = new CommandHandler(new MemoryEventStore(), new Application(new UidGenerator()));
+        $this->app = new CommandHandler(new Application(new UidGenerator()));
     }
 
     public function whenICreateTheGoal($name) {

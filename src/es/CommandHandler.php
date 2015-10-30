@@ -4,18 +4,13 @@ use rtens\ucdi\app\Application;
 
 class CommandHandler {
 
-    /** @var EventStore */
-    private $eventStore;
-
     /** @var Application */
     private $application;
 
     /**
-     * @param EventStore $eventStore
      * @param Application $application
      */
-    public function __construct(EventStore $eventStore, Application $application) {
-        $this->eventStore = $eventStore;
+    public function __construct(Application $application) {
         $this->application = $application;
     }
 
@@ -24,15 +19,7 @@ class CommandHandler {
      * @return object[] Resulting events
      */
     public function handle($command) {
-        $events = $this->eventStore->load();
-        foreach ($events as $event) {
-            $this->invokeMethod('apply', $event);
-        }
-
-        $newEvents = $this->invokeMethod('handle', $command);
-
-        $this->eventStore->save($newEvents);
-        return $newEvents;
+        return $this->invokeMethod('handle', $command);
     }
 
     private function invokeMethod($prefix, $event) {
