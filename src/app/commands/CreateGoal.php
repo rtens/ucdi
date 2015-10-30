@@ -5,14 +5,14 @@ class CreateGoal {
     /** @var string */
     private $name;
 
-    /** @var string */
+    /** @var null|string */
     private $notes;
 
     /**
      * @param string $name
-     * @param string $notes
+     * @param null|string $notes
      */
-    public function __construct($name, $notes = '') {
+    public function __construct($name, $notes = null) {
         $this->name = $name;
         $this->notes = $notes;
     }
@@ -25,7 +25,7 @@ class CreateGoal {
     }
 
     /**
-     * @return string
+     * @return null|string
      */
     public function getNotes() {
         return $this->notes;
