@@ -1,13 +1,12 @@
-<?php namespace rtens\ucdi\app;
+<?php namespace rtens\ucdi\es;
 
-class Application {
+class CommandHandler {
 
     private $eventStore;
 
     public function __construct(EventStore $eventStore) {
         $this->eventStore = $eventStore;
     }
-
 
     public function handle(Command $command) {
         $aggregate = $this->instantiateAggregate($command->aggregateClass());

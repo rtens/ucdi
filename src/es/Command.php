@@ -1,4 +1,4 @@
-<?php namespace rtens\ucdi\app;
+<?php namespace rtens\ucdi\es;
 
 interface Command {
 

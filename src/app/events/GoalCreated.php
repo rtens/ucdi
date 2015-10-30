@@ -1,7 +1,7 @@
-<?php namespace rtens\ucdi\events;
+<?php namespace rtens\ucdi\app\events;
 
-use rtens\ucdi\aggregates\GoalId;
-use rtens\ucdi\app\Event;
+use rtens\ucdi\es\Event;
+use rtens\ucdi\app\GoalId;
 
 class GoalCreated implements Event {
 
@@ -21,7 +21,7 @@ class GoalCreated implements Event {
     }
 
     /**
-     * @return \rtens\ucdi\app\AggregateId
+     * @return \rtens\ucdi\es\AggregateId
      */
     public function aggregateId() {
         return $this->goalId;

@@ -1,10 +1,10 @@
 <?php namespace spec\rtens\ucdi;
 
-use rtens\ucdi\app\Application;
-use rtens\ucdi\commands\CreateGoal;
-use rtens\ucdi\events\GoalCreated;
-use rtens\ucdi\events\GoalNotesChanged;
-use rtens\ucdi\store\MemoryEventStore;
+use rtens\ucdi\es\CommandHandler;
+use rtens\ucdi\es\MemoryEventStore;
+use rtens\ucdi\app\commands\CreateGoal;
+use rtens\ucdi\app\events\GoalCreated;
+use rtens\ucdi\app\events\GoalNotesChanged;
 
 /**
  * @property CreateGoalSpec_DomainDriver driver <-
@@ -39,14 +39,14 @@ interface CreateGoalSpec_Driver {
  */
 class CreateGoalSpec_DomainDriver implements CreateGoalSpec_Driver {
 
-    /** @var Application */
+    /** @var CommandHandler */
     private $app;
 
-    /** @var \rtens\ucdi\app\Event[] */
+    /** @var \rtens\ucdi\es\Event[] */
     private $events;
 
     public function __construct() {
-        $this->app = new Application(new MemoryEventStore());
+        $this->app = new CommandHandler(new MemoryEventStore());
     }
 
     public function whenICreateTheGoal($name) {

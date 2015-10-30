@@ -1,8 +1,8 @@
-<?php namespace rtens\ucdi\commands;
+<?php namespace rtens\ucdi\app\commands;
 
-use rtens\ucdi\aggregates\Goal;
-use rtens\ucdi\app\Command;
-use rtens\ucdi\app\NoneAggregateId;
+use rtens\ucdi\es\Command;
+use rtens\ucdi\es\NoneAggregateId;
+use rtens\ucdi\app\Goal;
 
 class CreateGoal implements Command {
 
@@ -22,7 +22,7 @@ class CreateGoal implements Command {
     }
 
     /**
-     * @return \rtens\ucdi\app\AggregateId
+     * @return \rtens\ucdi\es\AggregateId
      */
     public function aggregateId() {
         return new NoneAggregateId();

@@ -1,9 +1,5 @@
 <?php
-namespace rtens\ucdi\store;
-
-use rtens\ucdi\app\AggregateId;
-use rtens\ucdi\app\EventStore;
-use rtens\ucdi\app\EventStream;
+namespace rtens\ucdi\es;
 
 class MemoryEventStore implements EventStore {
 
@@ -13,7 +9,7 @@ class MemoryEventStore implements EventStore {
     private $events = [];
 
     /**
-     * @param \rtens\ucdi\app\AggregateId $id
+     * @param \rtens\ucdi\es\AggregateId $id
      * @return EventStream
      */
     public function load(AggregateId $id) {
@@ -24,7 +20,7 @@ class MemoryEventStore implements EventStore {
     }
 
     /**
-     * @param \rtens\ucdi\app\Event[] $events
+     * @param \rtens\ucdi\es\Event[] $events
      * @return void
      */
     public function save($events) {
