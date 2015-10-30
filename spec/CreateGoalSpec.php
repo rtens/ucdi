@@ -24,21 +24,10 @@ class CreateGoalSpec {
 
 }
 
-interface CreateGoalSpec_Driver {
-
-    public function whenICreateTheGoal($name);
-
-    public function thenAGoal_ShouldBeCreated($name);
-
-    public function whenICreateAGoalWithNotes($notes);
-
-    public function thenTheNotesOfTheEventShouldBeSetTo($notes);
-}
-
 /**
  * @property \rtens\scrut\Assert assert <-
  */
-class CreateGoalSpec_DomainDriver implements CreateGoalSpec_Driver {
+class CreateGoalSpec_DomainDriver {
 
     /** @var CommandHandler */
     private $app;

@@ -9,22 +9,15 @@ use rtens\ucdi\app\events\TaskAdded;
 class AddTaskSpec {
 
     function addSingleTask() {
-        $this->driver->whenIAdd_To('Task Foo', 'Goal-1');
-        $this->driver->then_ShouldBeAddedTo('Task Foo', 'Goal-1');
+        $this->driver->whenIAdd_To('Task Foo', 'Goal-Foo');
+        $this->driver->then_ShouldBeAddedTo('Task Foo', 'Goal-Foo');
     }
-}
-
-interface AddTaskSpec_Driver {
-
-    public function whenIAdd_To($description, $goalId);
-
-    public function then_ShouldBeAddedTo($description, $goalId);
 }
 
 /**
  * @property \rtens\scrut\Assert assert <-
  */
-class AddTaskSpec_DomainDriver implements AddTaskSpec_Driver {
+class AddTaskSpec_DomainDriver {
 
     private $events;
 
