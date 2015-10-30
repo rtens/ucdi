@@ -1,11 +1,11 @@
 <?php namespace spec\rtens\ucdi;
 
 use rtens\ucdi\app\Application;
-use rtens\ucdi\es\CommandHandler;
 use rtens\ucdi\app\commands\CreateGoal;
 use rtens\ucdi\app\events\GoalCreated;
 use rtens\ucdi\app\events\GoalNotesChanged;
-use rtens\ucdi\es\UidGenerator;
+use rtens\ucdi\es\CommandHandler;
+use spec\rtens\ucdi\fakes\FakeUidGenerator;
 
 /**
  * @property CreateGoalSpec_DomainDriver driver <-
@@ -47,7 +47,7 @@ class CreateGoalSpec_DomainDriver implements CreateGoalSpec_Driver {
     private $events;
 
     public function __construct() {
-        $this->app = new CommandHandler(new Application(new UidGenerator()));
+        $this->app = new CommandHandler(new Application(new FakeUidGenerator()));
     }
 
     public function whenICreateTheGoal($name) {
@@ -55,13 +55,7 @@ class CreateGoalSpec_DomainDriver implements CreateGoalSpec_Driver {
     }
 
     public function thenAGoal_ShouldBeCreated($name) {
-        $this->assert->size($this->events, 1);
-
-        /** @var GoalCreated $event */
-        $event = $this->events[0];
-
-        $this->assert->isInstanceOf($event, GoalCreated::class);
-        $this->assert->equals($event->getName(), $name);
+        $this->assert->contains($this->events, new GoalCreated('Goal-1', $name));
     }
 
     public function whenICreateAGoalWithNotes($notes) {
@@ -69,12 +63,6 @@ class CreateGoalSpec_DomainDriver implements CreateGoalSpec_Driver {
     }
 
     public function thenTheNotesOfTheEventShouldBeSetTo($notes) {
-        $this->assert->size($this->events, 2);
-
-        /** @var GoalNotesChanged $event */
-        $event = $this->events[1];
-
-        $this->assert->isInstanceOf($event, GoalNotesChanged::class);
-        $this->assert->equals($event->getNotes(), $notes);
+        $this->assert->contains($this->events, new GoalNotesChanged('Goal-1', $notes));
     }
 }

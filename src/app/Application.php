@@ -18,7 +18,7 @@ class Application {
     }
 
     public function handleCreateGoal(CreateGoal $command) {
-        $goalId = $this->uid->generate();
+        $goalId = $this->uid->generate('Goal');
         $events = [new GoalCreated($goalId, $command->getName())];
         if ($command->getNotes()) {
             $events[] = new GoalNotesChanged($goalId, $command->getNotes());
