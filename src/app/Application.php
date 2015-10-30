@@ -5,6 +5,7 @@ use rtens\ucdi\app\commands\CreateGoal;
 use rtens\ucdi\app\events\GoalCreated;
 use rtens\ucdi\app\events\GoalNotesChanged;
 use rtens\ucdi\app\events\TaskAdded;
+use rtens\ucdi\app\events\TaskMadeDependent;
 use rtens\ucdi\es\UidGenerator;
 
 class Application {
@@ -33,9 +34,17 @@ class Application {
     }
 
     public function handleAddTask(AddTask $command) {
-        return [
-            new TaskAdded($this->uid->generate('Task'), $command->getGoal(), $command->getDescription())
+        $taskId = $this->uid->generate('Task');
+
+        $events = [
+            new TaskAdded($taskId, $command->getGoal(), $command->getDescription())
         ];
+
+        if ($command->getDependency()) {
+            $events[] = new TaskMadeDependent($taskId, $command->getDependency());
+        }
+
+        return $events;
     }
 
 }

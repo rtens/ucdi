@@ -8,13 +8,18 @@ class AddTask {
     /** @var string */
     private $description;
 
+    /** @var null|string */
+    private $dependency;
+
     /**
      * @param string $goal
      * @param string $description
+     * @param null|string $dependency Task that needs to be completed before this task can be completed
      */
-    public function __construct($goal, $description) {
+    public function __construct($goal, $description, $dependency = null) {
         $this->goal = $goal;
         $this->description = $description;
+        $this->dependency = $dependency;
     }
 
     /**
@@ -29,6 +34,13 @@ class AddTask {
      */
     public function getDescription() {
         return $this->description;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getDependency() {
+        return $this->dependency;
     }
 
 }
