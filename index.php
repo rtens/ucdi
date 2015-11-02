@@ -4,7 +4,7 @@ use rtens\domin\delivery\web\root\IndexResource;
 use rtens\domin\delivery\web\WebApplication;
 use rtens\domin\reflection\GenericObjectAction;
 use rtens\mockster\Mockster;
-use rtens\ucdi\app\Application;
+use rtens\ucdi\app\ApplicationService;
 use rtens\ucdi\app\Calendar;
 use rtens\ucdi\app\commands\AddTask;
 use rtens\ucdi\app\commands\CreateGoal;
@@ -15,7 +15,7 @@ use watoki\curir\WebDelivery;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-$handler = new CommandHandler(new Application(new UidGenerator(), Mockster::mock(Calendar::class)));
+$handler = new CommandHandler(new ApplicationService(new UidGenerator(), Mockster::mock(Calendar::class)));
 
 $addCommand = function (WebApplication $app, $commandClass) use ($handler) {
     $app->actions->add((new ReflectionClass($commandClass))->getShortName(), new GenericObjectAction($commandClass, $app->types, $app->parser,
