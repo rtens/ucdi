@@ -1,6 +1,6 @@
 <?php
 
-use rtens\ucdi\app\Application;
+use rtens\ucdi\Application;
 
 require_once __DIR__ . '/vendor/autoload.php';
 

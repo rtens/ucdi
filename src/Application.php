@@ -1,9 +1,11 @@
-<?php namespace rtens\ucdi\app;
+<?php namespace rtens\ucdi;
 
 use rtens\domin\delivery\web\root\IndexResource;
 use rtens\domin\delivery\web\WebApplication;
 use rtens\domin\reflection\GenericObjectAction;
 use rtens\mockster\Mockster;
+use rtens\ucdi\app\ApplicationService;
+use rtens\ucdi\app\Calendar;
 use rtens\ucdi\app\commands\AddTask;
 use rtens\ucdi\app\commands\CreateGoal;
 use rtens\ucdi\app\commands\ScheduleBrick;
