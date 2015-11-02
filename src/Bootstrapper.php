@@ -9,14 +9,19 @@ use rtens\ucdi\app\Calendar;
 use rtens\ucdi\app\commands\AddTask;
 use rtens\ucdi\app\commands\CreateGoal;
 use rtens\ucdi\app\commands\ScheduleBrick;
+use rtens\ucdi\app\queries\ListGoals;
+use rtens\ucdi\app\Time;
 use rtens\ucdi\es\ApplicationService;
+use rtens\ucdi\es\PersistentEventStore;
 use rtens\ucdi\es\UidGenerator;
 use watoki\curir\WebDelivery;
 
 class Bootstrapper {
 
-    public static function run() {
-        $handler = new ApplicationService(new Application(new UidGenerator(), Mockster::mock(Calendar::class)));
+    public static function run($userDir) {
+        $handler = new ApplicationService(
+            new Application(new UidGenerator(), Mockster::mock(Calendar::class), new Time()),
+            new PersistentEventStore($userDir . '/events.json'));
 
         $addCommand = function (WebApplication $app, $commandClass) use ($handler) {
             $app->actions->add((new \ReflectionClass($commandClass))->getShortName(), new GenericObjectAction($commandClass, $app->types, $app->parser,
@@ -25,10 +30,18 @@ class Bootstrapper {
                 }));
         };
 
-        WebDelivery::quickResponse(IndexResource::class, WebApplication::init(function (WebApplication $app) use ($addCommand) {
+        $addQuery = function (WebApplication $app, $queryClass) use ($handler) {
+            $app->actions->add((new \ReflectionClass($queryClass))->getShortName(), new GenericObjectAction($queryClass, $app->types, $app->parser,
+                function ($query) use ($handler) {
+                    return $handler->execute($query);
+                }));
+        };
+
+        WebDelivery::quickResponse(IndexResource::class, WebApplication::init(function (WebApplication $app) use ($addCommand, $addQuery) {
             $addCommand($app, CreateGoal::class);
             $addCommand($app, AddTask::class);
             $addCommand($app, ScheduleBrick::class);
+            $addQuery($app, ListGoals::class);
         }, WebDelivery::init()));
     }
 
