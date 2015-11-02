@@ -7,11 +7,16 @@ class ApplicationService {
     /** @var Application */
     private $application;
 
+    /** @var EventStore */
+    private $store;
+
     /**
      * @param Application $application
+     * @param EventStore $store
      */
-    public function __construct(Application $application) {
+    public function __construct(Application $application, EventStore $store) {
         $this->application = $application;
+        $this->store = $store;
     }
 
     /**
@@ -19,12 +24,25 @@ class ApplicationService {
      * @return object[] Resulting events
      */
     public function handle($command) {
-        return $this->invokeMethod('handle', $command);
+        $events = $this->invokeMethod('handle', $command);
+        $this->store->save($events);
+        return $events;
     }
 
-    private function invokeMethod($prefix, $event) {
-        $eventName = (new \ReflectionClass($event))->getShortName();
+    /**
+     * @param object $query
+     * @return mixed Result of the query
+     */
+    public function execute($query) {
+        foreach ($this->store->load() as $event) {
+            $this->invokeMethod('apply', $event);
+        }
+        return $this->invokeMethod('execute', $query);
+    }
+
+    private function invokeMethod($prefix, $object) {
+        $eventName = (new \ReflectionClass($object))->getShortName();
         $applyMethod = new \ReflectionMethod($this->application, $prefix . $eventName);
-        return $applyMethod->invoke($this->application, $event);
+        return $applyMethod->invoke($this->application, $object);
     }
 }

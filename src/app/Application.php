@@ -15,20 +15,20 @@ class Application {
     /** @var UidGenerator */
     private $uid;
 
-    /** @var \DateTimeImmutable */
-    private $now;
-
     /** @var Calendar */
     private $calendar;
 
-    /**
-     * @param UidGenerator $uid
-     * @param Calendar $calendar
-     */
-    public function __construct(UidGenerator $uid, Calendar $calendar) {
+    /** @var Time */
+    private $time;
+
+    private $goals = [];
+    private $goalOfTask = [];
+    private $nextBrick = [];
+
+    public function __construct(UidGenerator $uid, Calendar $calendar, Time $time) {
         $this->uid = $uid;
         $this->calendar = $calendar;
-        $this->now = new \DateTimeImmutable();
+        $this->time = $time;
     }
 
     public function handleCreateGoal(CreateGoal $command) {
@@ -59,7 +59,7 @@ class Application {
     }
 
     public function handleScheduleBrick(ScheduleBrick $command) {
-        if ($command->getStart() < $this->now) {
+        if ($command->getStart() < $this->time->now()) {
             throw new \Exception('Cannot schedule brick in the past');
         }
         $brickId = $this->uid->generate('Brick');
@@ -78,6 +78,36 @@ class Application {
                 $command->getStart(),
                 $command->getDuration())
         ];
+    }
+
+    public function applyGoalCreated(GoalCreated $event) {
+        $this->goals[$event->getGoalId()] = [
+            'id' => $event->getGoalId(),
+            'name' => $event->getName(),
+            'nextBrick' => null
+        ];
+    }
+
+    public function applyTaskAdded(TaskAdded $event) {
+        $this->goalOfTask[$event->getTaskId()] = $event->getGoalId();
+    }
+
+    public function applyBrickScheduled(BrickScheduled $event) {
+        if ($event->getStart() < $this->time->now()) {
+            return;
+        }
+
+        $goalId = $this->goalOfTask[$event->getTaskId()];
+        if (isset($this->nextBrick[$goalId]) && $event->getStart() > $this->nextBrick[$goalId]) {
+            return;
+        }
+
+        $this->nextBrick[$goalId] = $event->getStart();
+        $this->goals[$goalId]['nextBrick'] = $event->getDescription() . ' @' . $event->getStart()->format('Y-m-d H:i');
+    }
+
+    public function executeListGoals() {
+        return array_values($this->goals);
     }
 
 }
