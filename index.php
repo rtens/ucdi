@@ -1,7 +1,7 @@
 <?php
 
-use rtens\ucdi\Application;
+use rtens\ucdi\Bootstrapper;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-Application::run();
+Bootstrapper::run();

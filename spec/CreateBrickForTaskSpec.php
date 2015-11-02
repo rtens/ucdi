@@ -37,7 +37,7 @@ class CreateBrickForTaskSpec_DomainDriver extends DomainDriver {
     }
 
     public function whenISchedule_Of_For_MinutesStarting($description, $taskId, $minutes, $start) {
-        $this->events = $this->handler->handle(new ScheduleBrick(
+        $this->events = $this->service->handle(new ScheduleBrick(
             $taskId,
             $description,
             new \DateTimeImmutable($start),

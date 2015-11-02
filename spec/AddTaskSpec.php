@@ -29,7 +29,7 @@ class AddTaskSpec_DomainDriver extends DomainDriver {
     private $events;
 
     public function whenIAdd_To($description, $goalId) {
-        $this->events = $this->handler->handle(new AddTask($goalId, $description));
+        $this->events = $this->service->handle(new AddTask($goalId, $description));
     }
 
     public function then_ShouldBeAddedTo($description, $goalId) {
@@ -37,7 +37,7 @@ class AddTaskSpec_DomainDriver extends DomainDriver {
     }
 
     public function whenIAdd_DependingOn($description, $dependencyTaskId) {
-        $this->events = $this->handler->handle(new AddTask('Goal-Foo', $description, $dependencyTaskId));
+        $this->events = $this->service->handle(new AddTask('Goal-Foo', $description, $dependencyTaskId));
     }
 
     public function then_ShouldBeMadeDependentOn($taskId, $dependencyTaskId) {

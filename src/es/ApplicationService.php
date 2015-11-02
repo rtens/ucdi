@@ -1,16 +1,16 @@
 <?php namespace rtens\ucdi\es;
 
-use rtens\ucdi\app\ApplicationService;
+use rtens\ucdi\app\Application;
 
-class CommandHandler {
+class ApplicationService {
 
-    /** @var ApplicationService */
+    /** @var Application */
     private $application;
 
     /**
-     * @param ApplicationService $application
+     * @param Application $application
      */
-    public function __construct(ApplicationService $application) {
+    public function __construct(Application $application) {
         $this->application = $application;
     }
 

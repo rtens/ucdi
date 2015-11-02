@@ -31,7 +31,7 @@ class CreateGoalSpec_DomainDriver extends DomainDriver {
     private $events;
 
     public function whenICreateTheGoal($name) {
-        $this->events = $this->handler->handle(new CreateGoal($name));
+        $this->events = $this->service->handle(new CreateGoal($name));
     }
 
     public function thenAGoal_ShouldBeCreated($name) {
@@ -39,7 +39,7 @@ class CreateGoalSpec_DomainDriver extends DomainDriver {
     }
 
     public function whenICreateAGoalWithNotes($notes) {
-        $this->events = $this->handler->handle(new CreateGoal('Foo', $notes));
+        $this->events = $this->service->handle(new CreateGoal('Foo', $notes));
     }
 
     public function thenTheNotesOfTheEventShouldBeSetTo($notes) {

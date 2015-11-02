@@ -10,7 +10,7 @@ use rtens\ucdi\app\events\TaskAdded;
 use rtens\ucdi\app\events\TaskMadeDependent;
 use rtens\ucdi\es\UidGenerator;
 
-class ApplicationService {
+class Application {
 
     /** @var UidGenerator */
     private $uid;
