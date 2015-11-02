@@ -31,4 +31,39 @@ class BrickScheduled {
         $this->duration = $duration;
         $this->brickId = $brickId;
     }
+
+    /**
+     * @return string
+     */
+    public function getBrickId() {
+        return $this->brickId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTaskId() {
+        return $this->taskId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription() {
+        return $this->description;
+    }
+
+    /**
+     * @return \DateTimeImmutable
+     */
+    public function getStart() {
+        return $this->start;
+    }
+
+    /**
+     * @return \DateInterval
+     */
+    public function getDuration() {
+        return $this->duration;
+    }
 }

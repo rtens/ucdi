@@ -2,6 +2,9 @@
     "name": "rtens/ucdi",
     "description": "U Can Do It - a time management tool",
     "type": "app",
+    "require": {
+        "rtens/domin": "dev-master"
+    },
     "require-dev": {
         "rtens/scrut": "dev-master",
         "rtens/mockster": "dev-master"
@@ -23,6 +26,5 @@
             "spec\\rtens\\ucdi\\": "spec/"
         }
     },
-    "minimum-stability": "dev",
-    "require": {}
+    "minimum-stability": "dev"
 }

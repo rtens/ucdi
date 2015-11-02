@@ -22,4 +22,25 @@ class TaskAdded {
         $this->description = $description;
     }
 
+    /**
+     * @return string
+     */
+    public function getTaskId() {
+        return $this->taskId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGoalId() {
+        return $this->goalId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription() {
+        return $this->description;
+    }
+
 }
