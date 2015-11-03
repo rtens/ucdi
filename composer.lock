@@ -58,12 +58,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/rtens/domin.git",
-                "reference": "bcaab2c4d1d1960631d543c643766514cf2889a6"
+                "reference": "3c90edc5ab3e4773c6616b7eeb253d6753437028"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rtens/domin/zipball/bcaab2c4d1d1960631d543c643766514cf2889a6",
-                "reference": "bcaab2c4d1d1960631d543c643766514cf2889a6",
+                "url": "https://api.github.com/repos/rtens/domin/zipball/3c90edc5ab3e4773c6616b7eeb253d6753437028",
+                "reference": "3c90edc5ab3e4773c6616b7eeb253d6753437028",
                 "shasum": ""
             },
             "require": {
@@ -105,7 +105,7 @@
                 "ddd",
                 "domain model"
             ],
-            "time": "2015-11-02 15:43:04"
+            "time": "2015-11-03 15:09:53"
         },
         {
             "name": "watoki/collections",
