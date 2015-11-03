@@ -504,12 +504,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/rtens/scrut.git",
-                "reference": "475f5e244fdebea654e05bc28c66ea9138814277"
+                "reference": "575072e7159ecd81dbae05ed34562dedbf4acd78"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rtens/scrut/zipball/475f5e244fdebea654e05bc28c66ea9138814277",
-                "reference": "475f5e244fdebea654e05bc28c66ea9138814277",
+                "url": "https://api.github.com/repos/rtens/scrut/zipball/575072e7159ecd81dbae05ed34562dedbf4acd78",
+                "reference": "575072e7159ecd81dbae05ed34562dedbf4acd78",
                 "shasum": ""
             },
             "require": {
@@ -545,7 +545,7 @@
                 "test",
                 "test runner"
             ],
-            "time": "2015-07-24 10:30:24"
+            "time": "2015-11-03 17:35:30"
         }
     ],
     "aliases": [],
