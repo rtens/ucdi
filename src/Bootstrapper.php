@@ -6,10 +6,6 @@ use rtens\domin\reflection\GenericObjectAction;
 use rtens\mockster\Mockster;
 use rtens\ucdi\app\Application;
 use rtens\ucdi\app\Calendar;
-use rtens\ucdi\app\commands\AddTask;
-use rtens\ucdi\app\commands\CreateGoal;
-use rtens\ucdi\app\commands\ScheduleBrick;
-use rtens\ucdi\app\queries\ListGoals;
 use rtens\ucdi\app\Time;
 use rtens\ucdi\es\ApplicationService;
 use rtens\ucdi\es\PersistentEventStore;
@@ -38,10 +34,12 @@ class Bootstrapper {
         };
 
         WebDelivery::quickResponse(IndexResource::class, WebApplication::init(function (WebApplication $app) use ($addCommand, $addQuery) {
-            $addCommand($app, CreateGoal::class);
-            $addCommand($app, AddTask::class);
-            $addCommand($app, ScheduleBrick::class);
-            $addQuery($app, ListGoals::class);
+            $addCommand($app, \rtens\ucdi\app\commands\CreateGoal::class);
+            $addCommand($app, \rtens\ucdi\app\commands\AddTask::class);
+            $addCommand($app, \rtens\ucdi\app\commands\ScheduleBrick::class);
+
+            $addQuery($app, \rtens\ucdi\app\queries\ListGoals::class);
+            $addQuery($app, \rtens\ucdi\app\queries\ShowGoal::class);
         }, WebDelivery::init()));
     }
 

@@ -8,6 +8,7 @@ use rtens\ucdi\app\events\GoalCreated;
 use rtens\ucdi\app\events\GoalNotesChanged;
 use rtens\ucdi\app\events\TaskAdded;
 use rtens\ucdi\app\events\TaskMadeDependent;
+use rtens\ucdi\app\queries\ShowGoal;
 use rtens\ucdi\es\UidGenerator;
 
 class Application {
@@ -24,6 +25,9 @@ class Application {
     private $goals = [];
     private $goalOfTask = [];
     private $nextBrick = [];
+    private $notes = [];
+    private $tasks = [];
+    private $bricks = [];
 
     public function __construct(UidGenerator $uid, Calendar $calendar, Time $time) {
         $this->uid = $uid;
@@ -83,31 +87,93 @@ class Application {
     public function applyGoalCreated(GoalCreated $event) {
         $this->goals[$event->getGoalId()] = [
             'id' => $event->getGoalId(),
-            'name' => $event->getName(),
-            'nextBrick' => null
+            'name' => $event->getName()
         ];
     }
 
     public function applyTaskAdded(TaskAdded $event) {
         $this->goalOfTask[$event->getTaskId()] = $event->getGoalId();
+        $this->tasks[$event->getGoalId()][] = [
+            'id' => $event->getTaskId(),
+            'description' => $event->getDescription()
+        ];
     }
 
     public function applyBrickScheduled(BrickScheduled $event) {
+        $this->bricks[$event->getTaskId()][] = [
+            'description' => $event->getDescription(),
+            'start' => $event->getStart()->format('Y-m-d H:i'),
+            'duration' => $event->getDuration()->format('%H:%I'),
+        ];
+
         if ($event->getStart() < $this->time->now()) {
             return;
         }
 
         $goalId = $this->goalOfTask[$event->getTaskId()];
-        if (isset($this->nextBrick[$goalId]) && $event->getStart() > $this->nextBrick[$goalId]) {
+        if (isset($this->nextBrick[$goalId]) && $event->getStart() > $this->nextBrick[$goalId]['start']) {
             return;
         }
 
-        $this->nextBrick[$goalId] = $event->getStart();
-        $this->goals[$goalId]['nextBrick'] = $event->getDescription() . ' @' . $event->getStart()->format('Y-m-d H:i');
+        $this->nextBrick[$goalId] = [
+            'description' => $event->getDescription(),
+            'start' => $event->getStart()
+        ];
+    }
+
+    public function applyGoalNotesChanged(GoalNotesChanged $event) {
+        $this->notes[$event->getGoalId()] = $event->getNotes();
     }
 
     public function executeListGoals() {
-        return array_values($this->goals);
+        return array_map(function ($goal) {
+            return array_merge($goal, [
+                'nextBrick' => $this->getNextBrick($goal['id'])
+            ]);
+        }, array_values($this->goals));
     }
 
+    public function executeShowGoal(ShowGoal $query) {
+        $goalId = $query->getGoal();
+        return array_merge($this->goals[$goalId], [
+            'notes' => isset($this->notes[$goalId]) ? $this->notes[$goalId] : null,
+            'tasks' => $this->getTasksWithBricks($goalId)
+        ]);
+    }
+
+    private function getNextBrick($goalId) {
+        if (!isset($this->nextBrick[$goalId])) {
+            return null;
+        }
+
+        $brick = $this->nextBrick[$goalId];
+        /** @var \DateTime $start */
+        $start = $brick['start'];
+        return $brick['description'] . ' @' . $start->format('Y-m-d H:i');
+    }
+
+    private function getTasksWithBricks($goalId) {
+        if (!isset($this->tasks[$goalId])) {
+            return [];
+        }
+
+        return array_map(function ($task) {
+            return array_merge($task, [
+                'bricks' => $this->getBricks($task['id'])
+            ]);
+        }, $this->tasks[$goalId]);
+    }
+
+    private function getBricks($taskId) {
+        if (!isset($this->bricks[$taskId])) {
+            return [];
+        }
+        $bricks = array_filter($this->bricks[$taskId], function ($brick) {
+            return new \DateTimeImmutable($brick['start']) >= $this->time->now();
+        });
+        usort($bricks, function ($a, $b) {
+            return strcmp($a['start'], $b['start']);
+        });
+        return array_values($bricks);
+    }
 }
