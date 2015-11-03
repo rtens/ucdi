@@ -35,7 +35,10 @@ class ApplicationService {
      */
     public function execute($query) {
         foreach ($this->store->load() as $event) {
-            $this->invokeMethod('apply', $event);
+            try {
+                $this->invokeMethod('apply', $event);
+            } catch (\ReflectionException $e) {
+            }
         }
         return $this->invokeMethod('execute', $query);
     }
@@ -43,11 +46,7 @@ class ApplicationService {
     private function invokeMethod($prefix, $object) {
         $eventName = (new \ReflectionClass($object))->getShortName();
 
-        try {
-            $applyMethod = new \ReflectionMethod($this->application, $prefix . $eventName);
-            return $applyMethod->invoke($this->application, $object);
-        } catch (\ReflectionException $e) {
-            return null;
-        }
+        $applyMethod = new \ReflectionMethod($this->application, $prefix . $eventName);
+        return $applyMethod->invoke($this->application, $object);
     }
 }
