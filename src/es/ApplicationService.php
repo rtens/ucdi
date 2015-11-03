@@ -17,6 +17,7 @@ class ApplicationService {
     public function __construct(Application $application, EventStore $store) {
         $this->application = $application;
         $this->store = $store;
+        $this->applyEvents($store->load());
     }
 
     /**
@@ -25,6 +26,7 @@ class ApplicationService {
      */
     public function handle($command) {
         $events = $this->invokeMethod('handle', $command);
+        $this->applyEvents($events);
         $this->store->save($events);
         return $events;
     }
@@ -34,13 +36,16 @@ class ApplicationService {
      * @return mixed Result of the query
      */
     public function execute($query) {
-        foreach ($this->store->load() as $event) {
+        return $this->invokeMethod('execute', $query);
+    }
+
+    private function applyEvents($events) {
+        foreach ($events as $event) {
             try {
                 $this->invokeMethod('apply', $event);
             } catch (\ReflectionException $e) {
             }
         }
-        return $this->invokeMethod('execute', $query);
     }
 
     private function invokeMethod($prefix, $object) {

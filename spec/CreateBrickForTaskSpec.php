@@ -1,6 +1,8 @@
 <?php namespace spec\rtens\ucdi;
 
 use rtens\mockster\Mockster;
+use rtens\ucdi\app\commands\AddTask;
+use rtens\ucdi\app\commands\CreateGoal;
 use rtens\ucdi\app\commands\ScheduleBrick;
 use rtens\ucdi\app\events\BrickScheduled;
 use spec\rtens\ucdi\drivers\DomainDriver;
@@ -16,9 +18,10 @@ class CreateBrickForTaskSpec {
     }
 
     function scheduleBrick() {
-        $this->driver->whenISchedule_Of_For_MinutesStarting('Brick Foo', 'Task-1', 15, 'tomorrow 12:00');
-        $this->driver->then_Of_ShouldBeScheduledFor_MinutesStarting('Brick Foo', 'Task-1', 15, 'tomorrow 12:00');
-        $this->driver->thenAnAppointment_For_Starting_Ending_ShouldBeInsertedInMyCalendar('Brick Foo', 'Brick-1', 'tomorrow 12:00', 'tomorrow 12:15');
+        $this->driver->givenATask();
+        $this->driver->whenISchedule_Of_For_MinutesStarting('Brick Foo', 'Task-2', 15, 'tomorrow 12:00');
+        $this->driver->then_Of_ShouldBeScheduledFor_MinutesStarting('Brick Foo', 'Task-2', 15, 'tomorrow 12:00');
+        $this->driver->thenAnAppointment_For_Starting_Ending_ShouldBeInsertedInMyCalendar('Brick Foo', 'Brick-3', 'tomorrow 12:00', 'tomorrow 12:15');
     }
 }
 
@@ -29,6 +32,11 @@ class CreateBrickForTaskSpec {
 class CreateBrickForTaskSpec_DomainDriver extends DomainDriver {
 
     private $events;
+
+    public function givenATask() {
+        $this->service->handle(new CreateGoal('Goal Foo'));
+        $this->service->handle(new AddTask('Goal-1', 'Task Foo'));
+    }
 
     public function whenTryToIScheduleABrickFor($when) {
         $this->try->tryTo(function () use ($when) {
@@ -50,7 +58,7 @@ class CreateBrickForTaskSpec_DomainDriver extends DomainDriver {
 
     public function then_Of_ShouldBeScheduledFor_MinutesStarting($description, $taskId, $minutes, $start) {
         $this->assert->contains($this->events, new BrickScheduled(
-            'Brick-1',
+            'Brick-3',
             $taskId,
             $description,
             new \DateTimeImmutable($start),

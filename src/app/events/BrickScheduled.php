@@ -69,4 +69,8 @@ class BrickScheduled extends Event {
     public function getDuration() {
         return $this->duration;
     }
+
+    function __toString() {
+        return $this->brickId;
+    }
 }

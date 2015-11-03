@@ -2,7 +2,9 @@
 
 use rtens\ucdi\app\commands\AddTask;
 use rtens\ucdi\app\commands\CreateGoal;
+use rtens\ucdi\app\commands\MarkBrickLaid;
 use rtens\ucdi\app\commands\ScheduleBrick;
+use rtens\ucdi\app\events\BrickMarkedLaid;
 use rtens\ucdi\app\events\BrickScheduled;
 use rtens\ucdi\app\events\GoalCreated;
 use rtens\ucdi\app\events\GoalNotesChanged;
@@ -19,8 +21,8 @@ class Application {
     /** @var Calendar */
     private $calendar;
 
-    /** @var Time */
-    private $time;
+    /** @var \DateTimeImmutable */
+    private $now;
 
     private $goals = [];
     private $goalOfTask = [];
@@ -28,11 +30,12 @@ class Application {
     private $notes = [];
     private $tasks = [];
     private $bricks = [];
+    private $laidBricks = [];
 
-    public function __construct(UidGenerator $uid, Calendar $calendar, Time $time) {
+    public function __construct(UidGenerator $uid, Calendar $calendar, \DateTimeImmutable $now) {
         $this->uid = $uid;
         $this->calendar = $calendar;
-        $this->time = $time;
+        $this->now = $now;
     }
 
     public function handleCreateGoal(CreateGoal $command) {
@@ -63,7 +66,7 @@ class Application {
     }
 
     public function handleScheduleBrick(ScheduleBrick $command) {
-        if ($command->getStart() < $this->time->now()) {
+        if ($command->getStart() < $this->now) {
             throw new \Exception('Cannot schedule brick in the past');
         }
         $brickId = $this->uid->generate('Brick');
@@ -81,6 +84,16 @@ class Application {
                 $command->getDescription(),
                 $command->getStart(),
                 $command->getDuration())
+        ];
+    }
+
+    public function handleMarkBrickLaid(MarkBrickLaid $command) {
+        if (isset($this->laidBricks[$command->getBrickId()])) {
+            $when = $this->laidBricks[$command->getBrickId()];
+            throw new \Exception("Brick [{$command->getBrickId()}] was already laid [$when].");
+        }
+        return [
+            new BrickMarkedLaid($command->getBrickId(), $this->now)
         ];
     }
 
@@ -106,7 +119,7 @@ class Application {
             'duration' => $event->getDuration()->format('%H:%I'),
         ];
 
-        if ($event->getStart() < $this->time->now()) {
+        if ($event->getStart() < $this->now) {
             return;
         }
 
@@ -123,6 +136,10 @@ class Application {
 
     public function applyGoalNotesChanged(GoalNotesChanged $event) {
         $this->notes[$event->getGoalId()] = $event->getNotes();
+    }
+
+    public function applyBrickMarkedLaid(BrickMarkedLaid $event) {
+        $this->laidBricks[$event->getBrickId()] = $event->getWhen()->format('Y-m-d H:i');
     }
 
     public function executeListGoals() {
@@ -169,7 +186,7 @@ class Application {
             return [];
         }
         $bricks = array_filter($this->bricks[$taskId], function ($brick) {
-            return new \DateTimeImmutable($brick['start']) >= $this->time->now();
+            return new \DateTimeImmutable($brick['start']) >= $this->now;
         });
         usort($bricks, function ($a, $b) {
             return strcmp($a['start'], $b['start']);
