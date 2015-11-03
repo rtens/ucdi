@@ -3,11 +3,13 @@
 use rtens\ucdi\app\commands\AddTask;
 use rtens\ucdi\app\commands\CreateGoal;
 use rtens\ucdi\app\commands\MarkBrickLaid;
+use rtens\ucdi\app\commands\MarkGoalAchieved;
 use rtens\ucdi\app\commands\MarkTaskCompleted;
 use rtens\ucdi\app\commands\ScheduleBrick;
 use rtens\ucdi\app\events\BrickMarkedLaid;
 use rtens\ucdi\app\events\BrickScheduled;
 use rtens\ucdi\app\events\GoalCreated;
+use rtens\ucdi\app\events\GoalMarkedAchieved;
 use rtens\ucdi\app\events\GoalNotesChanged;
 use rtens\ucdi\app\events\TaskAdded;
 use rtens\ucdi\app\events\TaskMadeDependent;
@@ -34,6 +36,7 @@ class Application {
     private $bricks = [];
     private $laidBricks = [];
     private $completedTasks = [];
+    private $achievedGoals = [];
 
     public function __construct(UidGenerator $uid, Calendar $calendar, \DateTimeImmutable $now) {
         $this->uid = $uid;
@@ -110,6 +113,16 @@ class Application {
         ];
     }
 
+    public function handleMarkGoalAchieved(MarkGoalAchieved $command) {
+        if (isset($this->achievedGoals[$command->getGoal()])) {
+            $when = $this->achievedGoals[$command->getGoal()];
+            throw new \Exception("Task [{$command->getGoal()}] was already completed [$when].");
+        }
+        return [
+            new GoalMarkedAchieved($command->getGoal(), $this->now)
+        ];
+    }
+
     public function applyGoalCreated(GoalCreated $event) {
         $this->goals[$event->getGoalId()] = [
             'id' => $event->getGoalId(),
@@ -157,6 +170,10 @@ class Application {
 
     public function applyTaskMarkedCompleted(TaskMarkedCompleted $event) {
         $this->completedTasks[$event->getTaskId()] = $event->getWhen()->format('Y-m-d H:i');
+    }
+
+    public function applyGoalMarkedAchieved(GoalMarkedAchieved $event) {
+        $this->achievedGoals[$event->getGoalId()] = $event->getWhen()->format('Y-m-d H:i');
     }
 
     public function executeListGoals() {
