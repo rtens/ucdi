@@ -1,6 +1,8 @@
 <?php namespace rtens\ucdi\app\events;
 
-class TaskAdded {
+use rtens\ucdi\es\Event;
+
+class TaskAdded extends Event {
 
     /** @var string */
     private $taskId;
@@ -17,6 +19,7 @@ class TaskAdded {
      * @param string $description
      */
     public function __construct($taskId, $goalId, $description) {
+        parent::__construct();
         $this->taskId = $taskId;
         $this->goalId = $goalId;
         $this->description = $description;
