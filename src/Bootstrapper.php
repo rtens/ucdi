@@ -6,7 +6,6 @@ use rtens\domin\reflection\GenericObjectAction;
 use rtens\mockster\Mockster;
 use rtens\ucdi\app\Application;
 use rtens\ucdi\app\Calendar;
-use rtens\ucdi\app\Time;
 use rtens\ucdi\es\ApplicationService;
 use rtens\ucdi\es\PersistentEventStore;
 use rtens\ucdi\es\UidGenerator;
@@ -16,7 +15,7 @@ class Bootstrapper {
 
     public static function run($userDir) {
         $handler = new ApplicationService(
-            new Application(new UidGenerator(), Mockster::mock(Calendar::class), new Time()),
+            new Application(new UidGenerator(), Mockster::mock(Calendar::class), new \DateTimeImmutable()),
             new PersistentEventStore($userDir . '/events.json'));
 
         $addCommand = function (WebApplication $app, $commandClass) use ($handler) {
@@ -37,9 +36,11 @@ class Bootstrapper {
             $addCommand($app, \rtens\ucdi\app\commands\CreateGoal::class);
             $addCommand($app, \rtens\ucdi\app\commands\AddTask::class);
             $addCommand($app, \rtens\ucdi\app\commands\ScheduleBrick::class);
-
             $addQuery($app, \rtens\ucdi\app\queries\ListGoals::class);
             $addQuery($app, \rtens\ucdi\app\queries\ShowGoal::class);
+            $addCommand($app, \rtens\ucdi\app\commands\MarkBrickLaid::class);
+            $addCommand($app, \rtens\ucdi\app\commands\MarkTaskCompleted::class);
+            $addCommand($app, \rtens\ucdi\app\commands\MarkGoalAchieved::class);
         }, WebDelivery::init()));
     }
 
