@@ -42,7 +42,12 @@ class ApplicationService {
 
     private function invokeMethod($prefix, $object) {
         $eventName = (new \ReflectionClass($object))->getShortName();
-        $applyMethod = new \ReflectionMethod($this->application, $prefix . $eventName);
-        return $applyMethod->invoke($this->application, $object);
+
+        try {
+            $applyMethod = new \ReflectionMethod($this->application, $prefix . $eventName);
+            return $applyMethod->invoke($this->application, $object);
+        } catch (\ReflectionException $e) {
+            return null;
+        }
     }
 }
