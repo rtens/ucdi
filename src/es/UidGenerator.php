@@ -3,6 +3,6 @@
 class UidGenerator {
 
     public function generate($prefix = null) {
-        return uniqid($prefix ? ($prefix . '-') : '');
+        return uniqid($prefix ? $prefix : '');
     }
 }
