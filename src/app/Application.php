@@ -133,7 +133,7 @@ class Application {
         }
         if (isset($this->achievedGoals[$command->getGoal()])) {
             $when = $this->achievedGoals[$command->getGoal()];
-            throw new \Exception("Task [{$command->getGoal()}] was already completed [$when].");
+            throw new \Exception("Goal [{$command->getGoal()}] was already achieved [$when].");
         }
         return [
             new GoalMarkedAchieved($command->getGoal(), $this->now)

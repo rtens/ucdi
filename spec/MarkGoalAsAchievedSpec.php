@@ -29,7 +29,7 @@ class MarkGoalAsAchievedSpec {
         $this->driver->givenAGoal();
         $this->driver->whenIMarkTheGoalAsAchieved();
         $this->driver->whenITryToMarkTheGoalAsAchieved();
-        $this->driver->thenItShouldFailWith('Task [Goal-1] was already completed [2011-12-13 14:15].');
+        $this->driver->thenItShouldFailWith('Goal [Goal-1] was already achieved [2011-12-13 14:15].');
     }
 }
 
