@@ -3,6 +3,7 @@
     "description": "U Can Do It - a time management tool",
     "type": "app",
     "require": {
+        "google/apiclient": "^1.1",
         "rtens/domin": "dev-master"
     },
     "require-dev": {

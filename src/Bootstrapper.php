@@ -3,7 +3,6 @@
 use rtens\domin\delivery\web\root\IndexResource;
 use rtens\domin\delivery\web\WebApplication;
 use rtens\domin\reflection\GenericObjectAction;
-use rtens\mockster\Mockster;
 use rtens\ucdi\app\Application;
 use rtens\ucdi\app\Calendar;
 use rtens\ucdi\es\ApplicationService;
@@ -13,35 +12,47 @@ use watoki\curir\WebDelivery;
 
 class Bootstrapper {
 
-    public static function run($userDir) {
-        $handler = new ApplicationService(
-            new Application(new UidGenerator(), Mockster::mock(Calendar::class), new \DateTimeImmutable()),
+    /** @var ApplicationService */
+    private $handler;
+
+    public function __construct($userDir, Calendar $calendar) {
+        $this->handler = new ApplicationService(
+            new Application(new UidGenerator(), $calendar, new \DateTimeImmutable()),
             new PersistentEventStore($userDir . '/events.json'));
+    }
 
-        $addCommand = function (WebApplication $app, $commandClass) use ($handler) {
-            $app->actions->add((new \ReflectionClass($commandClass))->getShortName(), new GenericObjectAction($commandClass, $app->types, $app->parser,
-                function ($command) use ($handler) {
-                    return $handler->handle($command);
-                }));
-        };
-
-        $addQuery = function (WebApplication $app, $queryClass) use ($handler) {
-            $app->actions->add((new \ReflectionClass($queryClass))->getShortName(), new GenericObjectAction($queryClass, $app->types, $app->parser,
-                function ($query) use ($handler) {
-                    return $handler->execute($query);
-                }));
-        };
-
-        WebDelivery::quickResponse(IndexResource::class, WebApplication::init(function (WebApplication $app) use ($addCommand, $addQuery) {
-            $addCommand($app, \rtens\ucdi\app\commands\CreateGoal::class);
-            $addCommand($app, \rtens\ucdi\app\commands\AddTask::class);
-            $addCommand($app, \rtens\ucdi\app\commands\ScheduleBrick::class);
-            $addQuery($app, \rtens\ucdi\app\queries\ListGoals::class);
-            $addQuery($app, \rtens\ucdi\app\queries\ShowGoal::class);
-            $addCommand($app, \rtens\ucdi\app\commands\MarkBrickLaid::class);
-            $addCommand($app, \rtens\ucdi\app\commands\MarkTaskCompleted::class);
-            $addCommand($app, \rtens\ucdi\app\commands\MarkGoalAchieved::class);
+    public function runWebApp() {
+        WebDelivery::quickResponse(IndexResource::class, WebApplication::init(function (WebApplication $app) {
+            $this->registerActions($app);
         }, WebDelivery::init()));
     }
 
+    private function registerActions(WebApplication $app) {
+        $this->addCommand($app, \rtens\ucdi\app\commands\CreateGoal::class);
+        $this->addCommand($app, \rtens\ucdi\app\commands\AddTask::class);
+        $this->addCommand($app, \rtens\ucdi\app\commands\ScheduleBrick::class);
+        $this->addQuery($app, \rtens\ucdi\app\queries\ListGoals::class);
+        $this->addQuery($app, \rtens\ucdi\app\queries\ShowGoal::class);
+        $this->addCommand($app, \rtens\ucdi\app\commands\MarkBrickLaid::class);
+        $this->addCommand($app, \rtens\ucdi\app\commands\MarkTaskCompleted::class);
+        $this->addCommand($app, \rtens\ucdi\app\commands\MarkGoalAchieved::class);
+    }
+
+
+    function addQuery(WebApplication $app, $queryClass) {
+        $this->addGenericObjectAction($app, function ($query) {
+            return $this->handler->execute($query);
+        }, $queryClass);
+    }
+
+    function addCommand(WebApplication $app, $commandClass) {
+        $this->addGenericObjectAction($app, function ($command) {
+            return $this->handler->handle($command);
+        }, $commandClass);
+    }
+
+    function addGenericObjectAction(WebApplication $app, callable $executer, $class) {
+        $app->actions->add((new \ReflectionClass($class))->getShortName(),
+            new GenericObjectAction($class, $app->types, $app->parser, $executer));
+    }
 }

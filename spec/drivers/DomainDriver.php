@@ -1,5 +1,6 @@
 <?php namespace spec\rtens\ucdi\drivers;
 
+use rtens\mockster\arguments\Argument as Arg;
 use rtens\mockster\Mockster;
 use rtens\scrut\Fixture;
 use rtens\ucdi\app\Application;
@@ -23,6 +24,9 @@ class DomainDriver extends Fixture {
         $this->calendar = Mockster::of(Calendar::class);
         $this->store = new EventStore();
         $this->givenNowIs('now');
+
+        Mockster::stub($this->calendar->insertEvent(Arg::any(), Arg::any(), Arg::any(), Arg::any()))
+            ->will()->return_('CalendarEventId-1');
     }
 
     public function givenNowIs($when) {

@@ -5,12 +5,13 @@ use rtens\ucdi\app\commands\AddTask;
 use rtens\ucdi\app\commands\CreateGoal;
 use rtens\ucdi\app\commands\ScheduleBrick;
 use rtens\ucdi\app\events\BrickScheduled;
+use rtens\ucdi\app\events\CalendarEventInserted;
 use spec\rtens\ucdi\drivers\DomainDriver;
 
 /**
- * @property CreateBrickForTaskSpec_DomainDriver driver <-
+ * @property ScheduleBrickSpec_DomainDriver driver <-
  */
-class CreateBrickForTaskSpec {
+class ScheduleBrickSpec {
 
     function taskMustExist() {
         $this->driver->whenTryToIScheduleABrickFor('Foo');
@@ -34,7 +35,7 @@ class CreateBrickForTaskSpec {
  * @property \rtens\scrut\Assert assert <-
  * @property \rtens\scrut\fixtures\ExceptionFixture try <-
  */
-class CreateBrickForTaskSpec_DomainDriver extends DomainDriver {
+class ScheduleBrickSpec_DomainDriver extends DomainDriver {
 
     private $events;
 
@@ -80,5 +81,6 @@ class CreateBrickForTaskSpec_DomainDriver extends DomainDriver {
     public function thenAnAppointment_For_Starting_Ending_ShouldBeInsertedInMyCalendar($caption, $brickId, $start, $end) {
         Mockster::stub($this->calendar->insertEvent($caption, new \DateTimeImmutable($start), new \DateTimeImmutable($end), 'Link to ' . $brickId))
             ->shouldHave()->beenCalled();
+        $this->assert->contains($this->events, new CalendarEventInserted($brickId, 'CalendarEventId-1'));
     }
 }

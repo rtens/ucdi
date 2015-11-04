@@ -8,6 +8,7 @@ use rtens\ucdi\app\commands\MarkTaskCompleted;
 use rtens\ucdi\app\commands\ScheduleBrick;
 use rtens\ucdi\app\events\BrickMarkedLaid;
 use rtens\ucdi\app\events\BrickScheduled;
+use rtens\ucdi\app\events\CalendarEventInserted;
 use rtens\ucdi\app\events\GoalCreated;
 use rtens\ucdi\app\events\GoalMarkedAchieved;
 use rtens\ucdi\app\events\GoalNotesChanged;
@@ -85,7 +86,7 @@ class Application {
         }
         $brickId = $this->uid->generate('Brick');
 
-        $this->calendar->insertEvent(
+        $eventId = $this->calendar->insertEvent(
             $command->getDescription(),
             $command->getStart(),
             $command->getStart()->add($command->getDuration()),
@@ -97,7 +98,8 @@ class Application {
                 $command->getTask(),
                 $command->getDescription(),
                 $command->getStart(),
-                $command->getDuration())
+                $command->getDuration()),
+            new CalendarEventInserted($brickId, $eventId)
         ];
     }
 
