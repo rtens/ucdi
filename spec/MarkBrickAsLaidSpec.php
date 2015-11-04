@@ -17,15 +17,20 @@ class MarkBrickAsLaidSpec {
         $this->driver->givenTheBrick('Foo');
     }
 
+    function brickMustExist() {
+        $this->driver->whenITryToMark_AsLaid('Brick-Foo');
+        $this->driver->thenItShouldFailWith('Brick [Brick-Foo] does not exist.');
+    }
+
     function success() {
-        $this->driver->whenIMark_AsLaid('Brick-1');
-        $this->driver->then_ShouldBeMarkedAsLaid('Brick-1', '2011-12-13 14:15:16');
+        $this->driver->whenIMark_AsLaid('Brick-3');
+        $this->driver->then_ShouldBeMarkedAsLaid('Brick-3', '2011-12-13 14:15:16');
     }
 
     function cannotMarkLaidBrickAsLaid() {
-        $this->driver->whenIMark_AsLaid('Brick-1');
-        $this->driver->whenITryToMark_AsLaid('Brick-1');
-        $this->driver->thenItShouldFailWith('Brick [Brick-1] was already laid [2011-12-13 14:15].');
+        $this->driver->whenIMark_AsLaid('Brick-3');
+        $this->driver->whenITryToMark_AsLaid('Brick-3');
+        $this->driver->thenItShouldFailWith('Brick [Brick-3] was already laid [2011-12-13 14:15].');
     }
 }
 

@@ -10,6 +10,11 @@ use spec\rtens\ucdi\drivers\DomainDriver;
  */
 class ShowGoalSpec {
 
+    function goalMustExist() {
+        $this->driver->whenITryToShowTheGoal('Goal-Foo');
+        $this->driver->thenItShouldFailWith('Goal [Goal-Foo] does not exist.');
+    }
+
     function minimalGoal() {
         $this->driver->givenTheGoal_WithTheNotes('Foo', 'Foo Notes');
 
@@ -61,6 +66,7 @@ class ShowGoalSpec {
 
 /**
  * @property \rtens\scrut\Assert assert <-
+ * @property \rtens\scrut\fixtures\ExceptionFixture try <-
  */
 class ShowGoalSpec_DomainDriver extends DomainDriver {
 
@@ -84,6 +90,12 @@ class ShowGoalSpec_DomainDriver extends DomainDriver {
 
     public function whenIShowTheGoal($goalId) {
         $this->goal = $this->service->execute(new ShowGoal($goalId));
+    }
+
+    public function whenITryToShowTheGoal($goalId) {
+        $this->try->tryTo(function () use ($goalId) {
+            $this->whenIShowTheGoal($goalId);
+        });
     }
 
     public function thenTheNotesShouldBe($notes) {
@@ -112,5 +124,9 @@ class ShowGoalSpec_DomainDriver extends DomainDriver {
 
     public function thenBrick_OfTask_ShouldHaveTheDescription($brickPos, $taskPos, $description) {
         $this->assert->equals($this->goal['tasks'][$taskPos - 1]['bricks'][$brickPos - 1]['description'], $description);
+    }
+
+    public function thenItShouldFailWith($message) {
+        $this->try->thenTheException_ShouldBeThrown($message);
     }
 }

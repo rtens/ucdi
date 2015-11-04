@@ -11,15 +11,21 @@ class MarkTaskAsCompletedSpec {
 
     function before() {
         $this->driver->givenNowIs('2011-12-13 14:15:16');
-        $this->driver->givenATask();
+    }
+
+    function taskMustExist() {
+        $this->driver->whenITryToMarkTheTaskAsCompleted();
+        $this->driver->thenItShouldFailWith('Task [Task-2] does not exist.');
     }
 
     function success() {
+        $this->driver->givenATask();
         $this->driver->whenIMarkTheTaskAsCompleted();
         $this->driver->thenTheTaskShouldBeMarkedAsCompleted('2011-12-13 14:15:16');
     }
 
     function cannotMarkCompletedTaskAsCompleted() {
+        $this->driver->givenATask();
         $this->driver->whenIMarkTheTaskAsCompleted();
         $this->driver->whenITryToMarkTheTaskAsCompleted();
         $this->driver->thenItShouldFailWith('Task [Task-2] was already completed [2011-12-13 14:15].');

@@ -32,11 +32,12 @@ class Application {
     private $goalOfTask = [];
     private $nextBrick = [];
     private $notes = [];
-    private $tasks = [];
-    private $bricks = [];
+    private $tasksOfGoals = [];
+    private $bricksOfTasks = [];
     private $laidBricks = [];
     private $completedTasks = [];
     private $achievedGoals = [];
+    private $bricks = [];
 
     public function __construct(UidGenerator $uid, Calendar $calendar, \DateTimeImmutable $now) {
         $this->uid = $uid;
@@ -58,6 +59,10 @@ class Application {
     }
 
     public function handleAddTask(AddTask $command) {
+        if (!isset($this->goals[$command->getGoal()])) {
+            throw new \Exception("Goal [{$command->getGoal()}] does not exist.");
+        }
+
         $taskId = $this->uid->generate('Task');
 
         $events = [
@@ -72,6 +77,9 @@ class Application {
     }
 
     public function handleScheduleBrick(ScheduleBrick $command) {
+        if (!isset($this->goalOfTask[$command->getTask()])) {
+            throw new \Exception("Task [{$command->getTask()}] does not exist.");
+        }
         if ($command->getStart() < $this->now) {
             throw new \Exception('Cannot schedule brick in the past');
         }
@@ -94,6 +102,9 @@ class Application {
     }
 
     public function handleMarkBrickLaid(MarkBrickLaid $command) {
+        if (!isset($this->bricks[$command->getBrickId()])) {
+            throw new \Exception("Brick [{$command->getBrickId()}] does not exist.");
+        }
         if (isset($this->laidBricks[$command->getBrickId()])) {
             $when = $this->laidBricks[$command->getBrickId()];
             throw new \Exception("Brick [{$command->getBrickId()}] was already laid [$when].");
@@ -104,6 +115,9 @@ class Application {
     }
 
     public function handleMarkTaskCompleted(MarkTaskCompleted $command) {
+        if (!isset($this->goalOfTask[$command->getTask()])) {
+            throw new \Exception("Task [{$command->getTask()}] does not exist.");
+        }
         if (isset($this->completedTasks[$command->getTask()])) {
             $when = $this->completedTasks[$command->getTask()];
             throw new \Exception("Task [{$command->getTask()}] was already completed [$when].");
@@ -114,6 +128,9 @@ class Application {
     }
 
     public function handleMarkGoalAchieved(MarkGoalAchieved $command) {
+        if (!isset($this->goals[$command->getGoal()])) {
+            throw new \Exception("Goal [{$command->getGoal()}] does not exist.");
+        }
         if (isset($this->achievedGoals[$command->getGoal()])) {
             $when = $this->achievedGoals[$command->getGoal()];
             throw new \Exception("Task [{$command->getGoal()}] was already completed [$when].");
@@ -132,14 +149,15 @@ class Application {
 
     public function applyTaskAdded(TaskAdded $event) {
         $this->goalOfTask[$event->getTaskId()] = $event->getGoalId();
-        $this->tasks[$event->getGoalId()][] = [
+        $this->tasksOfGoals[$event->getGoalId()][] = [
             'id' => $event->getTaskId(),
             'description' => $event->getDescription()
         ];
     }
 
     public function applyBrickScheduled(BrickScheduled $event) {
-        $this->bricks[$event->getTaskId()][] = [
+        $this->bricks[$event->getBrickId()] = true;
+        $this->bricksOfTasks[$event->getTaskId()][] = [
             'description' => $event->getDescription(),
             'start' => $event->getStart()->format('Y-m-d H:i'),
             'duration' => $event->getDuration()->format('%H:%I'),
@@ -185,6 +203,9 @@ class Application {
     }
 
     public function executeShowGoal(ShowGoal $query) {
+        if (!isset($this->goals[$query->getGoal()])) {
+            throw new \Exception("Goal [{$query->getGoal()}] does not exist.");
+        }
         $goalId = $query->getGoal();
         return array_merge($this->goals[$goalId], [
             'notes' => isset($this->notes[$goalId]) ? $this->notes[$goalId] : null,
@@ -204,7 +225,7 @@ class Application {
     }
 
     private function getTasksWithBricks($goalId) {
-        if (!isset($this->tasks[$goalId])) {
+        if (!isset($this->tasksOfGoals[$goalId])) {
             return [];
         }
 
@@ -212,14 +233,14 @@ class Application {
             return array_merge($task, [
                 'bricks' => $this->getBricks($task['id'])
             ]);
-        }, $this->tasks[$goalId]);
+        }, $this->tasksOfGoals[$goalId]);
     }
 
     private function getBricks($taskId) {
-        if (!isset($this->bricks[$taskId])) {
+        if (!isset($this->bricksOfTasks[$taskId])) {
             return [];
         }
-        $bricks = array_filter($this->bricks[$taskId], function ($brick) {
+        $bricks = array_filter($this->bricksOfTasks[$taskId], function ($brick) {
             return new \DateTimeImmutable($brick['start']) >= $this->now;
         });
         usort($bricks, function ($a, $b) {

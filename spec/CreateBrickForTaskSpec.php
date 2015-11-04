@@ -12,8 +12,13 @@ use spec\rtens\ucdi\drivers\DomainDriver;
  */
 class CreateBrickForTaskSpec {
 
+    function taskMustExist() {
+        $this->driver->whenTryToIScheduleABrickFor('Foo');
+        $this->driver->thenItShouldFailWith('Task [Foo] does not exist.');
+    }
+
     function failIfStartsInThePast() {
-        $this->driver->whenTryToIScheduleABrickFor('1 second ago');
+        $this->driver->whenTryToIScheduleABrick('1 second ago');
         $this->driver->thenItShouldFailWith('Cannot schedule brick in the past');
     }
 
@@ -38,9 +43,16 @@ class CreateBrickForTaskSpec_DomainDriver extends DomainDriver {
         $this->service->handle(new AddTask('Goal-1', 'Task Foo'));
     }
 
-    public function whenTryToIScheduleABrickFor($when) {
+    public function whenTryToIScheduleABrick($when) {
+        $this->givenATask();
         $this->try->tryTo(function () use ($when) {
-            $this->whenISchedule_Of_For_MinutesStarting('Brick Foo', 'Task-Foo', 0, $when);
+            $this->whenISchedule_Of_For_MinutesStarting('Brick Foo', 'Task-2', 0, $when);
+        });
+    }
+
+    public function whenTryToIScheduleABrickFor($taskId) {
+        $this->try->tryTo(function () use ($taskId) {
+            $this->whenISchedule_Of_For_MinutesStarting('Brick Foo', $taskId, 0, '1 minute');
         });
     }
 
