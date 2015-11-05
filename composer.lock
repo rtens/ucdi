@@ -101,12 +101,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/rtens/domin.git",
-                "reference": "3c90edc5ab3e4773c6616b7eeb253d6753437028"
+                "reference": "2591ea8f557482a15254b9b936a8b953adf05d7c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rtens/domin/zipball/3c90edc5ab3e4773c6616b7eeb253d6753437028",
-                "reference": "3c90edc5ab3e4773c6616b7eeb253d6753437028",
+                "url": "https://api.github.com/repos/rtens/domin/zipball/2591ea8f557482a15254b9b936a8b953adf05d7c",
+                "reference": "2591ea8f557482a15254b9b936a8b953adf05d7c",
                 "shasum": ""
             },
             "require": {
@@ -148,7 +148,7 @@
                 "ddd",
                 "domain model"
             ],
-            "time": "2015-11-03 15:09:53"
+            "time": "2015-11-05 09:49:49"
         },
         {
             "name": "watoki/collections",
@@ -498,12 +498,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/rtens/mockster.git",
-                "reference": "132f6c0793bb2c8bd15ee29e4b45d21b044e69e7"
+                "reference": "468f738364e2f351361a01ee56c86e8ffb092ac0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rtens/mockster/zipball/132f6c0793bb2c8bd15ee29e4b45d21b044e69e7",
-                "reference": "132f6c0793bb2c8bd15ee29e4b45d21b044e69e7",
+                "url": "https://api.github.com/repos/rtens/mockster/zipball/468f738364e2f351361a01ee56c86e8ffb092ac0",
+                "reference": "468f738364e2f351361a01ee56c86e8ffb092ac0",
                 "shasum": ""
             },
             "require": {
@@ -539,7 +539,7 @@
                 "mocking",
                 "unit testing"
             ],
-            "time": "2015-10-30 15:57:08"
+            "time": "2015-11-04 17:21:21"
         },
         {
             "name": "rtens/scrut",

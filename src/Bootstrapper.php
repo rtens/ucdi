@@ -1,5 +1,8 @@
 <?php namespace rtens\ucdi;
 
+use rtens\domin\delivery\web\Element;
+use rtens\domin\delivery\web\menu\CustomMenuItem;
+use rtens\domin\delivery\web\menu\MenuGroup;
 use rtens\domin\delivery\web\root\IndexResource;
 use rtens\domin\delivery\web\WebApplication;
 use rtens\domin\reflection\GenericObjectAction;
@@ -8,6 +11,7 @@ use rtens\ucdi\app\Calendar;
 use rtens\ucdi\es\ApplicationService;
 use rtens\ucdi\es\PersistentEventStore;
 use rtens\ucdi\es\UidGenerator;
+use watoki\curir\delivery\WebRequest;
 use watoki\curir\WebDelivery;
 
 class Bootstrapper {
@@ -15,7 +19,11 @@ class Bootstrapper {
     /** @var ApplicationService */
     private $handler;
 
-    public function __construct($userDir, Calendar $calendar) {
+    /** @var string */
+    private $userId;
+
+    public function __construct($userDir, $userId, Calendar $calendar) {
+        $this->userId = $userId;
         $this->handler = new ApplicationService(
             new Application(new UidGenerator(), $calendar, new \DateTimeImmutable()),
             new PersistentEventStore($userDir . '/events.json'));
@@ -23,6 +31,14 @@ class Bootstrapper {
 
     public function runWebApp() {
         WebDelivery::quickResponse(IndexResource::class, WebApplication::init(function (WebApplication $app) {
+            $app->menu->setBrand('ucdi');
+            $app->menu->addRight((new MenuGroup($this->userId))
+                ->add(new CustomMenuItem(function (WebRequest $request) {
+                    return new Element('a',
+                        ['href' => $request->getContext()->withParameter('logout', '')],
+                        ['Logout']);
+                })));
+
             $this->registerActions($app);
         }, WebDelivery::init()));
     }

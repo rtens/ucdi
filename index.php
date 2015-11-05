@@ -46,7 +46,5 @@ $info = new Google_Service_Oauth2($client);
 
 $userDir = __DIR__ . '/user/' . $info->userinfo->get()->email;
 
-(new Bootstrapper($userDir, new GoogleCalendar($cal)))->runWebApp();
-
-$url = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'];
-echo "<br><br>{$info->userinfo->get()->email} <a href=$url?logout>logout</a>";
+(new Bootstrapper($userDir, $info->userinfo->get()->email, new GoogleCalendar($cal)))
+    ->runWebApp();
