@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b6d074c7ec6d42d4dd48e5f24260694f",
-    "content-hash": "94f85031f13a5c9db70bdf58bba89c1a",
+    "hash": "6c7187ab62a6f013651ce46c93714a23",
+    "content-hash": "021859dcabeeb063dd142ca7517a93d3",
     "packages": [
         {
             "name": "google/apiclient",
@@ -352,12 +352,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/watoki/reflect.git",
-                "reference": "d2afa2b5e455914aa64ef135e8b5e779dcc8ebe7"
+                "reference": "d7115d405473c528746970cc06317f5c15131ba7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/watoki/reflect/zipball/d2afa2b5e455914aa64ef135e8b5e779dcc8ebe7",
-                "reference": "d2afa2b5e455914aa64ef135e8b5e779dcc8ebe7",
+                "url": "https://api.github.com/repos/watoki/reflect/zipball/d7115d405473c528746970cc06317f5c15131ba7",
+                "reference": "d7115d405473c528746970cc06317f5c15131ba7",
                 "shasum": ""
             },
             "require": {
@@ -393,7 +393,7 @@
                 "type hints",
                 "watoki"
             ],
-            "time": "2015-10-30 17:44:25"
+            "time": "2015-11-05 17:09:51"
         },
         {
             "name": "watoki/smokey",
@@ -445,12 +445,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/watoki/stores.git",
-                "reference": "6cfedcf5f56badc7eb6139bb08fd8f2128af360f"
+                "reference": "eb0ba5b93f822034c28cacc7bfdda195fc9cc071"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/watoki/stores/zipball/6cfedcf5f56badc7eb6139bb08fd8f2128af360f",
-                "reference": "6cfedcf5f56badc7eb6139bb08fd8f2128af360f",
+                "url": "https://api.github.com/repos/watoki/stores/zipball/eb0ba5b93f822034c28cacc7bfdda195fc9cc071",
+                "reference": "eb0ba5b93f822034c28cacc7bfdda195fc9cc071",
                 "shasum": ""
             },
             "require": {
@@ -488,7 +488,7 @@
                 "storage",
                 "watoki"
             ],
-            "time": "2015-08-19 14:49:51"
+            "time": "2015-11-05 21:16:53"
         }
     ],
     "packages-dev": [
@@ -595,6 +595,7 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "rtens/domin": 20,
+        "watoki/stores": 20,
         "rtens/scrut": 20,
         "rtens/mockster": 20
     },

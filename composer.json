@@ -4,7 +4,8 @@
     "type": "app",
     "require": {
         "google/apiclient": "^1.1",
-        "rtens/domin": "dev-master"
+        "rtens/domin": "dev-master",
+        "watoki/stores": "dev-master"
     },
     "require-dev": {
         "rtens/scrut": "dev-master",

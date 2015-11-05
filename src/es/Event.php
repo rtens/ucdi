@@ -5,8 +5,8 @@ class Event {
     /** @var \DateTimeImmutable */
     private $created;
 
-    public function __construct() {
-        $this->created = new \DateTimeImmutable();
+    public function __construct(\DateTimeImmutable $created = null) {
+        $this->created = $created ?: new \DateTimeImmutable();
     }
 
     /**
