@@ -1,9 +1,7 @@
 <?php namespace rtens\ucdi\app\events;
 
 
-use rtens\ucdi\es\Event;
-
-class GoalNotesChanged extends Event {
+class GoalNotesChanged {
 
     /** @var string */
     private $goalId;
@@ -16,7 +14,6 @@ class GoalNotesChanged extends Event {
      * @param string $notes
      */
     public function __construct($goalId, $notes) {
-        parent::__construct();
         $this->goalId = $goalId;
         $this->notes = $notes;
     }

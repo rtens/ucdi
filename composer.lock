@@ -445,12 +445,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/watoki/stores.git",
-                "reference": "eb0ba5b93f822034c28cacc7bfdda195fc9cc071"
+                "reference": "d1714e7569d0d58c1784a291b52054f0340b0316"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/watoki/stores/zipball/eb0ba5b93f822034c28cacc7bfdda195fc9cc071",
-                "reference": "eb0ba5b93f822034c28cacc7bfdda195fc9cc071",
+                "url": "https://api.github.com/repos/watoki/stores/zipball/d1714e7569d0d58c1784a291b52054f0340b0316",
+                "reference": "d1714e7569d0d58c1784a291b52054f0340b0316",
                 "shasum": ""
             },
             "require": {
@@ -488,7 +488,7 @@
                 "storage",
                 "watoki"
             ],
-            "time": "2015-11-05 21:16:53"
+            "time": "2015-11-05 21:51:02"
         }
     ],
     "packages-dev": [

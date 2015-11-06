@@ -3,16 +3,31 @@
 class Event {
 
     /** @var \DateTimeImmutable */
-    private $created;
+    private $occurred;
 
-    public function __construct(\DateTimeImmutable $created = null) {
-        $this->created = $created ?: new \DateTimeImmutable();
+    /** @var object */
+    private $event;
+
+    /**
+     * @param object $event
+     * @param \DateTimeImmutable $occurred
+     */
+    public function __construct($event, \DateTimeImmutable $occurred) {
+        $this->occurred = $occurred;
+        $this->event = $event;
     }
 
     /**
      * @return \DateTimeImmutable
      */
-    public function getCreated() {
-        return $this->created;
+    public function getOccurred() {
+        return $this->occurred;
+    }
+
+    /**
+     * @return object
+     */
+    public function getEvent() {
+        return $this->event;
     }
 }

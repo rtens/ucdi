@@ -1,8 +1,6 @@
 <?php namespace rtens\ucdi\app\events;
 
-use rtens\ucdi\es\Event;
-
-class TaskMadeDependent extends Event {
+class TaskMadeDependent {
 
     /** @var string */
     private $taskId;
@@ -15,7 +13,6 @@ class TaskMadeDependent extends Event {
      * @param string $dependency
      */
     public function __construct($taskId, $dependency) {
-        parent::__construct();
         $this->taskId = $taskId;
         $this->dependency = $dependency;
     }

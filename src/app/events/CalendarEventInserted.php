@@ -1,8 +1,6 @@
 <?php namespace rtens\ucdi\app\events;
 
-use rtens\ucdi\es\Event;
-
-class CalendarEventInserted extends Event {
+class CalendarEventInserted {
 
     /** @var string */
     private $brickId;
@@ -15,7 +13,6 @@ class CalendarEventInserted extends Event {
      * @param string $calendarEventId
      */
     public function __construct($brickId, $calendarEventId) {
-        parent::__construct();
         $this->brickId = $brickId;
         $this->calendarEventId = $calendarEventId;
     }

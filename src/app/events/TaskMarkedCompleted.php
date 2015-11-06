@@ -1,8 +1,6 @@
 <?php namespace rtens\ucdi\app\events;
 
-use rtens\ucdi\es\Event;
-
-class TaskMarkedCompleted extends Event {
+class TaskMarkedCompleted {
 
     /** @var string */
     private $taskId;
@@ -15,7 +13,6 @@ class TaskMarkedCompleted extends Event {
      * @param \DateTimeImmutable $when
      */
     public function __construct($taskId, \DateTimeImmutable $when) {
-        parent::__construct();
         $this->taskId = $taskId;
         $this->when = $when;
     }

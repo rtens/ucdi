@@ -1,8 +1,6 @@
 <?php namespace rtens\ucdi\app\events;
 
-use rtens\ucdi\es\Event;
-
-class GoalMarkedAchieved extends Event {
+class GoalMarkedAchieved {
 
     /** @var string */
     private $goalId;
@@ -15,7 +13,6 @@ class GoalMarkedAchieved extends Event {
      * @param \DateTimeImmutable $when
      */
     public function __construct($goalId, \DateTimeImmutable $when) {
-        parent::__construct();
         $this->goalId = $goalId;
         $this->when = $when;
     }

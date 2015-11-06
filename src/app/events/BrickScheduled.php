@@ -1,8 +1,6 @@
 <?php namespace rtens\ucdi\app\events;
 
-use rtens\ucdi\es\Event;
-
-class BrickScheduled extends Event {
+class BrickScheduled {
 
     /** @var string */
     private $brickId;
@@ -27,7 +25,6 @@ class BrickScheduled extends Event {
      * @param \DateInterval $duration
      */
     public function __construct($brickId, $taskId, $description, \DateTimeImmutable $start, \DateInterval $duration) {
-        parent::__construct();
         $this->taskId = $taskId;
         $this->description = $description;
         $this->start = $start;

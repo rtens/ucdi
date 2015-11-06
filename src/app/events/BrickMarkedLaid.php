@@ -1,8 +1,6 @@
 <?php namespace rtens\ucdi\app\events;
 
-use rtens\ucdi\es\Event;
-
-class BrickMarkedLaid extends Event {
+class BrickMarkedLaid {
 
     /** @var string */
     private $brickId;
@@ -14,7 +12,6 @@ class BrickMarkedLaid extends Event {
      * @param string $brickId
      */
     public function __construct($brickId, \DateTimeImmutable $when) {
-        parent::__construct();
         $this->brickId = $brickId;
         $this->when = $when;
     }
