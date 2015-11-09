@@ -45,8 +45,9 @@ class Application {
     private $laidBricks = [];
     private $completedTasks = [];
     private $achievedGoals = [];
-    private $bricks = [];
     private $ratings = [];
+    /** @var array|BrickScheduled[] */
+    private $bricks = [];
 
     public function __construct(UidGenerator $uid, Calendar $calendar, Url $base, \DateTimeImmutable $now) {
         $this->uid = $uid;
@@ -186,7 +187,7 @@ class Application {
     }
 
     public function applyBrickScheduled(BrickScheduled $event) {
-        $this->bricks[$event->getBrickId()] = true;
+        $this->bricks[$event->getBrickId()] = $event;
         $this->bricksOfTasks[$event->getTaskId()][] = [
             'description' => $event->getDescription(),
             'start' => $event->getStart()->format('Y-m-d H:i'),
@@ -247,6 +248,25 @@ class Application {
             'notes' => isset($this->notes[$goalId]) ? new Html($this->notes[$goalId]) : null,
             'tasks' => $this->getTasksWithBricks($goalId)
         ]);
+    }
+
+    public function executeListMissedBricks() {
+        $missedBricks = [];
+        foreach ($this->bricks as $brick) {
+            if (!isset($this->laidBricks[$brick->getBrickId()]) && $brick->getStart() < $this->now) {
+                $missedBricks[] = [
+                    'id' => $brick->getBrickId(),
+                    'description' => $brick->getDescription(),
+                    'start' => $brick->getStart()->format('Y-m-d H:i')
+                ];
+            }
+        }
+
+        usort($missedBricks, function ($a, $b) {
+            return strcmp($a['start'], $b['start']);
+        });
+
+        return $missedBricks;
     }
 
     private function getNextBrick($goalId) {

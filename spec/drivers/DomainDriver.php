@@ -11,6 +11,10 @@ use spec\rtens\ucdi\fakes\FakeUidGenerator;
 use watoki\curir\protocol\Url;
 
 class DomainDriver extends Fixture {
+
+    /** @var FakeUidGenerator */
+    private $uid;
+
     /** @var EventStore */
     private $store;
 
@@ -26,6 +30,7 @@ class DomainDriver extends Fixture {
     public function before() {
         $this->calendar = Mockster::of(Calendar::class);
         $this->store = new EventStore();
+        $this->uid = new FakeUidGenerator();
         $this->baseUrl = Url::fromString('http://example.com/ucdi');
 
         $this->givenNowIs('now');
@@ -34,9 +39,13 @@ class DomainDriver extends Fixture {
             ->will()->return_('CalendarEventId-1');
     }
 
+    protected function givenTheNextUidIs($uid) {
+        $this->uid->setCount($uid);
+    }
+
     public function givenNowIs($when) {
         $this->service = new ApplicationService(
-            new Application(new FakeUidGenerator(), Mockster::mock($this->calendar), $this->baseUrl, new \DateTimeImmutable($when)),
+            new Application($this->uid, Mockster::mock($this->calendar), $this->baseUrl, new \DateTimeImmutable($when)),
             $this->store);
     }
 }

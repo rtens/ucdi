@@ -45,11 +45,12 @@ class Bootstrapper {
     }
 
     private function registerActions(WebApplication $app) {
+        $this->addQuery($app, \rtens\ucdi\app\queries\ListGoals::class);
+        $this->addQuery($app, \rtens\ucdi\app\queries\ShowGoal::class);
+        $this->addQuery($app, \rtens\ucdi\app\queries\ListMissedBricks::class);
         $this->addCommand($app, \rtens\ucdi\app\commands\CreateGoal::class);
         $this->addCommand($app, \rtens\ucdi\app\commands\AddTask::class);
         $this->addCommand($app, \rtens\ucdi\app\commands\ScheduleBrick::class);
-        $this->addQuery($app, \rtens\ucdi\app\queries\ListGoals::class);
-        $this->addQuery($app, \rtens\ucdi\app\queries\ShowGoal::class);
         $this->addCommand($app, \rtens\ucdi\app\commands\RateGoal::class);
         $this->addCommand($app, \rtens\ucdi\app\commands\MarkBrickLaid::class);
         $this->addCommand($app, \rtens\ucdi\app\commands\MarkTaskCompleted::class);
