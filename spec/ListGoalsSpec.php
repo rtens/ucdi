@@ -3,6 +3,7 @@
 use rtens\ucdi\app\commands\AddTask;
 use rtens\ucdi\app\commands\CreateGoal;
 use rtens\ucdi\app\commands\MarkBrickLaid;
+use rtens\ucdi\app\commands\MarkGoalAchieved;
 use rtens\ucdi\app\commands\ScheduleBrick;
 use rtens\ucdi\app\queries\ListGoals;
 use spec\rtens\ucdi\drivers\DomainDriver;
@@ -76,19 +77,24 @@ class ListGoalsSpec {
         $this->driver->whenIListAllGoalsWithoutANextBrick();
         $this->driver->thenThereShouldBe_Goals(1);
     }
+
+    function filterAchieved() {
+        $this->driver->givenTheGoal('Foo');
+        $this->driver->givenTheGoal('Bar');
+        $this->driver->givenTheGoal('Baz');
+        $this->driver->givenTheGoal_IsAchieved('Goal-2');
+
+        $this->driver->whenIListAllGoals();
+        $this->driver->thenThereShouldBe_Goals(2);
+
+        $this->driver->whenIListAllAchievedGoals();
+        $this->driver->thenThereShouldBe_Goals(1);
+    }
 }
 
 class ListGoalsWithNextBricksSpec_DomainDriver extends DomainDriver {
 
     private $goals;
-
-    public function whenIListAllGoals() {
-        $this->goals = $this->service->execute(new ListGoals());
-    }
-
-    public function whenIListAllGoalsWithoutANextBrick() {
-        $this->goals = $this->service->execute(new ListGoals(true));
-    }
 
     public function givenTheGoal($name) {
         $this->service->handle(new CreateGoal($name));
@@ -106,6 +112,22 @@ class ListGoalsWithNextBricksSpec_DomainDriver extends DomainDriver {
 
     public function givenTheBrick_IsLaid($brickId) {
         $this->service->handle(new MarkBrickLaid($brickId));
+    }
+
+    public function givenTheGoal_IsAchieved($goalId) {
+        $this->service->handle(new MarkGoalAchieved($goalId));
+    }
+
+    public function whenIListAllGoals() {
+        $this->goals = $this->service->execute(new ListGoals());
+    }
+
+    public function whenIListAllGoalsWithoutANextBrick() {
+        $this->goals = $this->service->execute(new ListGoals(true));
+    }
+
+    public function whenIListAllAchievedGoals() {
+        $this->goals = $this->service->execute(new ListGoals(false, true));
     }
 
     public function thenThereShouldBe_Goals($int) {

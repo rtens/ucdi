@@ -226,7 +226,9 @@ class Application {
                 'rating' => isset($this->ratings[$goal['id']]) ? (string)$this->ratings[$goal['id']] : null,
                 'nextBrick' => $this->getNextBrick($goal['id'])
             ]);
-        }, array_values($this->goals));
+        }, array_filter(array_values($this->goals), function ($goal) use ($query) {
+            return $query->isAchieved() == isset($this->achievedGoals[$goal['id']]);
+        }));
 
         if ($query->isOnlyBrickLess()) {
             $goals = array_filter($goals, function ($goal) {
