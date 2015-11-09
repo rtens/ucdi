@@ -15,6 +15,8 @@ $client->setClassConfig(Google_Http_Request::class, "disable_gzip", true);
 
 if (isset($_GET['logout'])) {
     unset($_SESSION['token']);
+    echo "Logged-out <a href='?'>Log-in</a>";
+    exit();
 }
 
 if (isset($_GET['calendar'])) {
@@ -37,7 +39,7 @@ if (isset($_SESSION['token'])) {
 
 if (!$client->getAccessToken()) {
     $authUrl = $client->createAuthUrl();
-    print "<a href='$authUrl'>Log in</a>";
+    header('Location: ' . $authUrl);
     exit();
 }
 
