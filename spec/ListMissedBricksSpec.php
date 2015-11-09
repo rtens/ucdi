@@ -12,10 +12,6 @@ use spec\rtens\ucdi\drivers\DomainDriver;
  */
 class ListMissedBricksSpec {
 
-    function before() {
-        $this->driver->givenNowIs('2011-12-13 14:15');
-    }
-
     function noBricks() {
         $this->driver->whenIListMissedBricks();
         $this->driver->thenThereShouldBe_Bricks(0);
