@@ -38,7 +38,6 @@ class Application {
 
     private $goals = [];
     private $goalOfTask = [];
-    private $nextBrick = [];
     private $notes = [];
     private $tasksOfGoals = [];
     private $bricksOfTasks = [];
@@ -198,15 +197,6 @@ class Application {
             return;
         }
 
-        $goalId = $this->goalOfTask[$event->getTaskId()];
-        if (isset($this->nextBrick[$goalId]) && $event->getStart() > $this->nextBrick[$goalId]['start']) {
-            return;
-        }
-
-        $this->nextBrick[$goalId] = [
-            'description' => $event->getDescription(),
-            'start' => $event->getStart()
-        ];
     }
 
     public function applyGoalNotesChanged(GoalNotesChanged $event) {
@@ -282,14 +272,28 @@ class Application {
     }
 
     private function getNextBrick($goalId) {
-        if (!isset($this->nextBrick[$goalId])) {
-            return null;
+        /** @var BrickScheduled|null $next */
+        $next = null;
+
+        $taskIds = [];
+        if (isset($this->tasksOfGoals[$goalId])) {
+            foreach ($this->tasksOfGoals[$goalId] as $task) {
+                $taskIds[] = $task['id'];
+            }
         }
 
-        $brick = $this->nextBrick[$goalId];
-        /** @var \DateTime $start */
-        $start = $brick['start'];
-        return $brick['description'] . ' @' . $start->format('Y-m-d H:i');
+        foreach ($this->bricks as $brick) {
+            if (
+                $brick->getStart() > $this->now
+                && !isset($this->laidBricks[$brick->getBrickId()])
+                && (!$next || $brick->getStart() < $next->getStart())
+            ) {
+
+                $next = $brick;
+            }
+        }
+
+        return $next ? ($next->getDescription() . ' @' . $next->getStart()->format('Y-m-d H:i')) : null;
     }
 
     private function getTasksWithBricks($goalId) {
