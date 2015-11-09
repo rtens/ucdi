@@ -251,9 +251,21 @@ class Application {
     }
 
     public function executeListMissedBricks() {
+        return $this->listBricks(function (BrickScheduled $brick) {
+            return !isset($this->laidBricks[$brick->getBrickId()]) && $brick->getStart() < $this->now;
+        });
+    }
+
+    public function executeListUpcomingBricks() {
+        return $this->listBricks(function (BrickScheduled $brick) {
+            return !isset($this->laidBricks[$brick->getBrickId()]) && $brick->getStart() >= $this->now;
+        });
+    }
+
+    private function listBricks(callable $filter) {
         $missedBricks = [];
         foreach ($this->bricks as $brick) {
-            if (!isset($this->laidBricks[$brick->getBrickId()]) && $brick->getStart() < $this->now) {
+            if ($filter($brick)) {
                 $missedBricks[] = [
                     'id' => $brick->getBrickId(),
                     'description' => $brick->getDescription(),
