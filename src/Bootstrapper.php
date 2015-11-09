@@ -12,6 +12,7 @@ use rtens\ucdi\es\ApplicationService;
 use rtens\ucdi\es\PersistentEventStore;
 use rtens\ucdi\es\UidGenerator;
 use watoki\curir\delivery\WebRequest;
+use watoki\curir\protocol\Url;
 use watoki\curir\WebDelivery;
 
 class Bootstrapper {
@@ -22,10 +23,10 @@ class Bootstrapper {
     /** @var string */
     private $userId;
 
-    public function __construct($userDir, $userId, Calendar $calendar) {
+    public function __construct($userDir, $userId, Url $baseUrl, Calendar $calendar) {
         $this->userId = $userId;
         $this->handler = new ApplicationService(
-            new Application(new UidGenerator(), $calendar, new \DateTimeImmutable()),
+            new Application(new UidGenerator(), $calendar, $baseUrl, new \DateTimeImmutable()),
             new PersistentEventStore($userDir . '/events.json'));
     }
 

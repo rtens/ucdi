@@ -2,10 +2,13 @@
 
 use rtens\ucdi\Bootstrapper;
 use rtens\ucdi\GoogleCalendar;
+use watoki\curir\protocol\Url;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
 session_start();
+
+$baseUrl = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'];
 
 $client = new Google_Client();
 $client->setApplicationName('U Can Do It');
@@ -30,7 +33,7 @@ if (isset($_GET['resetCalendar'])) {
 if (isset($_GET['code'])) {
     $client->authenticate($_GET['code']);
     $_SESSION['token'] = $client->getAccessToken();
-    header('Location: http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF']);
+    header('Location: ' . $baseUrl);
 }
 
 if (isset($_SESSION['token'])) {
@@ -48,5 +51,5 @@ $info = new Google_Service_Oauth2($client);
 
 $userDir = __DIR__ . '/user/' . $info->userinfo->get()->email;
 
-(new Bootstrapper($userDir, $info->userinfo->get()->email, new GoogleCalendar($cal)))
+(new Bootstrapper($userDir, $info->userinfo->get()->email, Url::fromString(dirname($baseUrl)), new GoogleCalendar($cal)))
     ->runWebApp();

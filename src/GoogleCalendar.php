@@ -29,6 +29,7 @@ class GoogleCalendar implements Calendar {
         $eventEnd = new \Google_Service_Calendar_EventDateTime();
         $eventEnd->setDateTime($end->format('c'));
         $event->setEnd($eventEnd);
+        $event->setDescription($description);
         $createdEvent = $this->service->events->insert(self::$calendarId, $event);
 
         return $createdEvent->id;

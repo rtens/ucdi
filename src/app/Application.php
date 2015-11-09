@@ -17,6 +17,7 @@ use rtens\ucdi\app\events\TaskMadeDependent;
 use rtens\ucdi\app\events\TaskMarkedCompleted;
 use rtens\ucdi\app\queries\ShowGoal;
 use rtens\ucdi\es\UidGenerator;
+use watoki\curir\protocol\Url;
 
 class Application {
 
@@ -25,6 +26,9 @@ class Application {
 
     /** @var Calendar */
     private $calendar;
+
+    /** @var \watoki\curir\protocol\Url */
+    private $base;
 
     /** @var \DateTimeImmutable */
     private $now;
@@ -40,9 +44,10 @@ class Application {
     private $achievedGoals = [];
     private $bricks = [];
 
-    public function __construct(UidGenerator $uid, Calendar $calendar, \DateTimeImmutable $now) {
+    public function __construct(UidGenerator $uid, Calendar $calendar, Url $base, \DateTimeImmutable $now) {
         $this->uid = $uid;
         $this->calendar = $calendar;
+        $this->base = $base;
         $this->now = $now;
     }
 
@@ -90,7 +95,7 @@ class Application {
             $command->getDescription(),
             $command->getStart(),
             $command->getStart()->add($command->getDuration()),
-            'Link to ' . $brickId);
+            'Mark as laid: ' . $this->base->appended('MarkBrickLaid')->withParameter('brickId', $brickId));
 
         return [
             new BrickScheduled(
