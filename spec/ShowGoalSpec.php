@@ -138,23 +138,23 @@ class ShowGoalSpec_DomainDriver extends DomainDriver {
     }
 
     public function thenThereShouldBe_Tasks($count) {
-        $this->assert->size($this->goal['tasks'], $count);
+        $this->assert->size($this->goal['incompleteTasks'], $count);
     }
 
     public function thenTask_ShouldHaveTheId($pos, $taskId) {
-        $this->assert->equals($this->goal['tasks'][$pos - 1]['id'], $taskId);
+        $this->assert->equals($this->goal['incompleteTasks'][$pos - 1]['id'], $taskId);
     }
 
     public function thenTask_ShouldHaveTheDescription($pos, $description) {
-        $this->assert->equals($this->goal['tasks'][$pos - 1]['description'], $description);
+        $this->assert->equals($this->goal['incompleteTasks'][$pos - 1]['description'], $description);
     }
 
     public function thenTask_ShouldHave_Bricks($taskPos, $brickCount) {
-        $this->assert->size($this->goal['tasks'][$taskPos - 1]['bricks'], $brickCount);
+        $this->assert->size($this->goal['incompleteTasks'][$taskPos - 1]['bricks'], $brickCount);
     }
 
     public function thenBrick_OfTask_ShouldHaveTheDescription($brickPos, $taskPos, $description) {
-        $this->assert->equals($this->goal['tasks'][$taskPos - 1]['bricks'][$brickPos - 1]['description'], $description);
+        $this->assert->equals($this->goal['incompleteTasks'][$taskPos - 1]['bricks'][$brickPos - 1]['description'], $description);
     }
 
     public function thenItShouldFailWith($message) {
