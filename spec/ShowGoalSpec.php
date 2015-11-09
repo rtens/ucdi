@@ -3,7 +3,9 @@
 use rtens\domin\parameters\Html;
 use rtens\ucdi\app\commands\AddTask;
 use rtens\ucdi\app\commands\CreateGoal;
+use rtens\ucdi\app\commands\RateGoal;
 use rtens\ucdi\app\queries\ShowGoal;
+use rtens\ucdi\app\Rating;
 use spec\rtens\ucdi\drivers\DomainDriver;
 
 /**
@@ -22,6 +24,14 @@ class ShowGoalSpec {
         $this->driver->whenIShowTheGoal('Goal-1');
         $this->driver->thenTheNameShouldBe('Foo');
         $this->driver->thenTheNotesShouldBe('Foo Notes');
+    }
+
+    function showRating() {
+        $this->driver->givenTheGoal('Foo');
+        $this->driver->givenARatingOf_And_For(2, 7, 'Goal-1');
+
+        $this->driver->whenIShowTheGoal('Goal-1');
+        $this->driver->thenTheRatingShouldBe('delegate (U7,I2)');
     }
 
     function showTasksOfGoal() {
@@ -93,6 +103,10 @@ class ShowGoalSpec_DomainDriver extends DomainDriver {
         $this->goal = $this->service->execute(new ShowGoal($goalId));
     }
 
+    public function givenARatingOf_And_For($importance, $urgency, $goalId) {
+        $this->service->handle(new RateGoal($goalId, new Rating($urgency, $importance)));
+    }
+
     public function whenITryToShowTheGoal($goalId) {
         $this->try->tryTo(function () use ($goalId) {
             $this->whenIShowTheGoal($goalId);
@@ -129,5 +143,9 @@ class ShowGoalSpec_DomainDriver extends DomainDriver {
 
     public function thenItShouldFailWith($message) {
         $this->try->thenTheException_ShouldBeThrown($message);
+    }
+
+    public function thenTheRatingShouldBe($quadrantAndNumbers) {
+        $this->assert->equals($this->goal['rating'], $quadrantAndNumbers);
     }
 }

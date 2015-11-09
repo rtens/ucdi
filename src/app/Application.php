@@ -6,6 +6,7 @@ use rtens\ucdi\app\commands\CreateGoal;
 use rtens\ucdi\app\commands\MarkBrickLaid;
 use rtens\ucdi\app\commands\MarkGoalAchieved;
 use rtens\ucdi\app\commands\MarkTaskCompleted;
+use rtens\ucdi\app\commands\RateGoal;
 use rtens\ucdi\app\commands\ScheduleBrick;
 use rtens\ucdi\app\events\BrickMarkedLaid;
 use rtens\ucdi\app\events\BrickScheduled;
@@ -13,6 +14,7 @@ use rtens\ucdi\app\events\CalendarEventInserted;
 use rtens\ucdi\app\events\GoalCreated;
 use rtens\ucdi\app\events\GoalMarkedAchieved;
 use rtens\ucdi\app\events\GoalNotesChanged;
+use rtens\ucdi\app\events\GoalRated;
 use rtens\ucdi\app\events\TaskAdded;
 use rtens\ucdi\app\events\TaskMadeDependent;
 use rtens\ucdi\app\events\TaskMarkedCompleted;
@@ -44,6 +46,7 @@ class Application {
     private $completedTasks = [];
     private $achievedGoals = [];
     private $bricks = [];
+    private $ratings = [];
 
     public function __construct(UidGenerator $uid, Calendar $calendar, Url $base, \DateTimeImmutable $now) {
         $this->uid = $uid;
@@ -62,6 +65,11 @@ class Application {
         if ($command->getNotesContent()) {
             $events[] = new GoalNotesChanged($goalId, $command->getNotesContent());
         }
+
+        if ($command->getRating()) {
+            $events[] = new GoalRated($goalId, $command->getRating());
+        }
+
         return $events;
     }
 
@@ -148,6 +156,16 @@ class Application {
         ];
     }
 
+    public function handleRateGoal(RateGoal $command) {
+        if (!isset($this->goals[$command->getGoal()])) {
+            throw new \Exception("Goal [{$command->getGoal()}] does not exist.");
+        }
+
+        return [
+            new GoalRated($command->getGoal(), $command->getRating())
+        ];
+    }
+
     public function applyGoalCreated(GoalCreated $event) {
         $this->goals[$event->getGoalId()] = [
             'id' => $event->getGoalId(),
@@ -202,9 +220,14 @@ class Application {
         $this->achievedGoals[$event->getGoalId()] = $event->getWhen()->format('Y-m-d H:i');
     }
 
+    public function applyGoalRated(GoalRated $event) {
+        $this->ratings[$event->getGoal()] = $event->getRating();
+    }
+
     public function executeListGoals() {
         return array_map(function ($goal) {
             return array_merge($goal, [
+                'rating' => isset($this->ratings[$goal['id']]) ? (string)$this->ratings[$goal['id']] : null,
                 'nextBrick' => $this->getNextBrick($goal['id'])
             ]);
         }, array_values($this->goals));
@@ -216,6 +239,7 @@ class Application {
         }
         $goalId = $query->getGoal();
         return array_merge($this->goals[$goalId], [
+            'rating' => isset($this->ratings[$goalId]) ? (string)$this->ratings[$goalId] : null,
             'notes' => isset($this->notes[$goalId]) ? new Html($this->notes[$goalId]) : null,
             'tasks' => $this->getTasksWithBricks($goalId)
         ]);

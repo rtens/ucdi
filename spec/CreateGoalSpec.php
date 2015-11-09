@@ -4,6 +4,8 @@ use rtens\domin\parameters\Html;
 use rtens\ucdi\app\commands\CreateGoal;
 use rtens\ucdi\app\events\GoalCreated;
 use rtens\ucdi\app\events\GoalNotesChanged;
+use rtens\ucdi\app\events\GoalRated;
+use rtens\ucdi\app\Rating;
 use spec\rtens\ucdi\drivers\DomainDriver;
 
 /**
@@ -21,6 +23,10 @@ class CreateGoalSpec {
         $this->driver->thenTheNotesOfTheEventShouldBeSetTo('Foo bar');
     }
 
+    function withRating() {
+        $this->driver->whenICreateAGoalWithTheRating(7, 9);
+        $this->driver->thenTheGoal_ShouldBeRatedWith_And('Goal-1', 7, 9);
+    }
 }
 
 /**
@@ -39,11 +45,19 @@ class CreateGoalSpec_DomainDriver extends DomainDriver {
         $this->assert->contains($this->events, new GoalCreated('Goal-1', $name));
     }
 
+    public function whenICreateAGoalWithTheRating($urgency, $importance) {
+        $this->events = $this->service->handle(new CreateGoal('Foo', null, new Rating($urgency, $importance)));
+    }
+
     public function whenICreateAGoalWithNotes($notes) {
         $this->events = $this->service->handle(new CreateGoal('Foo', new Html($notes)));
     }
 
     public function thenTheNotesOfTheEventShouldBeSetTo($notes) {
         $this->assert->contains($this->events, new GoalNotesChanged('Goal-1', $notes));
+    }
+
+    public function thenTheGoal_ShouldBeRatedWith_And($goalId, $urgency, $importance) {
+        $this->assert->contains($this->events, new GoalRated($goalId, new Rating($urgency, $importance)));
     }
 }

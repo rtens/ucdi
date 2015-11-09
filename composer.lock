@@ -101,12 +101,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/rtens/domin.git",
-                "reference": "2591ea8f557482a15254b9b936a8b953adf05d7c"
+                "reference": "27359ee1588c5c9a210ef5c0a4afca647610e7a8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rtens/domin/zipball/2591ea8f557482a15254b9b936a8b953adf05d7c",
-                "reference": "2591ea8f557482a15254b9b936a8b953adf05d7c",
+                "url": "https://api.github.com/repos/rtens/domin/zipball/27359ee1588c5c9a210ef5c0a4afca647610e7a8",
+                "reference": "27359ee1588c5c9a210ef5c0a4afca647610e7a8",
                 "shasum": ""
             },
             "require": {
@@ -148,7 +148,7 @@
                 "ddd",
                 "domain model"
             ],
-            "time": "2015-11-05 09:49:49"
+            "time": "2015-11-09 13:57:44"
         },
         {
             "name": "watoki/collections",
@@ -445,12 +445,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/watoki/stores.git",
-                "reference": "d1714e7569d0d58c1784a291b52054f0340b0316"
+                "reference": "203b21c02f7d697b3c09170b994c4976d4752570"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/watoki/stores/zipball/d1714e7569d0d58c1784a291b52054f0340b0316",
-                "reference": "d1714e7569d0d58c1784a291b52054f0340b0316",
+                "url": "https://api.github.com/repos/watoki/stores/zipball/203b21c02f7d697b3c09170b994c4976d4752570",
+                "reference": "203b21c02f7d697b3c09170b994c4976d4752570",
                 "shasum": ""
             },
             "require": {
@@ -488,7 +488,7 @@
                 "storage",
                 "watoki"
             ],
-            "time": "2015-11-05 21:51:02"
+            "time": "2015-11-05 21:53:49"
         }
     ],
     "packages-dev": [

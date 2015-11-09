@@ -50,6 +50,7 @@ class Bootstrapper {
         $this->addCommand($app, \rtens\ucdi\app\commands\ScheduleBrick::class);
         $this->addQuery($app, \rtens\ucdi\app\queries\ListGoals::class);
         $this->addQuery($app, \rtens\ucdi\app\queries\ShowGoal::class);
+        $this->addCommand($app, \rtens\ucdi\app\commands\RateGoal::class);
         $this->addCommand($app, \rtens\ucdi\app\commands\MarkBrickLaid::class);
         $this->addCommand($app, \rtens\ucdi\app\commands\MarkTaskCompleted::class);
         $this->addCommand($app, \rtens\ucdi\app\commands\MarkGoalAchieved::class);
