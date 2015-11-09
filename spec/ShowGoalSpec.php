@@ -3,6 +3,7 @@
 use rtens\domin\parameters\Html;
 use rtens\ucdi\app\commands\AddTask;
 use rtens\ucdi\app\commands\CreateGoal;
+use rtens\ucdi\app\commands\MarkTaskCompleted;
 use rtens\ucdi\app\commands\RateGoal;
 use rtens\ucdi\app\queries\ShowGoal;
 use rtens\ucdi\app\Rating;
@@ -44,6 +45,17 @@ class ShowGoalSpec {
         $this->driver->thenTask_ShouldHaveTheId(1, 'Task-2');
         $this->driver->thenTask_ShouldHaveTheDescription(1, 'Bar');
         $this->driver->thenTask_ShouldHaveTheDescription(2, 'Baz');
+    }
+
+    function onlyShowUncompletedTasks() {
+        $this->driver->givenTheGoal('Foo');
+        $this->driver->givenTheTask_For('Bar', 'Goal-1');
+        $this->driver->givenTheTask_For('Baz', 'Goal-1');
+        $this->driver->givenTask_IsCompleted('Task-2');
+
+        $this->driver->whenIShowTheGoal('Goal-1');
+        $this->driver->thenThereShouldBe_Tasks(1);
+        $this->driver->thenTask_ShouldHaveTheId(1, 'Task-3');
     }
 
     function showFutureBricks() {
@@ -105,6 +117,10 @@ class ShowGoalSpec_DomainDriver extends DomainDriver {
 
     public function givenARatingOf_And_For($importance, $urgency, $goalId) {
         $this->service->handle(new RateGoal($goalId, new Rating($urgency, $importance)));
+    }
+
+    public function givenTask_IsCompleted($taskId) {
+        $this->service->handle(new MarkTaskCompleted($taskId));
     }
 
     public function whenITryToShowTheGoal($goalId) {

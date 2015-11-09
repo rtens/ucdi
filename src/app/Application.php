@@ -245,7 +245,7 @@ class Application {
         return array_merge($this->goals[$goalId], [
             'rating' => isset($this->ratings[$goalId]) ? (string)$this->ratings[$goalId] : null,
             'notes' => isset($this->notes[$goalId]) ? new Html($this->notes[$goalId]) : null,
-            'tasks' => $this->getTasksWithBricks($goalId)
+            'tasks' => $this->getIncompleteTasksWithBricks($goalId)
         ]);
     }
 
@@ -306,16 +306,18 @@ class Application {
         return $next ? ($next->getDescription() . ' @' . $next->getStart()->format('Y-m-d H:i')) : null;
     }
 
-    private function getTasksWithBricks($goalId) {
+    private function getIncompleteTasksWithBricks($goalId) {
         if (!isset($this->tasksOfGoals[$goalId])) {
             return [];
         }
 
-        return array_map(function ($task) {
+        return array_values(array_map(function ($task) {
             return array_merge($task, [
                 'bricks' => $this->getBricks($task['id'])
             ]);
-        }, $this->tasksOfGoals[$goalId]);
+        }, array_filter($this->tasksOfGoals[$goalId], function ($task) {
+            return !isset($this->completedTasks[$task['id']]);
+        })));
     }
 
     private function getBricks($taskId) {
