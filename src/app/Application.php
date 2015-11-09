@@ -18,6 +18,7 @@ use rtens\ucdi\app\events\GoalRated;
 use rtens\ucdi\app\events\TaskAdded;
 use rtens\ucdi\app\events\TaskMadeDependent;
 use rtens\ucdi\app\events\TaskMarkedCompleted;
+use rtens\ucdi\app\queries\ListGoals;
 use rtens\ucdi\app\queries\ShowGoal;
 use rtens\ucdi\es\UidGenerator;
 use watoki\curir\protocol\Url;
@@ -219,13 +220,21 @@ class Application {
         $this->ratings[$event->getGoal()] = $event->getRating();
     }
 
-    public function executeListGoals() {
-        return array_map(function ($goal) {
+    public function executeListGoals(ListGoals $query) {
+        $goals = array_map(function ($goal) {
             return array_merge($goal, [
                 'rating' => isset($this->ratings[$goal['id']]) ? (string)$this->ratings[$goal['id']] : null,
                 'nextBrick' => $this->getNextBrick($goal['id'])
             ]);
         }, array_values($this->goals));
+
+        if ($query->isOnlyBrickLess()) {
+            $goals = array_filter($goals, function ($goal) {
+                return !$goal['nextBrick'];
+            });
+        }
+
+        return $goals;
     }
 
     public function executeShowGoal(ShowGoal $query) {
@@ -287,6 +296,7 @@ class Application {
                 $brick->getStart() > $this->now
                 && !isset($this->laidBricks[$brick->getBrickId()])
                 && (!$next || $brick->getStart() < $next->getStart())
+                && in_array($brick->getTaskId(), $taskIds)
             ) {
 
                 $next = $brick;

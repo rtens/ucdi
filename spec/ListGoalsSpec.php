@@ -66,6 +66,16 @@ class ListGoalsSpec {
         $this->driver->thenThereShouldBe_Goals(1);
         $this->driver->thenGoal_ShouldHaveTheNextBrick(1, 'Sixteen @2011-12-16 12:00');
     }
+
+    function onlyWithoutNextBrick() {
+        $this->driver->givenTheGoal('Foo');
+        $this->driver->givenTheTask_Of('Task Bar', 'Goal-1');
+        $this->driver->givenTheBrick_For_Scheduled('Brick Bar', 'Task-2', '5 minutes');
+        $this->driver->givenTheGoal('Bar');
+
+        $this->driver->whenIListAllGoalsWithoutANextBrick();
+        $this->driver->thenThereShouldBe_Goals(1);
+    }
 }
 
 class ListGoalsWithNextBricksSpec_DomainDriver extends DomainDriver {
@@ -74,6 +84,10 @@ class ListGoalsWithNextBricksSpec_DomainDriver extends DomainDriver {
 
     public function whenIListAllGoals() {
         $this->goals = $this->service->execute(new ListGoals());
+    }
+
+    public function whenIListAllGoalsWithoutANextBrick() {
+        $this->goals = $this->service->execute(new ListGoals(true));
     }
 
     public function givenTheGoal($name) {
@@ -87,6 +101,7 @@ class ListGoalsWithNextBricksSpec_DomainDriver extends DomainDriver {
     public function givenTheBrick_For_Scheduled($brickDescription, $taskId, $start) {
         $this->givenTheNextUidIs($brickDescription);
         $this->service->handle(new ScheduleBrick($taskId, $brickDescription, new \DateTimeImmutable($start), new \DateInterval('PT1M')));
+        $this->givenTheNextUidIs(null);
     }
 
     public function givenTheBrick_IsLaid($brickId) {
