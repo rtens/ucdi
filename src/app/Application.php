@@ -1,5 +1,6 @@
 <?php namespace rtens\ucdi\app;
 
+use rtens\domin\parameters\Html;
 use rtens\ucdi\app\commands\AddTask;
 use rtens\ucdi\app\commands\CreateGoal;
 use rtens\ucdi\app\commands\MarkBrickLaid;
@@ -58,8 +59,8 @@ class Application {
             new GoalCreated($goalId, $command->getName())
         ];
 
-        if ($command->getNotes()) {
-            $events[] = new GoalNotesChanged($goalId, $command->getNotes());
+        if ($command->getNotesContent()) {
+            $events[] = new GoalNotesChanged($goalId, $command->getNotesContent());
         }
         return $events;
     }
@@ -215,7 +216,7 @@ class Application {
         }
         $goalId = $query->getGoal();
         return array_merge($this->goals[$goalId], [
-            'notes' => isset($this->notes[$goalId]) ? $this->notes[$goalId] : null,
+            'notes' => isset($this->notes[$goalId]) ? new Html($this->notes[$goalId]) : null,
             'tasks' => $this->getTasksWithBricks($goalId)
         ]);
     }

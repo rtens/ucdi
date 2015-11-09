@@ -1,5 +1,6 @@
 <?php namespace spec\rtens\ucdi;
 
+use rtens\domin\parameters\Html;
 use rtens\ucdi\app\commands\AddTask;
 use rtens\ucdi\app\commands\CreateGoal;
 use rtens\ucdi\app\queries\ShowGoal;
@@ -73,7 +74,7 @@ class ShowGoalSpec_DomainDriver extends DomainDriver {
     private $goal;
 
     public function givenTheGoal_WithTheNotes($name, $notes) {
-        $this->service->handle(new CreateGoal($name, $notes));
+        $this->service->handle(new CreateGoal($name, new Html($notes)));
     }
 
     public function givenTheGoal($name) {
@@ -99,7 +100,7 @@ class ShowGoalSpec_DomainDriver extends DomainDriver {
     }
 
     public function thenTheNotesShouldBe($notes) {
-        $this->assert->equals($this->goal['notes'], $notes);
+        $this->assert->equals($this->goal['notes'], new Html($notes));
     }
 
     public function thenTheNameShouldBe($name) {

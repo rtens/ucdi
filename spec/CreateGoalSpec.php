@@ -1,5 +1,6 @@
 <?php namespace spec\rtens\ucdi;
 
+use rtens\domin\parameters\Html;
 use rtens\ucdi\app\commands\CreateGoal;
 use rtens\ucdi\app\events\GoalCreated;
 use rtens\ucdi\app\events\GoalNotesChanged;
@@ -39,7 +40,7 @@ class CreateGoalSpec_DomainDriver extends DomainDriver {
     }
 
     public function whenICreateAGoalWithNotes($notes) {
-        $this->events = $this->service->handle(new CreateGoal('Foo', $notes));
+        $this->events = $this->service->handle(new CreateGoal('Foo', new Html($notes)));
     }
 
     public function thenTheNotesOfTheEventShouldBeSetTo($notes) {
