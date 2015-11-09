@@ -9,7 +9,7 @@ use spec\rtens\ucdi\drivers\DomainDriver;
 /**
  * @property ListGoalsWithNextBricksSpec_DomainDriver driver <-
  */
-class ListGoalsWithNextBricksSpec {
+class ListGoalsSpec {
 
     function noGoals() {
         $this->driver->whenIListAllGoals();
