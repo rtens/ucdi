@@ -13,15 +13,16 @@ class CreateGoal {
     /** @var null|Rating  */
     private $rating;
 
+    /** @var array|string[] */
+    private $tasks = [];
+
     /**
      * @param string $name
      * @param null|\rtens\domin\parameters\Html $notes
-     * @param Rating $rating
      */
-    public function __construct($name, $notes = null, Rating $rating = null) {
+    public function __construct($name, $notes = null) {
         $this->name = $name;
         $this->notes = $notes;
-        $this->rating = $rating;
     }
 
     /**
@@ -43,6 +44,34 @@ class CreateGoal {
      */
     public function getRating() {
         return $this->rating;
+    }
+
+    /**
+     * @param null|Rating $rating
+     */
+    public function setRating($rating) {
+        $this->rating = $rating;
+    }
+
+    /**
+     * @param string $description
+     */
+    public function addTask($description) {
+        $this->tasks[] = $description;
+    }
+
+    /**
+     * @param null|array|string[] $tasks
+     */
+    public function setTasks($tasks) {
+        $this->tasks = $tasks ?: [];
+    }
+
+    /**
+     * @return array|string[]
+     */
+    public function getAllTasks() {
+        return $this->tasks;
     }
 
 }

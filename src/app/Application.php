@@ -70,6 +70,10 @@ class Application {
             $events[] = new GoalRated($goalId, $command->getRating());
         }
 
+        foreach ($command->getAllTasks() as $taskDescription) {
+            $events[] = new TaskAdded($this->uid->generate('Task'), $goalId, $taskDescription);
+        }
+
         return $events;
     }
 
