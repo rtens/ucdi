@@ -1,5 +1,8 @@
 <?php namespace rtens\ucdi\app;
 
+use rtens\domin\delivery\web\renderers\charting\charts\ScatterChart;
+use rtens\domin\delivery\web\renderers\charting\data\ScatterData;
+use rtens\domin\delivery\web\renderers\charting\data\ScatterDataPoint;
 use rtens\domin\parameters\Html;
 use rtens\ucdi\app\commands\AddTask;
 use rtens\ucdi\app\commands\CreateGoal;
@@ -45,6 +48,7 @@ class Application {
     private $laidBricks = [];
     private $completedTasks = [];
     private $achievedGoals = [];
+    /** @var array|Rating[] */
     private $ratings = [];
     /** @var array|BrickScheduled[] */
     private $bricks = [];
@@ -236,7 +240,24 @@ class Application {
             });
         }
 
+        array_unshift($goals, new ScatterChart($this->getRatingScatterData()));
+
         return $goals;
+    }
+
+    private function getRatingScatterData() {
+        $data = [
+            new ScatterData('', [
+                new ScatterDataPoint(0, 0, 0.1),
+                new ScatterDataPoint(10, 10, 0.1),
+            ])
+        ];
+        foreach ($this->ratings as $goalId => $rating) {
+            $data[] = new ScatterData($this->goals[$goalId]['name'], [
+                new ScatterDataPoint($rating->getUrgency(), $rating->getImportance(), 2)
+            ]);
+        }
+        return $data;
     }
 
     public function executeShowGoal(ShowGoal $query) {
