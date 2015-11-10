@@ -5,8 +5,10 @@ use rtens\ucdi\app\commands\CreateGoal;
 use rtens\ucdi\app\commands\MarkBrickLaid;
 use rtens\ucdi\app\commands\MarkGoalAchieved;
 use rtens\ucdi\app\commands\MarkTaskCompleted;
+use rtens\ucdi\app\commands\RateGoal;
 use rtens\ucdi\app\commands\ScheduleBrick;
 use rtens\ucdi\app\queries\ListGoals;
+use rtens\ucdi\app\Rating;
 use spec\rtens\ucdi\drivers\DomainDriver;
 
 /**
@@ -20,16 +22,16 @@ class ListGoalsSpec {
     }
 
     function goalsWithoutBricks() {
-        $this->driver->givenTheGoal('Foo');
         $this->driver->givenTheGoal('Bar');
+        $this->driver->givenTheGoal('Foo');
 
         $this->driver->whenIListAllGoals();
         $this->driver->thenThereShouldBe_Goals(2);
 
-        $this->driver->thenGOal_ShouldHaveTheName(1, 'Foo');
+        $this->driver->thenGOal_ShouldHaveTheName(1, 'Bar');
         $this->driver->thenGoal_ShouldHaveNoNextBrick(1);
 
-        $this->driver->thenGOal_ShouldHaveTheName(2, 'Bar');
+        $this->driver->thenGOal_ShouldHaveTheName(2, 'Foo');
         $this->driver->thenGoal_ShouldHaveNoNextBrick(2);
     }
 
@@ -103,6 +105,25 @@ class ListGoalsSpec {
         $this->driver->thenThereShouldBe_Goals(1);
         $this->driver->thenGOal_ShouldHave_Tasks(1, 2);
     }
+
+    function sortByQuadrant() {
+        $this->driver->givenTheGoal('One');
+        $this->driver->givenTheGoal('Four');
+        $this->driver->givenTheGoal('Three');
+        $this->driver->givenTheGoal('Two');
+
+        $this->driver->given_IsRated('Goal-1', 10, 10);
+        $this->driver->given_IsRated('Goal-2', 0, 0);
+        $this->driver->given_IsRated('Goal-3', 10, 0);
+        $this->driver->given_IsRated('Goal-4', 0, 10);
+
+        $this->driver->whenIListAllGoals();
+        $this->driver->thenThereShouldBe_Goals(4);
+        $this->driver->thenGOal_ShouldHaveTheName(1, 'One');
+        $this->driver->thenGOal_ShouldHaveTheName(2, 'Two');
+        $this->driver->thenGOal_ShouldHaveTheName(3, 'Three');
+        $this->driver->thenGOal_ShouldHaveTheName(4, 'Four');
+    }
 }
 
 class ListGoalsWithNextBricksSpec_DomainDriver extends DomainDriver {
@@ -133,6 +154,10 @@ class ListGoalsWithNextBricksSpec_DomainDriver extends DomainDriver {
 
     public function givenTask_IsMarkedCompleted($taskId) {
         $this->service->handle(new MarkTaskCompleted($taskId));
+    }
+
+    public function given_IsRated($goalId, $urgency, $importance) {
+        $this->service->handle(new RateGoal($goalId, new Rating($urgency, $importance)));
     }
 
     public function whenIListAllGoals() {
