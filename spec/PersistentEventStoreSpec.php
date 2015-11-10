@@ -82,7 +82,7 @@ class PersistentEventStoreSpec {
                     ]
                 ]
             ]
-        ]);
+        ], JSON_PRETTY_PRINT);
     }
 
     private function getEvents() {
