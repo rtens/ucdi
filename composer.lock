@@ -5,6 +5,7 @@
         "This file is @generated automatically"
     ],
     "hash": "6c7187ab62a6f013651ce46c93714a23",
+    "content-hash": "021859dcabeeb063dd142ca7517a93d3",
     "packages": [
         {
             "name": "google/apiclient",
@@ -100,12 +101,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/rtens/domin.git",
-                "reference": "b2bbec83d3adceed623c6d318fed0d54932e67f6"
+                "reference": "18a4bb577ad9549bd5b5f699cc8aca051a46fef4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rtens/domin/zipball/b2bbec83d3adceed623c6d318fed0d54932e67f6",
-                "reference": "b2bbec83d3adceed623c6d318fed0d54932e67f6",
+                "url": "https://api.github.com/repos/rtens/domin/zipball/18a4bb577ad9549bd5b5f699cc8aca051a46fef4",
+                "reference": "18a4bb577ad9549bd5b5f699cc8aca051a46fef4",
                 "shasum": ""
             },
             "require": {
@@ -147,7 +148,7 @@
                 "ddd",
                 "domain model"
             ],
-            "time": "2015-11-09 18:44:36"
+            "time": "2015-11-10 11:13:40"
         },
         {
             "name": "watoki/collections",
