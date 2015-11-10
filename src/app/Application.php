@@ -228,7 +228,10 @@ class Application {
         $goals = array_map(function ($goal) {
             return array_merge($goal, [
                 'rating' => isset($this->ratings[$goal['id']]) ? (string)$this->ratings[$goal['id']] : null,
-                'nextBrick' => $this->getNextBrick($goal['id'])
+                'nextBrick' => $this->getNextBrick($goal['id']),
+                'tasks' => array_map(function ($task) {
+                    return $task['description'];
+                }, $this->getIncompleteTasks($goal['id'])) ?: null
             ]);
         }, array_filter(array_values($this->goals), function ($goal) use ($query) {
             return $query->isAchieved() == isset($this->achievedGoals[$goal['id']]);
@@ -273,17 +276,20 @@ class Application {
     }
 
     private function getIncompleteTasksWithBricks($goalId) {
-        if (!isset($this->tasksOfGoals[$goalId])) {
-            return [];
-        }
-
         return array_values(array_map(function ($task) {
             return array_merge($task, [
                 'bricks' => $this->getBricks($task['id'])
             ]);
-        }, array_filter($this->tasksOfGoals[$goalId], function ($task) {
+        }, $this->getIncompleteTasks($goalId)));
+    }
+
+    private function getIncompleteTasks($goalId) {
+        $tasksOfGoal = isset($this->tasksOfGoals[$goalId]) ? $this->tasksOfGoals[$goalId] : [];
+
+        $incompleteTasks = array_filter($tasksOfGoal, function ($task) {
             return !isset($this->completedTasks[$task['id']]);
-        })));
+        });
+        return $incompleteTasks;
     }
 
     public function executeListMissedBricks() {

@@ -90,6 +90,16 @@ class ListGoalsSpec {
         $this->driver->whenIListAllAchievedGoals();
         $this->driver->thenThereShouldBe_Goals(1);
     }
+
+    function showTasks() {
+        $this->driver->givenTheGoal('Foo');
+        $this->driver->givenTheTask_Of('Task Foo', 'Goal-1');
+        $this->driver->givenTheTask_Of('Task Bar', 'Goal-1');
+
+        $this->driver->whenIListAllGoals();
+        $this->driver->thenThereShouldBe_Goals(1);
+        $this->driver->thenGOal_ShouldHave_Tasks(1, 2);
+    }
 }
 
 class ListGoalsWithNextBricksSpec_DomainDriver extends DomainDriver {
@@ -144,5 +154,9 @@ class ListGoalsWithNextBricksSpec_DomainDriver extends DomainDriver {
 
     public function thenGoal_ShouldHaveTheNextBrick($pos, $brickDescriptionAndStart) {
         $this->assert->equals($this->goals[$pos]['nextBrick'], $brickDescriptionAndStart);
+    }
+
+    public function thenGOal_ShouldHave_Tasks($pos, $count) {
+        $this->assert->size($this->goals[$pos]['tasks'], $count);
     }
 }
