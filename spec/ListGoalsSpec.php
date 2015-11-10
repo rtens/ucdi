@@ -4,6 +4,7 @@ use rtens\ucdi\app\commands\AddTask;
 use rtens\ucdi\app\commands\CreateGoal;
 use rtens\ucdi\app\commands\MarkBrickLaid;
 use rtens\ucdi\app\commands\MarkGoalAchieved;
+use rtens\ucdi\app\commands\MarkTaskCompleted;
 use rtens\ucdi\app\commands\ScheduleBrick;
 use rtens\ucdi\app\queries\ListGoals;
 use spec\rtens\ucdi\drivers\DomainDriver;
@@ -95,6 +96,8 @@ class ListGoalsSpec {
         $this->driver->givenTheGoal('Foo');
         $this->driver->givenTheTask_Of('Task Foo', 'Goal-1');
         $this->driver->givenTheTask_Of('Task Bar', 'Goal-1');
+        $this->driver->givenTheTask_Of('Task Baz', 'Goal-1');
+        $this->driver->givenTask_IsMarkedCompleted('Task-4');
 
         $this->driver->whenIListAllGoals();
         $this->driver->thenThereShouldBe_Goals(1);
@@ -126,6 +129,10 @@ class ListGoalsWithNextBricksSpec_DomainDriver extends DomainDriver {
 
     public function givenTheGoal_IsAchieved($goalId) {
         $this->service->handle(new MarkGoalAchieved($goalId));
+    }
+
+    public function givenTask_IsMarkedCompleted($taskId) {
+        $this->service->handle(new MarkTaskCompleted($taskId));
     }
 
     public function whenIListAllGoals() {
