@@ -111,18 +111,24 @@ class ListGoalsSpec {
         $this->driver->givenTheGoal('Four');
         $this->driver->givenTheGoal('Three');
         $this->driver->givenTheGoal('Two');
+        $this->driver->givenTheGoal('Two A');
+        $this->driver->givenTheGoal('Two B');
 
         $this->driver->given_IsRated('Goal-1', 10, 10);
         $this->driver->given_IsRated('Goal-2', 0, 0);
         $this->driver->given_IsRated('Goal-3', 10, 0);
         $this->driver->given_IsRated('Goal-4', 0, 10);
+        $this->driver->given_IsRated('Goal-5', 3, 10);
+        $this->driver->given_IsRated('Goal-6', 4, 10);
 
         $this->driver->whenIListAllGoals();
-        $this->driver->thenThereShouldBe_Goals(4);
+        $this->driver->thenThereShouldBe_Goals(6);
         $this->driver->thenGOal_ShouldHaveTheName(1, 'One');
-        $this->driver->thenGOal_ShouldHaveTheName(2, 'Two');
-        $this->driver->thenGOal_ShouldHaveTheName(3, 'Three');
-        $this->driver->thenGOal_ShouldHaveTheName(4, 'Four');
+        $this->driver->thenGOal_ShouldHaveTheName(2, 'Two B');
+        $this->driver->thenGOal_ShouldHaveTheName(3, 'Two A');
+        $this->driver->thenGOal_ShouldHaveTheName(4, 'Two');
+        $this->driver->thenGOal_ShouldHaveTheName(5, 'Three');
+        $this->driver->thenGOal_ShouldHaveTheName(6, 'Four');
     }
 }
 

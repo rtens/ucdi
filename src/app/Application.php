@@ -247,7 +247,10 @@ class Application {
             $ratingA = isset($this->ratings[$a['id']]) ? $this->ratings[$a['id']] : new Rating(0, 0);
             $ratingB = isset($this->ratings[$b['id']]) ? $this->ratings[$b['id']] : new Rating(0, 0);
             if ($ratingA->getQuadrant() == $ratingB->getQuadrant()) {
-                return strcmp($a['name'], $b['name']);
+                if ($ratingA->getUrgency() == $ratingB->getUrgency()) {
+                    return strcmp($a['name'], $b['name']);
+                }
+                return $ratingB->getUrgency() - $ratingA->getUrgency();
             }
             return $ratingA->getQuadrant() - $ratingB->getQuadrant();
         });
