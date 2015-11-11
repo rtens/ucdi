@@ -22,18 +22,11 @@ if (isset($_GET['logout'])) {
     exit();
 }
 
-if (isset($_GET['calendar'])) {
-    $_SESSION['calendar'] = $_GET['calendar'];
-}
-
-if (isset($_GET['resetCalendar'])) {
-    unset($_SESSION['calendar']);
-}
-
 if (isset($_GET['code'])) {
     $client->authenticate($_GET['code']);
     $_SESSION['token'] = $client->getAccessToken();
-    header('Location: ' . $baseUrl);
+    header('Location: ' . $_SESSION['targetUrl']);
+    exit();
 }
 
 if (isset($_SESSION['token'])) {
@@ -41,6 +34,7 @@ if (isset($_SESSION['token'])) {
 }
 
 if (!$client->getAccessToken()) {
+    $_SESSION['targetUrl'] = $_SERVER['REQUEST_URI'];
     $authUrl = $client->createAuthUrl();
     header('Location: ' . $authUrl);
     exit();
