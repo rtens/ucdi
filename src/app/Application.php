@@ -352,7 +352,7 @@ class Application {
 
         foreach ($this->bricks as $brick) {
             if (
-                $brick->getStart() > $this->now
+                $brick->getStart()->add($brick->getDuration()) > $this->now
                 && !isset($this->laidBricks[$brick->getBrickId()])
                 && (!$next || $brick->getStart() < $next->getStart())
                 && in_array($brick->getTaskId(), $taskIds)
