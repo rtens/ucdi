@@ -256,9 +256,11 @@ class Application {
             return $ratingA->getQuadrant() - $ratingB->getQuadrant();
         });
 
-        array_unshift($goals, new ScatterChart($this->getRatingScatterData()));
-
         return $goals;
+    }
+
+    public function executePlotGoals() {
+        return new ScatterChart($this->getRatingScatterData());
     }
 
     private function getRatingScatterData() {

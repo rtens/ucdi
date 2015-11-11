@@ -179,22 +179,22 @@ class ListGoalsWithNextBricksSpec_DomainDriver extends DomainDriver {
     }
 
     public function thenThereShouldBe_Goals($int) {
-        $this->assert->size($this->goals, $int + 1);
+        $this->assert->size($this->goals, $int);
     }
 
     public function thenGOal_ShouldHaveTheName($pos, $name) {
-        $this->assert->equals($this->goals[$pos]['name'], $name);
+        $this->assert->equals($this->goals[$pos - 1]['name'], $name);
     }
 
     public function thenGoal_ShouldHaveNoNextBrick($pos) {
-        $this->assert->equals($this->goals[$pos]['nextBrick'], null);
+        $this->assert->equals($this->goals[$pos - 1]['nextBrick'], null);
     }
 
     public function thenGoal_ShouldHaveTheNextBrick($pos, $brickDescriptionAndStart) {
-        $this->assert->equals($this->goals[$pos]['nextBrick'], $brickDescriptionAndStart);
+        $this->assert->equals($this->goals[$pos - 1]['nextBrick'], $brickDescriptionAndStart);
     }
 
     public function thenGOal_ShouldHave_Tasks($pos, $count) {
-        $this->assert->size($this->goals[$pos]['tasks'], $count);
+        $this->assert->size($this->goals[$pos - 1]['tasks'], $count);
     }
 }

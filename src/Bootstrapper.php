@@ -50,6 +50,7 @@ class Bootstrapper {
         $this->addCommand($app, \rtens\ucdi\app\commands\ScheduleBrick::class);
         $this->addCommand($app, \rtens\ucdi\app\commands\RateGoal::class);
         $this->addQuery($app, \rtens\ucdi\app\queries\ListGoals::class);
+        $this->addQuery($app, \rtens\ucdi\app\queries\PlotGoals::class);
         $this->addQuery($app, \rtens\ucdi\app\queries\ShowGoal::class);
         $this->addCommand($app, \rtens\ucdi\app\commands\MarkBrickLaid::class);
         $this->addCommand($app, \rtens\ucdi\app\commands\MarkTaskCompleted::class);
@@ -57,7 +58,6 @@ class Bootstrapper {
         $this->addQuery($app, \rtens\ucdi\app\queries\ListMissedBricks::class);
         $this->addQuery($app, \rtens\ucdi\app\queries\ListUpcomingBricks::class);
     }
-
 
     function addQuery(WebApplication $app, $queryClass) {
         $this->addGenericObjectAction($app, function ($query) {
