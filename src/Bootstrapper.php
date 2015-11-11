@@ -32,14 +32,8 @@ class Bootstrapper {
 
     public function runWebApp() {
         WebDelivery::quickResponse(IndexResource::class, WebApplication::init(function (WebApplication $app) {
-            $app->menu->setBrand('ucdi');
-            $app->menu->addRight((new MenuGroup($this->userId))
-                ->add(new CustomMenuItem(function (WebRequest $request) {
-                    return new Element('a',
-                        ['href' => $request->getContext()->withParameter('logout', '')],
-                        ['Logout']);
-                })));
-
+            $app->name = 'ucdi';
+            $this->configureMenu($app);
             $this->registerActions($app);
         }, WebDelivery::init()));
     }
@@ -74,5 +68,15 @@ class Bootstrapper {
     function addGenericObjectAction(WebApplication $app, callable $executer, $class) {
         $app->actions->add((new \ReflectionClass($class))->getShortName(),
             new GenericObjectAction($class, $app->types, $app->parser, $executer));
+    }
+
+    private function configureMenu(WebApplication $app) {
+        $app->menu->setBrand($app->name);
+        $app->menu->addRight((new MenuGroup($this->userId))
+            ->add(new CustomMenuItem(function (WebRequest $request) {
+                return new Element('a',
+                    ['href' => $request->getContext()->withParameter('logout', '')],
+                    ['Logout']);
+            })));
     }
 }
