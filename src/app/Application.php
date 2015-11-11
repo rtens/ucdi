@@ -1,8 +1,9 @@
 <?php namespace rtens\ucdi\app;
 
 use rtens\domin\delivery\web\renderers\charting\charts\ScatterChart;
-use rtens\domin\delivery\web\renderers\charting\data\ScatterData;
 use rtens\domin\delivery\web\renderers\charting\data\ScatterDataPoint;
+use rtens\domin\delivery\web\renderers\charting\data\ScatterDataSet;
+use rtens\domin\parameters\Color;
 use rtens\domin\parameters\Html;
 use rtens\ucdi\app\commands\AddTask;
 use rtens\ucdi\app\commands\CreateGoal;
@@ -262,15 +263,18 @@ class Application {
 
     private function getRatingScatterData() {
         $data = [
-            new ScatterData('', [
+            new ScatterDataSet([
                 new ScatterDataPoint(0, 0, 0.1),
                 new ScatterDataPoint(10, 10, 0.1),
-            ])
+            ], '', Color::fromHex('#ffffff'))
         ];
         foreach ($this->ratings as $goalId => $rating) {
-            $data[] = new ScatterData($this->goals[$goalId]['name'], [
-                new ScatterDataPoint($rating->getUrgency(), $rating->getImportance(), 2)
-            ]);
+            $data[] = new ScatterDataSet(
+                [
+                    new ScatterDataPoint($rating->getUrgency(), $rating->getImportance(), 2)
+                ],
+                $this->goals[$goalId]['name'],
+                $this->getNextBrick($goalId) ? Color::GREEN() : Color::RED());
         }
         return $data;
     }
