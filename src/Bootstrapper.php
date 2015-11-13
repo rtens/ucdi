@@ -39,6 +39,8 @@ class Bootstrapper {
     }
 
     private function registerActions(WebApplication $app) {
+        $this->addQuery($app, \rtens\ucdi\app\queries\ShowDashboard::class);
+        $this->addQuery($app, \rtens\ucdi\app\queries\ShowBrickStatistics::class);
         $this->addCommand($app, \rtens\ucdi\app\commands\CreateGoal::class);
         $this->addCommand($app, \rtens\ucdi\app\commands\AddTask::class);
         $this->addCommand($app, \rtens\ucdi\app\commands\ScheduleBrick::class);

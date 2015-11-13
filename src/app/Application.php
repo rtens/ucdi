@@ -3,6 +3,10 @@
 use rtens\domin\delivery\web\renderers\charting\charts\ScatterChart;
 use rtens\domin\delivery\web\renderers\charting\data\ScatterDataPoint;
 use rtens\domin\delivery\web\renderers\charting\data\ScatterDataSet;
+use rtens\domin\delivery\web\renderers\dashboard\ActionPanel;
+use rtens\domin\delivery\web\renderers\dashboard\Column;
+use rtens\domin\delivery\web\renderers\dashboard\Dashboard;
+use rtens\domin\delivery\web\renderers\dashboard\Row;
 use rtens\domin\parameters\Color;
 use rtens\domin\parameters\Html;
 use rtens\ucdi\app\commands\AddTask;
@@ -322,11 +326,55 @@ class Application {
         });
     }
 
-    private function listBricks(callable $filter) {
-        $missedBricks = [];
+    public function executeShowBrickStatistics() {
+        $current = 0;
+        $longest = 0;
+
+        $bricks = $this->listBricks(function (BrickScheduled $brick) {
+            return $brick->getStart()->add($brick->getDuration()) < $this->now;
+        });
+
+        foreach ($bricks as $brick) {
+            if (isset($this->laidBricks[$brick['id']])) {
+                $current++;
+            } else {
+                $current = 0;
+            }
+
+            if ($current > $longest) {
+                $longest = $current;
+            }
+        }
+
+        return [
+            'total' => count($bricks),
+            'laid' => count($this->laidBricks),
+            'currentStreak' => $current,
+            'longestStreak' => $longest
+        ];
+    }
+
+    public function executeShowDashboard() {
+        return new Dashboard([
+            new Row([
+                new Column([
+                    new ActionPanel('PlotGoals'),
+                    new ActionPanel('ListGoals', ['onlyBrickLess' => true]),
+                ], 6),
+                new Column([
+                    new ActionPanel('ShowBrickStatistics'),
+                    new ActionPanel('ListMissedBricks'),
+                    new ActionPanel('ListUpcomingBricks'),
+                ], 6),
+            ]),
+        ]);
+    }
+
+    private function listBricks(callable $filter = null) {
+        $bricks = [];
         foreach ($this->bricks as $brick) {
-            if ($filter($brick)) {
-                $missedBricks[] = [
+            if (!$filter || $filter($brick)) {
+                $bricks[] = [
                     'id' => $brick->getBrickId(),
                     'description' => $brick->getDescription(),
                     'start' => $brick->getStart()->format('Y-m-d H:i')
@@ -334,11 +382,11 @@ class Application {
             }
         }
 
-        usort($missedBricks, function ($a, $b) {
+        usort($bricks, function ($a, $b) {
             return strcmp($a['start'], $b['start']);
         });
 
-        return $missedBricks;
+        return $bricks;
     }
 
     private function getNextBrick($goalId) {
