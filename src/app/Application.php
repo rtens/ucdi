@@ -367,12 +367,14 @@ class Application {
             new Row([
                 new Column([
                     new ActionPanel('PlotGoals'),
-                    new ActionPanel('ListGoals', ['onlyBrickLess' => true]),
+                    (new ActionPanel('ListGoals', ['onlyBrickLess' => true]))
+                        ->setMaxHeight('40em'),
                 ], 6),
                 new Column([
                     new ActionPanel('ShowBrickStatistics'),
                     new ActionPanel('ListMissedBricks'),
-                    new ActionPanel('ListUpcomingBricks'),
+                    (new ActionPanel('ListUpcomingBricks'))
+                        ->setMaxHeight('40em'),
                 ], 6),
             ]),
         ]);
