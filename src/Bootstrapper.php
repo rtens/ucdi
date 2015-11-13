@@ -3,6 +3,8 @@
 use rtens\domin\delivery\web\Element;
 use rtens\domin\delivery\web\menu\CustomMenuItem;
 use rtens\domin\delivery\web\menu\MenuGroup;
+use rtens\domin\delivery\web\renderers\link\types\GenericLink;
+use rtens\domin\delivery\web\renderers\tables\types\ArrayTable;
 use rtens\domin\delivery\web\root\IndexResource;
 use rtens\domin\delivery\web\WebApplication;
 use rtens\domin\reflection\GenericObjectAction;
@@ -35,6 +37,26 @@ class Bootstrapper {
             $app->name = 'ucdi';
             $this->configureMenu($app);
             $this->registerActions($app);
+
+            $is = function ($type) {
+                return function ($item) use ($type) {
+                    return is_array($item) && isset($item['id']) && substr($item['id'], 0, strlen($type)) == $type;
+                };
+            };
+            $set = function ($key) {
+                return function ($item) use ($key) {
+                    return [$key => $item['id']];
+                };
+            };
+
+            $app->links->add(new GenericLink('RateGoal', $is('Goal'), $set('goal')));
+            $app->links->add(new GenericLink('ShowGoal', $is('Goal'), $set('goal')));
+            $app->links->add(new GenericLink('AddTask', $is('Goal'), $set('goal')));
+            $app->links->add(new GenericLink('MarkGoalAchieved', $is('Goal'), $set('goal')));
+            $app->links->add(new GenericLink('ScheduleBrick', $is('Task'), $set('task')));
+            $app->links->add(new GenericLink('MarkTaskCompleted', $is('Task'), $set('task')));
+            $app->links->add(new GenericLink('ShowGoalOfBrick', $is('Brick'), $set('brick')));
+            $app->links->add(new GenericLink('MarkBrickLaid', $is('Brick'), $set('brick')));
         }, WebDelivery::init()));
     }
 
@@ -45,31 +67,57 @@ class Bootstrapper {
         $this->addCommand($app, \rtens\ucdi\app\commands\AddTask::class);
         $this->addCommand($app, \rtens\ucdi\app\commands\ScheduleBrick::class);
         $this->addCommand($app, \rtens\ucdi\app\commands\RateGoal::class);
-        $this->addQuery($app, \rtens\ucdi\app\queries\ListGoals::class);
+        $this->addQuery($app, \rtens\ucdi\app\queries\ListGoals::class)
+            ->setAfterExecute(function ($goals) {
+                return (new ArrayTable($goals))
+                    ->selectColumns(['name', 'rating', 'nextBrick', 'tasks'])
+                    ->setFilter('tasks', function ($tasks) {
+                        return $tasks ? new Element('span', ['title' => implode("\n", $tasks)], [count($tasks)]) : '';
+                    });
+            });
         $this->addQuery($app, \rtens\ucdi\app\queries\PlotGoals::class);
-        $this->addQuery($app, \rtens\ucdi\app\queries\ShowGoal::class);
+        $this->addQuery($app, \rtens\ucdi\app\queries\ShowGoalOfBrick::class);
+        $this->addQuery($app, \rtens\ucdi\app\queries\ShowGoal::class)
+            ->setAfterExecute(function ($goal) {
+                $goal['incompleteTasks'] = array_map(function ($task) {
+                    $task['bricks'] = (new ArrayTable($task['bricks']))
+                        ->selectColumns(['description', 'start', 'duration']);
+                    return $task;
+                }, $goal['incompleteTasks']);
+
+                return $goal;
+            });
         $this->addCommand($app, \rtens\ucdi\app\commands\MarkBrickLaid::class);
         $this->addCommand($app, \rtens\ucdi\app\commands\MarkTaskCompleted::class);
         $this->addCommand($app, \rtens\ucdi\app\commands\MarkGoalAchieved::class);
-        $this->addQuery($app, \rtens\ucdi\app\queries\ListMissedBricks::class);
-        $this->addQuery($app, \rtens\ucdi\app\queries\ListUpcomingBricks::class);
+        $this->addQuery($app, \rtens\ucdi\app\queries\ListMissedBricks::class)
+            ->setAfterExecute(function ($bricks) {
+                return (new ArrayTable($bricks))
+                    ->selectColumns(['description', 'start']);
+            });
+        $this->addQuery($app, \rtens\ucdi\app\queries\ListUpcomingBricks::class)
+        ->setAfterExecute(function ($bricks) {
+            return (new ArrayTable($bricks))
+                ->selectColumns(['description', 'start']);
+        });
     }
 
     function addQuery(WebApplication $app, $queryClass) {
-        $this->addGenericObjectAction($app, function ($query) {
+        return $this->addGenericObjectAction($app, function ($query) {
             return $this->handler->execute($query);
         }, $queryClass);
     }
 
     function addCommand(WebApplication $app, $commandClass) {
-        $this->addGenericObjectAction($app, function ($command) {
+        return $this->addGenericObjectAction($app, function ($command) {
             return $this->handler->handle($command);
         }, $commandClass);
     }
 
     function addGenericObjectAction(WebApplication $app, callable $executer, $class) {
-        $app->actions->add((new \ReflectionClass($class))->getShortName(),
-            new GenericObjectAction($class, $app->types, $app->parser, $executer));
+        $action = new GenericObjectAction($class, $app->types, $app->parser, $executer);
+        $app->actions->add((new \ReflectionClass($class))->getShortName(), $action);
+        return $action;
     }
 
     private function configureMenu(WebApplication $app) {

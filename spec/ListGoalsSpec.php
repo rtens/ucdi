@@ -8,7 +8,7 @@ use rtens\ucdi\app\commands\MarkTaskCompleted;
 use rtens\ucdi\app\commands\RateGoal;
 use rtens\ucdi\app\commands\ScheduleBrick;
 use rtens\ucdi\app\queries\ListGoals;
-use rtens\ucdi\app\Rating;
+use rtens\ucdi\app\model\Rating;
 use spec\rtens\ucdi\drivers\DomainDriver;
 
 /**

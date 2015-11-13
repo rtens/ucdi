@@ -1,6 +1,6 @@
 <?php namespace rtens\ucdi\app\commands;
 
-use rtens\ucdi\app\Rating;
+use rtens\ucdi\app\model\Rating;
 
 class RateGoal {
 

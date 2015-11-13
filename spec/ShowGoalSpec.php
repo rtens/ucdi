@@ -6,7 +6,7 @@ use rtens\ucdi\app\commands\CreateGoal;
 use rtens\ucdi\app\commands\MarkTaskCompleted;
 use rtens\ucdi\app\commands\RateGoal;
 use rtens\ucdi\app\queries\ShowGoal;
-use rtens\ucdi\app\Rating;
+use rtens\ucdi\app\model\Rating;
 use spec\rtens\ucdi\drivers\DomainDriver;
 
 /**

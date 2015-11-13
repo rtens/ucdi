@@ -3,10 +3,11 @@
 use rtens\domin\delivery\web\renderers\charting\charts\ScatterChart;
 use rtens\domin\delivery\web\renderers\charting\data\ScatterDataPoint;
 use rtens\domin\delivery\web\renderers\charting\data\ScatterDataSet;
-use rtens\domin\delivery\web\renderers\dashboard\ActionPanel;
-use rtens\domin\delivery\web\renderers\dashboard\Column;
-use rtens\domin\delivery\web\renderers\dashboard\Dashboard;
-use rtens\domin\delivery\web\renderers\dashboard\Row;
+use rtens\domin\delivery\web\renderers\dashboard\types\ActionPanel;
+use rtens\domin\delivery\web\renderers\dashboard\types\Column;
+use rtens\domin\delivery\web\renderers\dashboard\types\Dashboard;
+use rtens\domin\delivery\web\renderers\dashboard\types\Row;
+use rtens\domin\execution\RedirectResult;
 use rtens\domin\parameters\Color;
 use rtens\domin\parameters\Html;
 use rtens\ucdi\app\commands\AddTask;
@@ -26,8 +27,10 @@ use rtens\ucdi\app\events\GoalRated;
 use rtens\ucdi\app\events\TaskAdded;
 use rtens\ucdi\app\events\TaskMadeDependent;
 use rtens\ucdi\app\events\TaskMarkedCompleted;
+use rtens\ucdi\app\model\Rating;
 use rtens\ucdi\app\queries\ListGoals;
 use rtens\ucdi\app\queries\ShowGoal;
+use rtens\ucdi\app\queries\ShowGoalOfBrick;
 use rtens\ucdi\es\UidGenerator;
 use watoki\curir\protocol\Url;
 
@@ -198,6 +201,7 @@ class Application {
     public function applyBrickScheduled(BrickScheduled $event) {
         $this->bricks[$event->getBrickId()] = $event;
         $this->bricksOfTasks[$event->getTaskId()][] = [
+            'id' => $event->getBrickId(),
             'description' => $event->getDescription(),
             'start' => $event->getStart()->format('Y-m-d H:i'),
             'duration' => $event->getDuration()->format('%H:%I'),
@@ -230,7 +234,7 @@ class Application {
     }
 
     public function executeListGoals(ListGoals $query) {
-        $goals = array_map(function ($goal) {
+        $goals = array_map(function ($goal) use ($query) {
             return array_merge($goal, [
                 'rating' => isset($this->ratings[$goal['id']]) ? (string)$this->ratings[$goal['id']] : null,
                 'nextBrick' => $this->getNextBrick($goal['id']),
@@ -246,6 +250,10 @@ class Application {
             $goals = array_filter($goals, function ($goal) {
                 return !$goal['nextBrick'];
             });
+            $goals = array_map(function ($goal) {
+                unset($goal['nextBrick']);
+                return $goal;
+            }, $goals);
         }
 
         usort($goals, function ($a, $b) {
@@ -291,6 +299,12 @@ class Application {
                 $this->getNextBrick($goalId) ? Color::GREEN() : Color::RED());
         }
         return $data;
+    }
+
+    public function executeShowGoalOfBrick(ShowGoalOfBrick $query) {
+        $taskId = $this->bricks[$query->getBrick()]->getTaskId();
+        $goalId = $this->goalOfTask[$taskId];
+        return new RedirectResult('ShowGoal', ['goal' => $goalId]);
     }
 
     public function executeShowGoal(ShowGoal $query) {

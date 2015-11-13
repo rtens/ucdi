@@ -1,4 +1,4 @@
-<?php namespace rtens\ucdi\app;
+<?php namespace rtens\ucdi\app\model;
 
 class Rating {
 

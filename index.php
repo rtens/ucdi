@@ -44,9 +44,11 @@ $cal = new Google_Service_Calendar($client);
 $info = new Google_Service_Oauth2($client);
 
 try {
-    $userDir = __DIR__ . '/user/' . $info->userinfo->get()->email;
+    $userId = $info->userinfo->get()->email;
+    $calendar = new GoogleCalendar($cal);
 
-    (new Bootstrapper($userDir, $info->userinfo->get()->email, Url::fromString(dirname($baseUrl)), new GoogleCalendar($cal)))
+    $userDir = __DIR__ . '/user/' . $userId;
+    (new Bootstrapper($userDir, $userId, Url::fromString(dirname($baseUrl)), $calendar))
         ->runWebApp();
 } catch (Google_Auth_Exception $e) {
     unset($_SESSION['token']);

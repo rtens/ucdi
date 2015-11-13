@@ -6,7 +6,7 @@ use rtens\ucdi\app\events\GoalCreated;
 use rtens\ucdi\app\events\GoalNotesChanged;
 use rtens\ucdi\app\events\GoalRated;
 use rtens\ucdi\app\events\TaskAdded;
-use rtens\ucdi\app\Rating;
+use rtens\ucdi\app\model\Rating;
 use spec\rtens\ucdi\drivers\DomainDriver;
 
 /**
