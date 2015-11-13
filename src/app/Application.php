@@ -274,7 +274,15 @@ class Application {
                 new ScatterDataPoint(10, 10, 0.1),
             ], '', Color::fromHex('#ffffff'))
         ];
-        foreach ($this->ratings as $goalId => $rating) {
+        foreach ($this->goals as $goalId => $goal) {
+            if (isset($this->achievedGoals[$goalId])) {
+                continue;
+            } else if (isset($this->ratings[$goalId])) {
+                $rating = $this->ratings[$goalId];
+            } else {
+                $rating = new Rating(0, 0);
+            }
+
             $data[] = new ScatterDataSet(
                 [
                     new ScatterDataPoint($rating->getUrgency(), $rating->getImportance(), 2)
