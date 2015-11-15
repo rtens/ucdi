@@ -1,6 +1,7 @@
 <?php namespace rtens\ucdi;
 
 use rtens\domin\delivery\web\Element;
+use rtens\domin\delivery\web\menu\ActionMenuItem;
 use rtens\domin\delivery\web\menu\CustomMenuItem;
 use rtens\domin\delivery\web\menu\MenuGroup;
 use rtens\domin\delivery\web\renderers\link\types\GenericLink;
@@ -37,26 +38,7 @@ class Bootstrapper {
             $app->name = 'ucdi';
             $this->configureMenu($app);
             $this->registerActions($app);
-
-            $is = function ($type) {
-                return function ($item) use ($type) {
-                    return is_array($item) && isset($item['id']) && substr($item['id'], 0, strlen($type)) == $type;
-                };
-            };
-            $set = function ($key) {
-                return function ($item) use ($key) {
-                    return [$key => $item['id']];
-                };
-            };
-
-            $app->links->add(new GenericLink('RateGoal', $is('Goal'), $set('goal')));
-            $app->links->add(new GenericLink('ShowGoal', $is('Goal'), $set('goal')));
-            $app->links->add(new GenericLink('AddTask', $is('Goal'), $set('goal')));
-            $app->links->add(new GenericLink('MarkGoalAchieved', $is('Goal'), $set('goal')));
-            $app->links->add(new GenericLink('ScheduleBrick', $is('Task'), $set('task')));
-            $app->links->add(new GenericLink('MarkTaskCompleted', $is('Task'), $set('task')));
-            $app->links->add(new GenericLink('ShowGoalOfBrick', $is('Brick'), $set('brick')));
-            $app->links->add(new GenericLink('MarkBrickLaid', $is('Brick'), $set('brick')));
+            $this->registerLinks($app);
         }, WebDelivery::init()));
     }
 
@@ -96,10 +78,10 @@ class Bootstrapper {
                     ->selectColumns(['description', 'start']);
             });
         $this->addQuery($app, \rtens\ucdi\app\queries\ListUpcomingBricks::class)
-        ->setAfterExecute(function ($bricks) {
-            return (new ArrayTable($bricks))
-                ->selectColumns(['description', 'start']);
-        });
+            ->setAfterExecute(function ($bricks) {
+                return (new ArrayTable($bricks))
+                    ->selectColumns(['description', 'start']);
+            });
     }
 
     function addQuery(WebApplication $app, $queryClass) {
@@ -128,5 +110,30 @@ class Bootstrapper {
                     ['href' => $request->getContext()->withParameter('logout', '')],
                     ['Logout']);
             })));
+
+        $app->menu->add(new ActionMenuItem($app->actions, 'ShowDashboard'));
+        $app->menu->add(new ActionMenuItem($app->actions, 'CreateGoal'));
+    }
+
+    private function registerLinks(WebApplication $app) {
+        $is = function ($type) {
+            return function ($item) use ($type) {
+                return is_array($item) && isset($item['id']) && substr($item['id'], 0, strlen($type)) == $type;
+            };
+        };
+        $set = function ($key) {
+            return function ($item) use ($key) {
+                return [$key => $item['id']];
+            };
+        };
+
+        $app->links->add(new GenericLink('RateGoal', $is('Goal'), $set('goal')));
+        $app->links->add(new GenericLink('ShowGoal', $is('Goal'), $set('goal')));
+        $app->links->add(new GenericLink('AddTask', $is('Goal'), $set('goal')));
+        $app->links->add(new GenericLink('MarkGoalAchieved', $is('Goal'), $set('goal')));
+        $app->links->add(new GenericLink('ScheduleBrick', $is('Task'), $set('task')));
+        $app->links->add(new GenericLink('MarkTaskCompleted', $is('Task'), $set('task')));
+        $app->links->add(new GenericLink('ShowGoalOfBrick', $is('Brick'), $set('brick')));
+        $app->links->add(new GenericLink('MarkBrickLaid', $is('Brick'), $set('brick')));
     }
 }
