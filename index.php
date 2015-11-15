@@ -25,7 +25,7 @@ if (isset($_GET['logout'])) {
 if (isset($_GET['code'])) {
     $client->authenticate($_GET['code']);
     $_SESSION['token'] = $client->getAccessToken();
-    header('Location: ' . $_SESSION['targetUrl']);
+    header('Location: ' . ($_SESSION['targetUrl'] ?: '/'));
     exit();
 }
 
