@@ -29,6 +29,7 @@ use rtens\ucdi\app\events\TaskMadeDependent;
 use rtens\ucdi\app\events\TaskMarkedCompleted;
 use rtens\ucdi\app\model\Rating;
 use rtens\ucdi\app\queries\ListGoals;
+use rtens\ucdi\app\queries\ListMissedBricks;
 use rtens\ucdi\app\queries\ShowGoal;
 use rtens\ucdi\app\queries\ShowGoalOfBrick;
 use rtens\ucdi\es\UidGenerator;
@@ -336,9 +337,11 @@ class Application {
         return $incompleteTasks;
     }
 
-    public function executeListMissedBricks() {
-        return $this->listBricks(function (BrickScheduled $brick) {
-            return !isset($this->laidBricks[$brick->getBrickId()]) && $brick->getStart() < $this->now;
+    public function executeListMissedBricks(ListMissedBricks $query) {
+        return $this->listBricks(function (BrickScheduled $brick) use ($query) {
+            return !isset($this->laidBricks[$brick->getBrickId()])
+            && $brick->getStart() < $this->now
+                && (!$query->getMaxAge() || $brick->getStart()->add($query->getMaxAge()) >= $this->now);
         });
     }
 
@@ -386,7 +389,7 @@ class Application {
                 ], 6),
                 new Column([
                     new ActionPanel('ShowBrickStatistics'),
-                    new ActionPanel('ListMissedBricks'),
+                    new ActionPanel('ListMissedBricks', ['maxAge' => ['h' => 24]]),
                     (new ActionPanel('ListUpcomingBricks'))
                         ->setMaxHeight('20em'),
                 ], 6),

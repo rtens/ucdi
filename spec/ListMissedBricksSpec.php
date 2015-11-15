@@ -38,6 +38,16 @@ class ListMissedBricksSpec {
         $this->driver->thenBrick_ShouldBe(2, 'Five');
         $this->driver->thenBrick_ShouldBe(3, 'Seven');
     }
+
+    function restrictTimeFrame() {
+        $this->driver->givenABrick_ScheduledIn('one', '59 hour');
+        $this->driver->givenABrick_ScheduledIn('three', '1 hour');
+
+        $this->driver->givenNowIs('25 hours');
+        $this->driver->whenIListMissedBricksOfTheLast_Hours(24);
+        $this->driver->thenThereShouldBe_Bricks(1);
+        $this->driver->thenBrick_ShouldBe(1, 'three');
+    }
 }
 
 class ListMissedBricksSpec_DomainDriver extends DomainDriver {
@@ -59,6 +69,10 @@ class ListMissedBricksSpec_DomainDriver extends DomainDriver {
 
     public function whenIListMissedBricks() {
         $this->bricks = $this->service->execute(new ListMissedBricks());
+    }
+
+    public function whenIListMissedBricksOfTheLast_Hours($int) {
+        $this->bricks = $this->service->execute(new ListMissedBricks(new \DateInterval("PT{$int}H")));
     }
 
     public function thenThereShouldBe_Bricks($count) {
