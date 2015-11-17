@@ -127,8 +127,8 @@ class Bootstrapper {
             };
         };
 
-        $app->links->add(new GenericLink('RateGoal', $is('Goal'), $set('goal')));
         $app->links->add(new GenericLink('ShowGoal', $is('Goal'), $set('goal')));
+        $app->links->add(new GenericLink('RateGoal', $is('Goal'), $set('goal')));
         $app->links->add(new GenericLink('AddTask', $is('Goal'), $set('goal')));
         $app->links->add(new GenericLink('MarkGoalAchieved', $is('Goal'), $set('goal')));
         $app->links->add(new GenericLink('ScheduleBrick', $is('Task'), $set('task')));
