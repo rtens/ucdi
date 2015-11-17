@@ -80,7 +80,10 @@ class Bootstrapper {
         $this->addQuery($app, \rtens\ucdi\app\queries\ListUpcomingBricks::class)
             ->setAfterExecute(function ($bricks) {
                 return (new ArrayTable($bricks))
-                    ->selectColumns(['description', 'start']);
+                    ->selectColumns(['description', 'start'])
+                    ->setFilter('start', function ($start) {
+                        return self::toRelative(new \DateTimeImmutable($start));
+                    });
             });
     }
 
@@ -135,5 +138,44 @@ class Bootstrapper {
         $app->links->add(new GenericLink('MarkTaskCompleted', $is('Task'), $set('task')));
         $app->links->add(new GenericLink('ShowGoalOfBrick', $is('Brick'), $set('brick')));
         $app->links->add(new GenericLink('MarkBrickLaid', $is('Brick'), $set('brick')));
+    }
+
+    private static function toRelative(\DateTimeInterface $dateTime, \DateTimeInterface $now = null) {
+        $now = $now ?: new \DateTimeImmutable();
+
+        if ($dateTime == $now) {
+            return 'now';
+        }
+
+        $diff = $dateTime->diff($now);
+
+        if ($dateTime->format('Y-m-d') != $now->format('Y-m-d')) {
+            $days = (new \DateTime($dateTime->format('Y-m-d')))->diff(new \DateTime($now->format('Y-m-d')))->days;
+
+            if ($days == 1) {
+                $daysString = 'tomorrow';
+            } else {
+                $daysString = 'in ' . $days. ' days';
+            }
+
+            return $daysString . ' at ' . $dateTime->format('H:i');
+        }
+
+        $times = [];
+        foreach ([
+                     'hour' => $diff->h,
+                     'minute' => $diff->i,
+                     'second' => $diff->s
+                 ] as $unit => $value) {
+            if ($value) {
+                $times[] = $value . ' ' . $unit . ($value == 1 ? '' : 's');
+            }
+
+            if (count($times) >= 2) {
+                break;
+            }
+        }
+
+        return 'in ' . implode(', ', $times);
     }
 }
