@@ -320,12 +320,20 @@ class Application {
                 $rating = new Rating(0, 0);
             }
 
+            if (!$this->getIncompleteTasks($goalId)) {
+                $color = Color::PURPLE();
+            } else if (!$this->getNextBrick($goalId)) {
+                $color = Color::RED();
+            } else {
+                $color = Color::GREEN();
+            }
+
             $data[] = new ScatterDataSet(
                 [
                     new ScatterDataPoint($rating->getUrgency(), $rating->getImportance(), 2)
                 ],
                 $this->goals[$goalId]['name'],
-                $this->getNextBrick($goalId) ? Color::GREEN() : Color::RED());
+                $color);
         }
         return $data;
     }
