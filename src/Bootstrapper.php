@@ -153,12 +153,14 @@ class Bootstrapper {
             $days = (new \DateTime($dateTime->format('Y-m-d')))->diff(new \DateTime($now->format('Y-m-d')))->days;
 
             if ($days == 1) {
-                $daysString = 'tomorrow';
+                $dayString = 'tomorrow';
+            } else if ($days < 7) {
+                $dayString = $dateTime->format('l');
             } else {
-                $daysString = 'in ' . $days. ' days';
+                $dayString = $dateTime->format('Y-m-d');
             }
 
-            return $daysString . ' at ' . $dateTime->format('H:i');
+            return $dayString . ' at ' . $dateTime->format('H:i');
         }
 
         $times = [];
@@ -169,10 +171,6 @@ class Bootstrapper {
                  ] as $unit => $value) {
             if ($value) {
                 $times[] = $value . ' ' . $unit . ($value == 1 ? '' : 's');
-            }
-
-            if (count($times) >= 2) {
-                break;
             }
         }
 
