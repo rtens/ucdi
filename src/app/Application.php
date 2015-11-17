@@ -462,6 +462,7 @@ class Application {
             if (
                 $brick->getStart()->add($brick->getDuration()) > $this->now
                 && !isset($this->laidBricks[$brick->getBrickId()])
+                && !isset($this->cancelledBricks[$brick->getBrickId()])
                 && (!$next || $brick->getStart() < $next->getStart())
                 && in_array($brick->getTaskId(), $taskIds)
             ) {

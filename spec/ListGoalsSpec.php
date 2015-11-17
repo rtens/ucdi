@@ -35,12 +35,23 @@ class ListGoalsSpec {
         $this->driver->thenGoal_ShouldHaveNoNextBrick(2);
     }
 
-    function expiredBrick() {
+    function missedBrickDoesNotCount() {
         $this->driver->givenTheGoal('Foo');
         $this->driver->givenTheTask_Of('My Task', 'Goal-1');
         $this->driver->givenTheBrick_For_Scheduled('My Brick', 'Task-2', 'tomorrow 12:00');
 
         $this->driver->givenNowIs('tomorrow 12:01');
+        $this->driver->whenIListAllGoals();
+        $this->driver->thenThereShouldBe_Goals(1);
+        $this->driver->thenGoal_ShouldHaveNoNextBrick(1);
+    }
+
+    function cancelledBrickDoesNotCount() {
+        $this->driver->givenTheGoal('Foo');
+        $this->driver->givenTheTask_Of('My Task', 'Goal-1');
+        $this->driver->givenTheBrick_For_Scheduled('Foo', 'Task-2', '1 hour');
+        $this->driver->givenTask_IsMarkedCompleted('Task-2');
+
         $this->driver->whenIListAllGoals();
         $this->driver->thenThereShouldBe_Goals(1);
         $this->driver->thenGoal_ShouldHaveNoNextBrick(1);
