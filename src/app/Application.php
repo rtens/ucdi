@@ -125,7 +125,7 @@ class Application {
             $command->getDescription(),
             $command->getStart(),
             $command->getStart()->add($command->getDuration()),
-            'Mark as laid: ' . $this->base->appended('MarkBrickLaid')->withParameter('brickId', $brickId));
+            'Mark as laid: ' . $this->base->appended('MarkBrickLaid')->withParameter('brick', $brickId));
 
         return [
             new BrickScheduled(
@@ -139,18 +139,18 @@ class Application {
     }
 
     public function handleMarkBrickLaid(MarkBrickLaid $command) {
-        if (!isset($this->bricks[$command->getBrickId()])) {
-            throw new \Exception("Brick [{$command->getBrickId()}] does not exist.");
+        if (!isset($this->bricks[$command->getBrick()])) {
+            throw new \Exception("Brick [{$command->getBrick()}] does not exist.");
         }
-        if (isset($this->laidBricks[$command->getBrickId()])) {
-            $when = $this->laidBricks[$command->getBrickId()];
-            throw new \Exception("Brick [{$command->getBrickId()}] was already laid [$when].");
+        if (isset($this->laidBricks[$command->getBrick()])) {
+            $when = $this->laidBricks[$command->getBrick()];
+            throw new \Exception("Brick [{$command->getBrick()}] was already laid [$when].");
         }
 
-        $this->calendar->deleteEvent($this->calendarEventIds[$command->getBrickId()]);
+        $this->calendar->deleteEvent($this->calendarEventIds[$command->getBrick()]);
 
         return [
-            new BrickMarkedLaid($command->getBrickId(), $this->now)
+            new BrickMarkedLaid($command->getBrick(), $this->now)
         ];
     }
 

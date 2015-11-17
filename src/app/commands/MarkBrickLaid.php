@@ -3,20 +3,20 @@
 class MarkBrickLaid {
 
     /** @var string */
-    private $brickId;
+    private $brick;
 
     /**
-     * @param string $brickId
+     * @param string $brick
      */
-    public function __construct($brickId) {
-        $this->brickId = $brickId;
+    public function __construct($brick) {
+        $this->brick = $brick;
     }
 
     /**
      * @return string
      */
-    public function getBrickId() {
-        return $this->brickId;
+    public function getBrick() {
+        return $this->brick;
     }
 
 }

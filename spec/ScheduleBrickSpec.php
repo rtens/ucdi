@@ -28,7 +28,7 @@ class ScheduleBrickSpec {
         $this->driver->whenISchedule_Of_For_MinutesStarting('Brick Foo', 'Task-2', 15, 'tomorrow 12:00');
         $this->driver->then_Of_ShouldBeScheduledFor_MinutesStarting('Brick Foo', 'Task-2', 15, 'tomorrow 12:00');
         $this->driver->thenAnAppointment_For_WithTheDescription_Starting_Ending_ShouldBeInsertedInMyCalendar(
-            'Brick Foo', 'Brick-3', 'Mark as laid: http://example.com/ucdi/MarkBrickLaid?brickId=Brick-3',
+            'Brick Foo', 'Brick-3', 'Mark as laid: http://example.com/ucdi/MarkBrickLaid?brick=Brick-3',
             'tomorrow 12:00', 'tomorrow 12:15');
     }
 }
