@@ -27,9 +27,10 @@ class ScheduleBrickSpec {
         $this->driver->givenATask();
         $this->driver->whenISchedule_Of_For_MinutesStarting('Brick Foo', 'Task-2', 15, 'tomorrow 12:00');
         $this->driver->then_Of_ShouldBeScheduledFor_MinutesStarting('Brick Foo', 'Task-2', 15, 'tomorrow 12:00');
-        $this->driver->thenAnAppointment_For_WithTheDescription_Starting_Ending_ShouldBeInsertedInMyCalendar(
-            'Brick Foo', 'Brick-3', 'Mark as laid: http://example.com/ucdi/MarkBrickLaid?brick=Brick-3',
-            'tomorrow 12:00', 'tomorrow 12:15');
+        $this->driver->thenAnAppointment_For_Starting_Ending_WithTheDescription_ShouldBeInsertedInMyCalendar(
+            'Brick Foo', 'Brick-3', 'tomorrow 12:00', 'tomorrow 12:15',
+            'Show goal: http://example.com/ucdi/ShowGoalOfBrick?brick=Brick-3' . "\n" .
+            'Mark as laid: http://example.com/ucdi/MarkBrickLaid?brick=Brick-3');
     }
 }
 
@@ -80,7 +81,7 @@ class ScheduleBrickSpec_DomainDriver extends DomainDriver {
             new \DateInterval("PT{$minutes}M")));
     }
 
-    public function thenAnAppointment_For_WithTheDescription_Starting_Ending_ShouldBeInsertedInMyCalendar($summary, $brickId, $description, $start, $end) {
+    public function thenAnAppointment_For_Starting_Ending_WithTheDescription_ShouldBeInsertedInMyCalendar($summary, $brickId, $start, $end, $description) {
         Mockster::stub($this->calendar->insertEvent($summary, new \DateTimeImmutable($start), new \DateTimeImmutable($end), $description))
             ->shouldHave()->beenCalled();
         $this->assert->contains($this->events, new CalendarEventInserted($brickId, 'Event-' . $summary, $description));

@@ -125,6 +125,7 @@ class Application {
             $command->getDescription(),
             $command->getStart(),
             $command->getStart()->add($command->getDuration()),
+            'Show goal: ' . $this->base->appended('ShowGoalOfBrick')->withParameter('brick', $brickId) . "\n" .
             'Mark as laid: ' . $this->base->appended('MarkBrickLaid')->withParameter('brick', $brickId));
 
         return [
