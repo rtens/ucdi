@@ -1,5 +1,6 @@
 <?php namespace spec\rtens\ucdi;
 
+use rtens\mockster\Mockster;
 use rtens\ucdi\app\commands\AddTask;
 use rtens\ucdi\app\commands\CreateGoal;
 use rtens\ucdi\app\commands\MarkBrickLaid;
@@ -25,6 +26,7 @@ class MarkBrickAsLaidSpec {
     function success() {
         $this->driver->whenIMark_AsLaid('Brick-3');
         $this->driver->then_ShouldBeMarkedAsLaid('Brick-3', '2011-12-13 14:15:16');
+        $this->driver->thenTheCalendarEventOfBrick_ShoudBeDeleted('Foo');
     }
 
     function cannotMarkLaidBrickAsLaid() {
@@ -63,5 +65,10 @@ class MarkBrickAsLaidSpec_DomainDriver extends DomainDriver {
 
     public function thenItShouldFailWith($message) {
         $this->try->thenTheException_ShouldBeThrown($message);
+    }
+
+    public function thenTheCalendarEventOfBrick_ShoudBeDeleted($description) {
+        Mockster::stub($this->calendar->deleteEvent("Event-$description"))
+            ->shouldHave()->beenCalled();
     }
 }

@@ -146,6 +146,9 @@ class Application {
             $when = $this->laidBricks[$command->getBrickId()];
             throw new \Exception("Brick [{$command->getBrickId()}] was already laid [$when].");
         }
+
+        $this->calendar->deleteEvent($this->calendarEventIds[$command->getBrickId()]);
+
         return [
             new BrickMarkedLaid($command->getBrickId(), $this->now)
         ];
