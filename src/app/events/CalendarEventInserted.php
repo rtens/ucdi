@@ -32,7 +32,7 @@ class CalendarEventInserted {
     }
 
     function __toString() {
-        return $this->brickId . $this->calendarEventId;
+        return $this->brickId . ':' . $this->calendarEventId;
     }
 
 

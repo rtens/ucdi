@@ -36,7 +36,9 @@ class DomainDriver extends Fixture {
         $this->givenNowIs('now');
 
         Mockster::stub($this->calendar->insertEvent(Arg::any(), Arg::any(), Arg::any(), Arg::any()))
-            ->will()->return_('CalendarEventId-1');
+            ->will()->forwardTo(function ($summary) {
+                return 'Event-' . $summary;
+            });
     }
 
     protected function givenTheNextUidIs($uid) {

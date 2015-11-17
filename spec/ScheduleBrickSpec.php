@@ -80,9 +80,9 @@ class ScheduleBrickSpec_DomainDriver extends DomainDriver {
             new \DateInterval("PT{$minutes}M")));
     }
 
-    public function thenAnAppointment_For_WithTheDescription_Starting_Ending_ShouldBeInsertedInMyCalendar($caption, $brickId, $description, $start, $end) {
-        Mockster::stub($this->calendar->insertEvent($caption, new \DateTimeImmutable($start), new \DateTimeImmutable($end), $description))
+    public function thenAnAppointment_For_WithTheDescription_Starting_Ending_ShouldBeInsertedInMyCalendar($summary, $brickId, $description, $start, $end) {
+        Mockster::stub($this->calendar->insertEvent($summary, new \DateTimeImmutable($start), new \DateTimeImmutable($end), $description))
             ->shouldHave()->beenCalled();
-        $this->assert->contains($this->events, new CalendarEventInserted($brickId, 'CalendarEventId-1', $description));
+        $this->assert->contains($this->events, new CalendarEventInserted($brickId, 'Event-' . $summary, $description));
     }
 }

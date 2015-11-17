@@ -48,6 +48,17 @@ class ListMissedBricksSpec {
         $this->driver->thenThereShouldBe_Bricks(1);
         $this->driver->thenBrick_ShouldBe(1, 'three');
     }
+
+    function ignoreCancelledBricks() {
+        $this->driver->givenABrick_ScheduledIn('Missed', '1 hour');
+        $this->driver->givenABrick_ScheduledIn('Cancelled', '1 hour');
+        $this->driver->givenTheTaskOfBrick_IsCompleted('Cancelled');
+
+        $this->driver->givenNowIs('2 hours');
+        $this->driver->whenIListMissedBricks();
+        $this->driver->thenThereShouldBe_Bricks(1);
+        $this->driver->thenBrick_ShouldBe(1, 'Missed');
+    }
 }
 
 class ListMissedBricksSpec_DomainDriver extends DomainDriver {
@@ -65,6 +76,10 @@ class ListMissedBricksSpec_DomainDriver extends DomainDriver {
         $this->service->handle(new CreateGoal('Goal Foo'));
         $this->service->handle(new AddTask("Goal-$description", 'Task Foo'));
         $this->service->handle(new ScheduleBrick("Task-$description", $description, new \DateTimeImmutable($when), new \DateInterval('PT1H')));
+    }
+
+    public function givenTheTaskOfBrick_IsCompleted($description) {
+        $this->service->handle(new \rtens\ucdi\app\commands\MarkTaskCompleted("Task-$description"));
     }
 
     public function whenIListMissedBricks() {

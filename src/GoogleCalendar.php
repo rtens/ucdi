@@ -34,4 +34,12 @@ class GoogleCalendar implements Calendar {
 
         return $createdEvent->id;
     }
+
+    /**
+     * @param string $eventId
+     * @return void
+     */
+    public function deleteEvent($eventId) {
+        $this->service->events->delete(self::$calendarId, $eventId);
+    }
 }

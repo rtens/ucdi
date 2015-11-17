@@ -17,6 +17,7 @@ use rtens\ucdi\app\commands\MarkGoalAchieved;
 use rtens\ucdi\app\commands\MarkTaskCompleted;
 use rtens\ucdi\app\commands\RateGoal;
 use rtens\ucdi\app\commands\ScheduleBrick;
+use rtens\ucdi\app\events\BrickCancelled;
 use rtens\ucdi\app\events\BrickMarkedLaid;
 use rtens\ucdi\app\events\BrickScheduled;
 use rtens\ucdi\app\events\CalendarEventInserted;
@@ -61,6 +62,8 @@ class Application {
     private $ratings = [];
     /** @var array|BrickScheduled[] */
     private $bricks = [];
+    private $calendarEventIds = [];
+    private $cancelledBricks = [];
 
     public function __construct(UidGenerator $uid, Calendar $calendar, Url $base, \DateTimeImmutable $now) {
         $this->uid = $uid;
@@ -156,9 +159,17 @@ class Application {
             $when = $this->completedTasks[$command->getTask()];
             throw new \Exception("Task [{$command->getTask()}] was already completed [$when].");
         }
-        return [
+
+        $events = [
             new TaskMarkedCompleted($command->getTask(), $this->now)
         ];
+
+        foreach ($this->getUpcomingUnlaidBricks($command->getTask()) as $brick) {
+            $events[] = new BrickCancelled($brick['id']);
+            $this->calendar->deleteEvent($this->calendarEventIds[$brick['id']]);
+        }
+
+        return $events;
     }
 
     public function handleMarkGoalAchieved(MarkGoalAchieved $command) {
@@ -232,6 +243,14 @@ class Application {
 
     public function applyGoalRated(GoalRated $event) {
         $this->ratings[$event->getGoal()] = $event->getRating();
+    }
+
+    public function applyCalendarEventInserted(CalendarEventInserted $event) {
+        $this->calendarEventIds[$event->getBrickId()] = $event->getCalendarEventId();
+    }
+
+    public function applyBrickCancelled(BrickCancelled $event) {
+        $this->cancelledBricks[$event->getBrickId()] = true;
     }
 
     public function executeListGoals(ListGoals $query) {
@@ -323,7 +342,7 @@ class Application {
     private function getIncompleteTasksWithBricks($goalId) {
         return array_values(array_map(function ($task) {
             return array_merge($task, [
-                'bricks' => $this->getBricks($task['id'])
+                'bricks' => $this->getUpcomingUnlaidBricks($task['id'])
             ]);
         }, $this->getIncompleteTasks($goalId)));
     }
@@ -338,7 +357,7 @@ class Application {
     }
 
     public function executeListMissedBricks(ListMissedBricks $query) {
-        return $this->listBricks(function (BrickScheduled $brick) use ($query) {
+        return $this->listActiveBricks(function (BrickScheduled $brick) use ($query) {
             return !isset($this->laidBricks[$brick->getBrickId()])
             && $brick->getStart() < $this->now
                 && (!$query->getMaxAge() || $brick->getStart()->add($query->getMaxAge()) >= $this->now);
@@ -346,7 +365,7 @@ class Application {
     }
 
     public function executeListUpcomingBricks() {
-        return $this->listBricks(function (BrickScheduled $brick) {
+        return $this->listActiveBricks(function (BrickScheduled $brick) {
             return !isset($this->laidBricks[$brick->getBrickId()]) && $brick->getStart() >= $this->now;
         });
     }
@@ -355,7 +374,7 @@ class Application {
         $current = 0;
         $longest = 0;
 
-        $bricks = $this->listBricks(function (BrickScheduled $brick) {
+        $bricks = $this->listActiveBricks(function (BrickScheduled $brick) {
             return $brick->getStart()->add($brick->getDuration()) < $this->now;
         });
 
@@ -397,10 +416,13 @@ class Application {
         ]);
     }
 
-    private function listBricks(callable $filter = null) {
+    private function listActiveBricks(callable $filter = null) {
         $bricks = [];
         foreach ($this->bricks as $brick) {
-            if (!$filter || $filter($brick)) {
+            $isCancelled = isset($this->cancelledBricks[$brick->getBrickId()]);
+            $passesFilter = !$filter || $filter($brick);
+
+            if (!$isCancelled && $passesFilter) {
                 $bricks[] = [
                     'id' => $brick->getBrickId(),
                     'description' => $brick->getDescription(),
@@ -442,12 +464,12 @@ class Application {
         return $next ? ($next->getDescription() . ' @' . $next->getStart()->format('Y-m-d H:i')) : null;
     }
 
-    private function getBricks($taskId) {
+    private function getUpcomingUnlaidBricks($taskId) {
         if (!isset($this->bricksOfTasks[$taskId])) {
             return [];
         }
         $bricks = array_filter($this->bricksOfTasks[$taskId], function ($brick) {
-            return new \DateTimeImmutable($brick['start']) >= $this->now;
+            return new \DateTimeImmutable($brick['start']) >= $this->now && !isset($this->laidBricks[$brick['id']]);
         });
         usort($bricks, function ($a, $b) {
             return strcmp($a['start'], $b['start']);

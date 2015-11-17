@@ -11,4 +11,10 @@ interface Calendar {
      * @return string Event ID
      */
     public function insertEvent($summary, \DateTimeImmutable $start, \DateTimeImmutable $end, $description = null);
+
+    /**
+     * @param string $eventId
+     * @return null
+     */
+    public function deleteEvent($eventId);
 }

@@ -36,6 +36,16 @@ class ListUpcomingBricksSpec {
         $this->driver->thenBrick_ShouldBe(2, 'Nine');
         $this->driver->thenBrick_ShouldBe(3, 'Ten');
     }
+
+    function ignoreCancelledBricks() {
+        $this->driver->givenABrick_Scheduled('Active', '1 hour');
+        $this->driver->givenABrick_Scheduled('Cancelled', '1 hour');
+        $this->driver->givenTaskOfBrick_IsCompleted('Cancelled');
+
+        $this->driver->whenIListUpcomingBricks();
+        $this->driver->thenThereShouldBe_Bricks(1);
+        $this->driver->thenBrick_ShouldBe(1, 'Active');
+    }
 }
 
 class ListUpcomingBricksSpec_DomainDriver extends DomainDriver {
@@ -51,6 +61,10 @@ class ListUpcomingBricksSpec_DomainDriver extends DomainDriver {
         $this->service->handle(new CreateGoal('Foo'));
         $this->service->handle(new AddTask("Goal-$description", 'Foo'));
         $this->service->handle(new \rtens\ucdi\app\commands\ScheduleBrick("Task-$description", $description, new \DateTimeImmutable($when), new \DateInterval('PT1H')));
+    }
+
+    public function givenTaskOfBrick_IsCompleted($description) {
+        $this->service->handle(new \rtens\ucdi\app\commands\MarkTaskCompleted("Task-$description"));
     }
 
     public function given_IsLaid($description) {
