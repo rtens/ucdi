@@ -30,4 +30,10 @@ class TaskMarkedCompleted {
     public function getWhen() {
         return $this->when;
     }
+
+    function __toString() {
+        return $this->taskId . '@' . $this->when->format('c');
+    }
+
+
 }

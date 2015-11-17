@@ -12,6 +12,9 @@ use watoki\curir\protocol\Url;
 
 class DomainDriver extends Fixture {
 
+    /** @var \DateTimeImmutable */
+    protected $now;
+
     /** @var FakeUidGenerator */
     private $uid;
 
@@ -46,8 +49,9 @@ class DomainDriver extends Fixture {
     }
 
     public function givenNowIs($when) {
+        $this->now = new \DateTimeImmutable($when);
         $this->service = new ApplicationService(
-            new Application($this->uid, Mockster::mock($this->calendar), $this->baseUrl, new \DateTimeImmutable($when)),
+            new Application($this->uid, Mockster::mock($this->calendar), $this->baseUrl, $this->now),
             $this->store);
     }
 }

@@ -180,9 +180,15 @@ class Application {
             $when = $this->achievedGoals[$command->getGoal()];
             throw new \Exception("Goal [{$command->getGoal()}] was already achieved [$when].");
         }
-        return [
+        $events = [
             new GoalMarkedAchieved($command->getGoal(), $this->now)
         ];
+
+        foreach ($this->getIncompleteTasks($command->getGoal()) as $task) {
+            $events = array_merge($events, $this->handleMarkTaskCompleted(new MarkTaskCompleted($task['id'])));
+        }
+
+        return $events;
     }
 
     public function handleRateGoal(RateGoal $command) {
@@ -360,7 +366,7 @@ class Application {
         return $this->listActiveBricks(function (BrickScheduled $brick) use ($query) {
             return !isset($this->laidBricks[$brick->getBrickId()])
             && $brick->getStart() < $this->now
-                && (!$query->getMaxAge() || $brick->getStart()->add($query->getMaxAge()) >= $this->now);
+            && (!$query->getMaxAge() || $brick->getStart()->add($query->getMaxAge()) >= $this->now);
         });
     }
 
