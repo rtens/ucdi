@@ -72,6 +72,7 @@ class Bootstrapper {
         $this->addCommand($app, \rtens\ucdi\app\commands\MarkBrickLaid::class);
         $this->addCommand($app, \rtens\ucdi\app\commands\MarkTaskCompleted::class);
         $this->addCommand($app, \rtens\ucdi\app\commands\MarkGoalAchieved::class);
+        $this->addCommand($app, \rtens\ucdi\app\commands\CancelGoal::class);
         $this->addQuery($app, \rtens\ucdi\app\queries\ListMissedBricks::class)
             ->setAfterExecute(function ($bricks) {
                 return (new ArrayTable($bricks))
@@ -134,6 +135,7 @@ class Bootstrapper {
         $app->links->add(new GenericLink('RateGoal', $is('Goal'), $set('goal')));
         $app->links->add(new GenericLink('AddTask', $is('Goal'), $set('goal')));
         $app->links->add(new GenericLink('MarkGoalAchieved', $is('Goal'), $set('goal')));
+        $app->links->add(new GenericLink('CancelGoal', $is('Goal'), $set('goal')));
         $app->links->add(new GenericLink('ScheduleBrick', $is('Task'), $set('task')));
         $app->links->add(new GenericLink('MarkTaskCompleted', $is('Task'), $set('task')));
         $app->links->add(new GenericLink('ShowGoalOfBrick', $is('Brick'), $set('brick')));

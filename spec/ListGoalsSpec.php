@@ -1,6 +1,7 @@
 <?php namespace spec\rtens\ucdi;
 
 use rtens\ucdi\app\commands\AddTask;
+use rtens\ucdi\app\commands\CancelGoal;
 use rtens\ucdi\app\commands\CreateGoal;
 use rtens\ucdi\app\commands\MarkBrickLaid;
 use rtens\ucdi\app\commands\MarkGoalAchieved;
@@ -105,6 +106,17 @@ class ListGoalsSpec {
         $this->driver->thenThereShouldBe_Goals(1);
     }
 
+    function ignoreCancelled() {
+        $this->driver->givenTheGoal('Foo');
+        $this->driver->givenTheGoal('Bar');
+        $this->driver->givenTheGoal('Baz');
+
+        $this->driver->givenTheGoal_IsCancelled('Goal-2');
+
+        $this->driver->whenIListAllGoals();
+        $this->driver->thenThereShouldBe_Goals(2);
+    }
+
     function showTasks() {
         $this->driver->givenTheGoal('Foo');
         $this->driver->givenTheTask_Of('Task Foo', 'Goal-1');
@@ -175,6 +187,10 @@ class ListGoalsWithNextBricksSpec_DomainDriver extends DomainDriver {
 
     public function given_IsRated($goalId, $urgency, $importance) {
         $this->service->handle(new RateGoal($goalId, new Rating($urgency, $importance)));
+    }
+
+    public function givenTheGoal_IsCancelled($goalId) {
+        $this->service->handle(new CancelGoal($goalId));
     }
 
     public function whenIListAllGoals() {

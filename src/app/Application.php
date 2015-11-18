@@ -11,6 +11,7 @@ use rtens\domin\execution\RedirectResult;
 use rtens\domin\parameters\Color;
 use rtens\domin\parameters\Html;
 use rtens\ucdi\app\commands\AddTask;
+use rtens\ucdi\app\commands\CancelGoal;
 use rtens\ucdi\app\commands\CreateGoal;
 use rtens\ucdi\app\commands\MarkBrickLaid;
 use rtens\ucdi\app\commands\MarkGoalAchieved;
@@ -64,6 +65,7 @@ class Application {
     private $bricks = [];
     private $calendarEventIds = [];
     private $cancelledBricks = [];
+    private $cancelledGoals = [];
 
     public function __construct(UidGenerator $uid, Calendar $calendar, Url $base, \DateTimeImmutable $now) {
         $this->uid = $uid;
@@ -205,6 +207,30 @@ class Application {
         ];
     }
 
+    public function handleCancelGoal(CancelGoal $command) {
+        $goalId = $command->getGoal();
+        
+        if (!isset($this->goals[$goalId])) {
+            throw new \Exception("Goal [$goalId] does not exist.");
+        }
+        if (isset($this->cancelledGoals[$goalId])) {
+            throw new \Exception("Goal [$goalId] was already cancelled.");
+        }
+        if (isset($this->achievedGoals[$goalId])) {
+            throw new \Exception("Goal [$goalId] is already achieved.");
+        }
+
+        $events = [
+            new events\GoalCancelled($goalId, $this->now)
+        ];
+
+        foreach ($this->getIncompleteTasks($goalId) as $task) {
+            $events = array_merge($events, $this->handleMarkTaskCompleted(new MarkTaskCompleted($task['id'])));
+        }
+
+        return $events;
+    }
+
     public function applyGoalCreated(GoalCreated $event) {
         $this->goals[$event->getGoalId()] = [
             'id' => $event->getGoalId(),
@@ -263,6 +289,10 @@ class Application {
         $this->cancelledBricks[$event->getBrickId()] = true;
     }
 
+    public function applyGoalCancelled(events\GoalCancelled $event) {
+        $this->cancelledGoals[$event->getGoalId()] = $event->getWhen();
+    }
+
     public function executeListGoals(ListGoals $query) {
         $goals = array_map(function ($goal) use ($query) {
             return array_merge($goal, [
@@ -273,7 +303,7 @@ class Application {
                 }, $this->getIncompleteTasks($goal['id'])) ?: null
             ]);
         }, array_filter(array_values($this->goals), function ($goal) use ($query) {
-            return $query->isAchieved() == isset($this->achievedGoals[$goal['id']]);
+            return !isset($this->cancelledGoals[$goal['id']]) && $query->isAchieved() == isset($this->achievedGoals[$goal['id']]);
         }));
 
         if ($query->isOnlyBrickLess()) {
