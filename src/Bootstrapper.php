@@ -141,6 +141,7 @@ class Bootstrapper {
     }
 
     private static function toRelative(\DateTimeInterface $dateTime, \DateTimeInterface $now = null) {
+        $precision = 'minute';
         $now = $now ?: new \DateTimeImmutable();
 
         if ($dateTime == $now) {
@@ -173,7 +174,7 @@ class Bootstrapper {
                 $times[] = $value . ' ' . $unit . ($value == 1 ? '' : 's');
             }
 
-            if (count($times) == 2) {
+            if ($precision == $unit) {
                 break;
             }
         }
