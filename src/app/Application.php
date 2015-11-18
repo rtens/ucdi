@@ -352,9 +352,9 @@ class Application {
             }
 
             if (!$this->getIncompleteTasks($goalId)) {
-                $color = Color::PURPLE();
-            } else if (!$this->getNextBrick($goalId)) {
                 $color = Color::RED();
+            } else if (!$this->getNextBrick($goalId)) {
+                $color = Color::PURPLE();
             } else {
                 $color = Color::GREEN();
             }
