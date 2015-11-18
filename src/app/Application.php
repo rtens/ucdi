@@ -343,7 +343,7 @@ class Application {
             ], '', Color::fromHex('#ffffff'))
         ];
         foreach ($this->goals as $goalId => $goal) {
-            if (isset($this->achievedGoals[$goalId])) {
+            if (isset($this->achievedGoals[$goalId]) || isset($this->cancelledGoals[$goalId])) {
                 continue;
             } else if (isset($this->ratings[$goalId])) {
                 $rating = $this->ratings[$goalId];
