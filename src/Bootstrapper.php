@@ -172,6 +172,10 @@ class Bootstrapper {
             if ($value) {
                 $times[] = $value . ' ' . $unit . ($value == 1 ? '' : 's');
             }
+
+            if (count($times) == 2) {
+                break;
+            }
         }
 
         return 'in ' . implode(', ', $times);
