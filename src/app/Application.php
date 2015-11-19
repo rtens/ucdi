@@ -34,6 +34,7 @@ use rtens\ucdi\app\events\TaskMarkedCompleted;
 use rtens\ucdi\app\model\Rating;
 use rtens\ucdi\app\queries\ListGoals;
 use rtens\ucdi\app\queries\ListMissedBricks;
+use rtens\ucdi\app\queries\ReportEfforts;
 use rtens\ucdi\app\queries\ShowGoal;
 use rtens\ucdi\app\queries\ShowGoalOfBrick;
 use rtens\ucdi\es\UidGenerator;
@@ -68,6 +69,10 @@ class Application {
     private $calendarEventIds = [];
     private $cancelledBricks = [];
     private $cancelledGoals = [];
+    /** @var EffortLogged[] */
+    private $efforts = [];
+    /** @var TaskAdded[] */
+    private $tasks = [];
 
     public function __construct(UidGenerator $uid, Calendar $calendar, Url $base, \DateTimeImmutable $now) {
         $this->uid = $uid;
@@ -211,7 +216,7 @@ class Application {
 
     public function handleCancelGoal(CancelGoal $command) {
         $goalId = $command->getGoal();
-        
+
         if (!isset($this->goals[$goalId])) {
             throw new \Exception("Goal [$goalId] does not exist.");
         }
@@ -247,6 +252,50 @@ class Application {
         ];
     }
 
+    public function executeReportEfforts(ReportEfforts $query) {
+        $efforts = [];
+        foreach ($this->efforts as $effort) {
+            $efforts[] = [
+                'id' => $this->goalOfTask[$effort->getTask()],
+                'goal' => $this->goals[$this->goalOfTask[$effort->getTask()]]['name'],
+                'task' => $this->tasks[$effort->getTask()]->getDescription(),
+                'comment' => $effort->getComment(),
+                'start' => $effort->getStart(),
+                'end' => $effort->getEnd(),
+                'duration' => $effort->getEnd()->diff($effort->getStart())
+            ];
+        }
+
+        $efforts = array_filter($efforts, function ($e) use ($query) {
+            $span = $query->getTimeSpan();
+            $containsStart = $span && $span->contains($e['start']);
+            $containsEnd = $span && $span->contains($e['end']);
+
+            return (!$query->getGoal() || $e['id'] == $query->getGoal())
+                && (!$span || ($containsStart && $containsEnd));
+        });
+
+        usort($efforts, function ($a, $b) {
+            return $a['start'] < $b['start'] ? -1 : 1;
+        });
+
+        $total = 0;
+        foreach ($efforts as $effort) {
+            /** @var \DateTimeImmutable[] $effort */
+            $total += $effort['end']->getTimestamp() - $effort['start']->getTimestamp();
+        }
+        $totalInterval = (new \DateTime("@$total"))->diff(new \DateTime("@0"));
+
+        return [
+            'total' => $totalInterval,
+            'efforts' => $efforts
+        ];
+    }
+
+    public function applyEffortLogged(EffortLogged $event) {
+        $this->efforts[] = $event;
+    }
+
     public function applyGoalCreated(GoalCreated $event) {
         $this->goals[$event->getGoalId()] = [
             'id' => $event->getGoalId(),
@@ -255,6 +304,7 @@ class Application {
     }
 
     public function applyTaskAdded(TaskAdded $event) {
+        $this->tasks[$event->getTaskId()] = $event;
         $this->goalOfTask[$event->getTaskId()] = $event->getGoalId();
         $this->tasksOfGoals[$event->getGoalId()][] = [
             'id' => $event->getTaskId(),

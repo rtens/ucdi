@@ -59,6 +59,12 @@ class Bootstrapper {
                     });
             });
         $this->addQuery($app, \rtens\ucdi\app\queries\PlotGoals::class);
+        $this->addQuery($app, \rtens\ucdi\app\queries\ReportEfforts::class)
+            ->setAfterExecute(function ($report) {
+                $report['efforts'] = (new ArrayTable($report['efforts']))
+                    ->selectColumns(['goal', 'task', 'comment', 'start', 'duration']);
+                return $report;
+            });
         $this->addQuery($app, \rtens\ucdi\app\queries\ShowGoalOfBrick::class);
         $this->addQuery($app, \rtens\ucdi\app\queries\ShowGoal::class)
             ->setAfterExecute(function ($goal) {
@@ -118,6 +124,7 @@ class Bootstrapper {
 
         $app->menu->add(new ActionMenuItem($app->actions, 'ShowDashboard'));
         $app->menu->add(new ActionMenuItem($app->actions, 'CreateGoal'));
+        $app->menu->add(new ActionMenuItem($app->actions, 'ReportEfforts'));
     }
 
     private function registerLinks(WebApplication $app) {
@@ -137,6 +144,7 @@ class Bootstrapper {
         $app->links->add(new GenericLink('AddTask', $is('Goal'), $set('goal')));
         $app->links->add(new GenericLink('MarkGoalAchieved', $is('Goal'), $set('goal')));
         $app->links->add(new GenericLink('CancelGoal', $is('Goal'), $set('goal')));
+        $app->links->add(new GenericLink('ReportEfforts', $is('Goal'), $set('goal')));
         $app->links->add(new GenericLink('ScheduleBrick', $is('Task'), $set('task')));
         $app->links->add(new GenericLink('LogEffort', $is('Task'), $set('task')));
         $app->links->add(new GenericLink('MarkTaskCompleted', $is('Task'), $set('task')));
