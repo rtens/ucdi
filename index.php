@@ -2,6 +2,7 @@
 
 use rtens\ucdi\Bootstrapper;
 use rtens\ucdi\GoogleCalendar;
+use watoki\collections\Collection;
 use watoki\curir\protocol\Url;
 
 require_once __DIR__ . '/vendor/autoload.php';
@@ -34,7 +35,8 @@ if (isset($_SESSION['token'])) {
 }
 
 if (!$client->getAccessToken()) {
-    $_SESSION['targetUrl'] = $_SERVER['REQUEST_URI'];
+    $_SESSION['targetUrl'] = Url::fromString($_SERVER['REQUEST_URI'])
+        ->withParameters(Collection::toCollections($_REQUEST));
     $authUrl = $client->createAuthUrl();
     header('Location: ' . $authUrl);
     exit();
