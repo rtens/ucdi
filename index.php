@@ -34,12 +34,16 @@ if (isset($_SESSION['token'])) {
     $client->setAccessToken($_SESSION['token']);
 }
 
-if (!$client->getAccessToken()) {
-    $_SESSION['targetUrl'] = Url::fromString($_SERVER['REQUEST_URI'])
+$redirectToAuthUrl = function() use ($client) {
+    $_SESSION['targetUrl'] = (string)Url::fromString($_SERVER['REQUEST_URI'])
         ->withParameters(Collection::toCollections($_REQUEST));
     $authUrl = $client->createAuthUrl();
     header('Location: ' . $authUrl);
     exit();
+};
+
+if (!$client->getAccessToken()) {
+    $redirectToAuthUrl();
 }
 
 $cal = new Google_Service_Calendar($client);
@@ -54,6 +58,6 @@ try {
         ->runWebApp();
 } catch (Google_Auth_Exception $e) {
     unset($_SESSION['token']);
-    header('Location: ' . $baseUrl);
+    $redirectToAuthUrl();
 }
 
