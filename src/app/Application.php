@@ -13,6 +13,7 @@ use rtens\domin\parameters\Html;
 use rtens\ucdi\app\commands\AddTask;
 use rtens\ucdi\app\commands\CancelGoal;
 use rtens\ucdi\app\commands\CreateGoal;
+use rtens\ucdi\app\commands\LogEffort;
 use rtens\ucdi\app\commands\MarkBrickLaid;
 use rtens\ucdi\app\commands\MarkGoalAchieved;
 use rtens\ucdi\app\commands\MarkTaskCompleted;
@@ -22,6 +23,7 @@ use rtens\ucdi\app\events\BrickCancelled;
 use rtens\ucdi\app\events\BrickMarkedLaid;
 use rtens\ucdi\app\events\BrickScheduled;
 use rtens\ucdi\app\events\CalendarEventInserted;
+use rtens\ucdi\app\events\EffortLogged;
 use rtens\ucdi\app\events\GoalCreated;
 use rtens\ucdi\app\events\GoalMarkedAchieved;
 use rtens\ucdi\app\events\GoalNotesChanged;
@@ -229,6 +231,20 @@ class Application {
         }
 
         return $events;
+    }
+
+    public function handleLogEffort(LogEffort $command) {
+        if (!isset($this->goalOfTask[$command->getTask()])) {
+            throw new \Exception("Task [{$command->getTask()}] does not exist.");
+        }
+
+        if ($command->getEnd() <= $command->getStart()) {
+            throw new \Exception('The end time must be after the start time');
+        }
+
+        return [
+            new EffortLogged($command->getTask(), $command->getStart(), $command->getEnd(), $command->getComment())
+        ];
     }
 
     public function applyGoalCreated(GoalCreated $event) {
