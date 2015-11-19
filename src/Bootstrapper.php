@@ -62,7 +62,10 @@ class Bootstrapper {
         $this->addQuery($app, \rtens\ucdi\app\queries\ReportEfforts::class)
             ->setAfterExecute(function ($report) {
                 $report['efforts'] = (new ArrayTable($report['efforts']))
-                    ->selectColumns(['goal', 'task', 'comment', 'start', 'duration']);
+                    ->selectColumns(['goal', 'task', 'comment', 'start', 'duration'])
+                    ->setFilter('start', function (\DateTimeImmutable $start) {
+                        return $start->format('Y-m-d H:i');
+                    });
                 return $report;
             });
         $this->addQuery($app, \rtens\ucdi\app\queries\ShowGoalOfBrick::class);
