@@ -38,6 +38,7 @@ use rtens\ucdi\app\queries\ReportEfforts;
 use rtens\ucdi\app\queries\ShowGoal;
 use rtens\ucdi\app\queries\ShowGoalOfBrick;
 use rtens\ucdi\es\UidGenerator;
+use rtens\ucdi\Settings;
 use watoki\curir\protocol\Url;
 
 class Application {
@@ -54,6 +55,9 @@ class Application {
     /** @var \DateTimeImmutable */
     private $now;
 
+    /** @var Settings */
+    private $settings;
+
     private $goals = [];
     private $goalOfTask = [];
     private $notes = [];
@@ -66,19 +70,22 @@ class Application {
     private $ratings = [];
     /** @var array|BrickScheduled[] */
     private $bricks = [];
-    private $calendarEventIds = [];
+    /** @var CalendarEventInserted[][] */
+    private $insertedCalendarEvents = [];
     private $cancelledBricks = [];
     private $cancelledGoals = [];
     /** @var EffortLogged[] */
     private $efforts = [];
+
     /** @var TaskAdded[] */
     private $tasks = [];
 
-    public function __construct(UidGenerator $uid, Calendar $calendar, Url $base, \DateTimeImmutable $now) {
+    public function __construct(UidGenerator $uid, Settings $settings, Calendar $calendar, Url $base, \DateTimeImmutable $now) {
         $this->uid = $uid;
         $this->calendar = $calendar;
         $this->base = $base;
         $this->now = $now;
+        $this->settings = $settings;
     }
 
     public function handleCreateGoal(CreateGoal $command) {
@@ -130,22 +137,23 @@ class Application {
         }
         $brickId = $this->uid->generate('Brick');
 
-        $eventId = $this->calendar->insertEvent(
-            $command->getDescription(),
-            $command->getStart(),
-            $command->getStart()->add($command->getDuration()),
-            'Show goal: ' . $this->base->appended('ShowGoalOfBrick')->withParameter('brick', $brickId) . "\n" .
-            'Mark as laid: ' . $this->base->appended('MarkBrickLaid')->withParameter('brick', $brickId));
-
-        return [
+        $events = [
             new BrickScheduled(
                 $brickId,
                 $command->getTask(),
                 $command->getDescription(),
                 $command->getStart(),
-                $command->getDuration()),
-            new CalendarEventInserted($brickId, $eventId)
+                $command->getDuration())
         ];
+
+        if ($this->settings->calendarId) {
+            $eventId = $this->calendar->insertEvent($this->settings->calendarId,
+                $command->getDescription(), $command->getStart(), $command->getStart()->add($command->getDuration()), 'Show goal: ' . $this->base->appended('ShowGoalOfBrick')->withParameter('brick', $brickId) . "\n" .
+                'Mark as laid: ' . $this->base->appended('MarkBrickLaid')->withParameter('brick', $brickId));
+            $events[] = new CalendarEventInserted($brickId, $this->settings->calendarId, $eventId);
+        }
+
+        return $events;
     }
 
     public function handleMarkBrickLaid(MarkBrickLaid $command) {
@@ -157,7 +165,7 @@ class Application {
             throw new \Exception("Brick [{$command->getBrick()}] was already laid [$when].");
         }
 
-        $this->calendar->deleteEvent($this->calendarEventIds[$command->getBrick()]);
+        $this->deleteInsertedCalendarEvents($command->getBrick());
 
         return [
             new BrickMarkedLaid($command->getBrick(), $this->now)
@@ -179,7 +187,7 @@ class Application {
 
         foreach ($this->getUpcomingUnlaidBricks($command->getTask()) as $brick) {
             $events[] = new BrickCancelled($brick['id']);
-            $this->calendar->deleteEvent($this->calendarEventIds[$brick['id']]);
+            $this->deleteInsertedCalendarEvents($brick['id']);
         }
 
         return $events;
@@ -348,7 +356,7 @@ class Application {
     }
 
     public function applyCalendarEventInserted(CalendarEventInserted $event) {
-        $this->calendarEventIds[$event->getBrickId()] = $event->getCalendarEventId();
+        $this->insertedCalendarEvents[$event->getBrickId()][] = $event;
     }
 
     public function applyBrickCancelled(BrickCancelled $event) {
@@ -590,5 +598,12 @@ class Application {
             return strcmp($a['start'], $b['start']);
         });
         return array_values($bricks);
+    }
+
+    private function deleteInsertedCalendarEvents($brickId) {
+        foreach ($this->insertedCalendarEvents[$brickId] as $event) {
+            $calendarId = $event->getCalendarId() ?: $this->settings->calendarId; // Older events don't have a calendarId
+            $this->calendar->deleteEvent($calendarId, $event->getCalendarEventId());
+        }
     }
 }

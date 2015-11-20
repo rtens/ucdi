@@ -7,6 +7,7 @@ use rtens\ucdi\app\Application;
 use rtens\ucdi\app\Calendar;
 use rtens\ucdi\es\ApplicationService;
 use rtens\ucdi\es\EventStore;
+use rtens\ucdi\Settings;
 use spec\rtens\ucdi\fakes\FakeUidGenerator;
 use watoki\curir\protocol\Url;
 
@@ -38,9 +39,9 @@ class DomainDriver extends Fixture {
 
         $this->givenNowIs('now');
 
-        Mockster::stub($this->calendar->insertEvent(Arg::any(), Arg::any(), Arg::any(), Arg::any()))
-            ->will()->forwardTo(function ($summary) {
-                return 'Event-' . $summary;
+        Mockster::stub($this->calendar->insertEvent(Arg::any(), Arg::any(), Arg::any(), Arg::any(), Arg::any()))
+            ->will()->call(function ($args) {
+                return 'Event-' . $args['summary'];
             });
     }
 
@@ -50,8 +51,11 @@ class DomainDriver extends Fixture {
 
     public function givenNowIs($when) {
         $this->now = new \DateTimeImmutable($when);
+        $settings = new Settings();
+        $settings->calendarId = 'myCalendarId';
+
         $this->service = new ApplicationService(
-            new Application($this->uid, Mockster::mock($this->calendar), $this->baseUrl, $this->now),
+            new Application($this->uid, $settings, Mockster::mock($this->calendar), $this->baseUrl, $this->now),
             $this->store);
     }
 }

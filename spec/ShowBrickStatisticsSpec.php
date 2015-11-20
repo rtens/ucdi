@@ -51,7 +51,7 @@ class ShowBrickStatisticsSpec {
         $this->driver->givenALaidBrickScheduledIn('50 minutes');
         $this->driver->givenALaidBrickScheduledIn('60 minutes');
 
-        $this->driver->givenNowIs('tomorrow');
+        $this->driver->givenNowIs('2 hours');
         $this->driver->whenIShowTheStreaks();
         $this->driver->thenTheCurrentStreakShouldBe(2);
         $this->driver->thenTheLongestStreakShouldBe(3);

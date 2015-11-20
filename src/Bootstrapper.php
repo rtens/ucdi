@@ -11,6 +11,7 @@ use rtens\domin\delivery\web\WebApplication;
 use rtens\domin\reflection\GenericObjectAction;
 use rtens\ucdi\app\Application;
 use rtens\ucdi\app\Calendar;
+use rtens\ucdi\app\commands\SelectCalendar;
 use rtens\ucdi\es\ApplicationService;
 use rtens\ucdi\es\PersistentEventStore;
 use rtens\ucdi\es\UidGenerator;
@@ -26,10 +27,18 @@ class Bootstrapper {
     /** @var string */
     private $userId;
 
-    public function __construct($userDir, $userId, Url $baseUrl, Calendar $calendar) {
+    /** @var SettingsStore */
+    private $settings;
+
+    /** @var Calendar */
+    private $calendar;
+
+    public function __construct($userDir, $userId, Url $baseUrl, Calendar $calendar, SettingsStore $settings) {
+        $this->settings = $settings;
+        $this->calendar = $calendar;
         $this->userId = $userId;
         $this->handler = new ApplicationService(
-            new Application(new UidGenerator(), $calendar, $baseUrl, new \DateTimeImmutable()),
+            new Application(new UidGenerator(), $settings->read(), $calendar, $baseUrl, new \DateTimeImmutable()),
             new PersistentEventStore($userDir . '/events.json'));
     }
 
@@ -96,6 +105,8 @@ class Bootstrapper {
                         return self::toRelative(new \DateTimeImmutable($start));
                     });
             });
+
+        $app->actions->add('SelectCalendar', new SelectCalendar($this->settings, $this->calendar));
     }
 
     function addQuery(WebApplication $app, $queryClass) {

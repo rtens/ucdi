@@ -7,20 +7,19 @@ class GoogleCalendar implements Calendar {
     /** @var \Google_Service_Calendar */
     private $service;
 
-    private static $calendarId = '46p4opal5ifts2p9tb18mhm170@group.calendar.google.com';
-
     public function __construct(\Google_Service_Calendar $cal) {
         $this->service = $cal;
     }
 
     /**
+     * @param string $calendarId
      * @param string $summary
      * @param \DateTimeImmutable $start
      * @param \DateTimeImmutable $end
      * @param null|string $description
      * @return string Event ID in calendar
      */
-    public function insertEvent($summary, \DateTimeImmutable $start, \DateTimeImmutable $end, $description = null) {
+    public function insertEvent($calendarId, $summary, \DateTimeImmutable $start, \DateTimeImmutable $end, $description = null) {
         $event = new \Google_Service_Calendar_Event();
         $event->setSummary($summary);
         $eventStart = new \Google_Service_Calendar_EventDateTime();
@@ -30,16 +29,29 @@ class GoogleCalendar implements Calendar {
         $eventEnd->setDateTime($end->format('c'));
         $event->setEnd($eventEnd);
         $event->setDescription($description);
-        $createdEvent = $this->service->events->insert(self::$calendarId, $event);
+        $createdEvent = $this->service->events->insert($calendarId, $event);
 
         return $createdEvent->id;
     }
 
     /**
+     * @param string $calendarId
      * @param string $eventId
-     * @return void
+     * @return null
      */
-    public function deleteEvent($eventId) {
-        $this->service->events->delete(self::$calendarId, $eventId);
+    public function deleteEvent($calendarId, $eventId) {
+        $this->service->events->delete($calendarId, $eventId);
+    }
+
+    /**
+     * @return string[]
+     */
+    public function availableCalendars() {
+        $calendars = [];
+        /** @var \Google_Service_Calendar_CalendarListEntry $calendar */
+        foreach ($this->service->calendarList->listCalendarList() as $calendar) {
+            $calendars[$calendar->id] = $calendar->summary;
+        }
+        return $calendars;
     }
 }

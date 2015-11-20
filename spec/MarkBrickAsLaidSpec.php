@@ -68,7 +68,7 @@ class MarkBrickAsLaidSpec_DomainDriver extends DomainDriver {
     }
 
     public function thenTheCalendarEventOfBrick_ShoudBeDeleted($description) {
-        Mockster::stub($this->calendar->deleteEvent("Event-$description"))
+        Mockster::stub($this->calendar->deleteEvent('myCalendarId', "Event-$description"))
             ->shouldHave()->beenCalled();
     }
 }

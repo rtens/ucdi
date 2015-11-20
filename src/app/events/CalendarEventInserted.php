@@ -8,13 +8,18 @@ class CalendarEventInserted {
     /** @var string */
     private $calendarEventId;
 
+    /** @var string */
+    private $calendarId = '';
+
     /**
      * @param string $brickId
+     * @param string $calendarId
      * @param string $calendarEventId
      */
-    public function __construct($brickId, $calendarEventId) {
+    public function __construct($brickId, $calendarId, $calendarEventId) {
         $this->brickId = $brickId;
         $this->calendarEventId = $calendarEventId;
+        $this->calendarId = $calendarId;
     }
 
     /**
@@ -29,6 +34,13 @@ class CalendarEventInserted {
      */
     public function getCalendarEventId() {
         return $this->calendarEventId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCalendarId() {
+        return $this->calendarId;
     }
 
     function __toString() {

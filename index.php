@@ -2,6 +2,7 @@
 
 use rtens\ucdi\Bootstrapper;
 use rtens\ucdi\GoogleCalendar;
+use rtens\ucdi\SettingsStore;
 use watoki\collections\Collection;
 use watoki\curir\protocol\Url;
 
@@ -51,10 +52,13 @@ $info = new Google_Service_Oauth2($client);
 
 try {
     $userId = $info->userinfo->get()->email;
-    $calendar = new GoogleCalendar($cal);
-
     $userDir = __DIR__ . '/user/' . $userId;
-    (new Bootstrapper($userDir, $userId, Url::fromString(dirname($baseUrl)), $calendar))
+
+    $settingsStore = new SettingsStore($userDir);
+
+    $calendar = new GoogleCalendar($cal, $settingsStore->read()->calendarId);
+
+    (new Bootstrapper($userDir, $userId, Url::fromString(dirname($baseUrl)), $calendar, $settingsStore))
         ->runWebApp();
 } catch (Google_Auth_Exception $e) {
     unset($_SESSION['token']);

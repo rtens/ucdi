@@ -82,8 +82,8 @@ class ScheduleBrickSpec_DomainDriver extends DomainDriver {
     }
 
     public function thenAnAppointment_For_Starting_Ending_WithTheDescription_ShouldBeInsertedInMyCalendar($summary, $brickId, $start, $end, $description) {
-        Mockster::stub($this->calendar->insertEvent($summary, new \DateTimeImmutable($start), new \DateTimeImmutable($end), $description))
+        Mockster::stub($this->calendar->insertEvent('myCalendarId', $summary, new \DateTimeImmutable($start), new \DateTimeImmutable($end), $description))
             ->shouldHave()->beenCalled();
-        $this->assert->contains($this->events, new CalendarEventInserted($brickId, 'Event-' . $summary, $description));
+        $this->assert->contains($this->events, new CalendarEventInserted($brickId, 'myCalendarId', 'Event-' . $summary));
     }
 }

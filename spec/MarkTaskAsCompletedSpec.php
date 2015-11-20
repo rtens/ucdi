@@ -90,7 +90,7 @@ class MarkTaskAsCompletedSpec_DomainDriver extends DomainDriver {
     public function thenBrick_ShouldBeCancelled($description) {
         $this->assert->contains($this->events, new BrickCancelled("Brick-$description"));
 
-        Mockster::stub($this->calendar->deleteEvent("Event-$description"))
+        Mockster::stub($this->calendar->deleteEvent('myCalendarId', "Event-$description"))
             ->shouldHave()->beenCalled();
     }
 
