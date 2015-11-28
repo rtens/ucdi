@@ -95,7 +95,7 @@ class Bootstrapper {
         $this->addCommand($app, \rtens\ucdi\app\commands\UpdateGoal::class)
             ->setFill(function ($parameters) {
                 $goal = $this->handler->execute(new ShowGoal($parameters['goal']));
-                $parameters['name'] = str_replace('"', '\\"', $goal['name']);
+                $parameters['name'] = str_replace('"', '\'', $goal['name']);
                 $parameters['notes'] = $goal['notes'];
                 return $parameters;
             });
