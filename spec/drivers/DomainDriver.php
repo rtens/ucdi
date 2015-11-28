@@ -20,7 +20,7 @@ class DomainDriver extends Fixture {
     private $uid;
 
     /** @var EventStore */
-    private $store;
+    protected $store;
 
     /** @var Calendar */
     protected $calendar;

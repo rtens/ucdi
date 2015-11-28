@@ -5,6 +5,7 @@ use rtens\ucdi\app\commands\AddTask;
 use rtens\ucdi\app\commands\CreateGoal;
 use rtens\ucdi\app\commands\MarkTaskCompleted;
 use rtens\ucdi\app\commands\RateGoal;
+use rtens\ucdi\app\commands\UpdateGoal;
 use rtens\ucdi\app\queries\ShowGoal;
 use rtens\ucdi\app\model\Rating;
 use spec\rtens\ucdi\drivers\DomainDriver;
@@ -85,6 +86,15 @@ class ShowGoalSpec {
         $this->driver->thenBrick_OfTask_ShouldHaveTheDescription(1, 1, 'C Brick');
         $this->driver->thenBrick_OfTask_ShouldHaveTheDescription(2, 1, 'A Brick');
     }
+
+    function showChangedNameAndNotes() {
+        $this->driver->givenTheGoal_WithTheNotes('Foo', 'Notes');
+        $this->driver->given_WasUpdatedWith('Goal-1', 'New name', 'New notes');
+
+        $this->driver->whenIShowTheGoal('Goal-1');
+        $this->driver->thenTheNameShouldBe('New name');
+        $this->driver->thenTheNotesShouldBe('New notes');
+    }
 }
 
 /**
@@ -121,6 +131,10 @@ class ShowGoalSpec_DomainDriver extends DomainDriver {
 
     public function givenTask_IsCompleted($taskId) {
         $this->service->handle(new MarkTaskCompleted($taskId));
+    }
+
+    public function given_WasUpdatedWith($goalId, $name, $notes) {
+        $this->service->handle(new UpdateGoal($goalId, $name, new Html($notes)));
     }
 
     public function whenITryToShowTheGoal($goalId) {

@@ -19,6 +19,7 @@ use rtens\ucdi\app\commands\MarkGoalAchieved;
 use rtens\ucdi\app\commands\MarkTaskCompleted;
 use rtens\ucdi\app\commands\RateGoal;
 use rtens\ucdi\app\commands\ScheduleBrick;
+use rtens\ucdi\app\commands\UpdateGoal;
 use rtens\ucdi\app\events\BrickCancelled;
 use rtens\ucdi\app\events\BrickMarkedLaid;
 use rtens\ucdi\app\events\BrickScheduled;
@@ -26,6 +27,7 @@ use rtens\ucdi\app\events\CalendarEventInserted;
 use rtens\ucdi\app\events\EffortLogged;
 use rtens\ucdi\app\events\GoalCreated;
 use rtens\ucdi\app\events\GoalMarkedAchieved;
+use rtens\ucdi\app\events\GoalNameChanged;
 use rtens\ucdi\app\events\GoalNotesChanged;
 use rtens\ucdi\app\events\GoalRated;
 use rtens\ucdi\app\events\TaskAdded;
@@ -260,6 +262,26 @@ class Application {
         ];
     }
 
+    public function handleUpdateGoal(UpdateGoal $command) {
+        $goalId = $command->getGoal();
+        if (!isset($this->goals[$goalId])) {
+            throw new \Exception("The goal [$goalId] does not exist.");
+        }
+
+        $events = [];
+
+        if ($command->getName() != $this->goals[$goalId]['name']) {
+            $events[] = new GoalNameChanged($goalId, $command->getName());
+        }
+
+        $notes = $command->getNotes()->getContent();
+        if (!isset($this->notes[$goalId]) || $notes != $this->notes[$goalId]) {
+            $events[] = new GoalNotesChanged($goalId, $notes);
+        }
+
+        return $events;
+    }
+
     public function executeReportEfforts(ReportEfforts $query) {
         $efforts = [];
         foreach ($this->efforts as $effort) {
@@ -333,6 +355,10 @@ class Application {
             return;
         }
 
+    }
+
+    public function applyGoalNameChanged(GoalNameChanged $event) {
+        $this->goals[$event->getGoalId()]['name'] = $event->getNewName();
     }
 
     public function applyGoalNotesChanged(GoalNotesChanged $event) {

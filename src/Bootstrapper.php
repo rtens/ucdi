@@ -12,6 +12,7 @@ use rtens\domin\reflection\GenericObjectAction;
 use rtens\ucdi\app\Application;
 use rtens\ucdi\app\Calendar;
 use rtens\ucdi\app\commands\SelectCalendar;
+use rtens\ucdi\app\queries\ShowGoal;
 use rtens\ucdi\es\ApplicationService;
 use rtens\ucdi\es\PersistentEventStore;
 use rtens\ucdi\es\UidGenerator;
@@ -91,6 +92,13 @@ class Bootstrapper {
         $this->addCommand($app, \rtens\ucdi\app\commands\MarkBrickLaid::class);
         $this->addCommand($app, \rtens\ucdi\app\commands\MarkTaskCompleted::class);
         $this->addCommand($app, \rtens\ucdi\app\commands\MarkGoalAchieved::class);
+        $this->addCommand($app, \rtens\ucdi\app\commands\UpdateGoal::class)
+            ->setFill(function ($parameters) {
+                $goal = $this->handler->execute(new ShowGoal($parameters['goal']));
+                $parameters['name'] = $goal['name'];
+                $parameters['notes'] = $goal['notes'];
+                return $parameters;
+            });
         $this->addCommand($app, \rtens\ucdi\app\commands\CancelGoal::class);
         $this->addQuery($app, \rtens\ucdi\app\queries\ListMissedBricks::class)
             ->setAfterExecute(function ($bricks) {
@@ -157,6 +165,7 @@ class Bootstrapper {
         $app->links->add(new GenericLink('RateGoal', $is('Goal'), $set('goal')));
         $app->links->add(new GenericLink('AddTask', $is('Goal'), $set('goal')));
         $app->links->add(new GenericLink('MarkGoalAchieved', $is('Goal'), $set('goal')));
+        $app->links->add(new GenericLink('UpdateGoal', $is('Goal'), $set('goal')));
         $app->links->add(new GenericLink('CancelGoal', $is('Goal'), $set('goal')));
         $app->links->add(new GenericLink('ReportEfforts', $is('Goal'), $set('goal')));
         $app->links->add(new GenericLink('ScheduleBrick', $is('Task'), $set('task')));
