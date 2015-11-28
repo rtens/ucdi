@@ -451,17 +451,22 @@ class Application {
                 $rating = new Rating(0, 0);
             }
 
-            if (!$this->getIncompleteTasks($goalId)) {
-                $color = Color::RED();
-            } else if (!$this->getNextBrick($goalId)) {
-                $color = Color::PURPLE();
+            $incompleteTasks = $this->getIncompleteTasks($goalId);
+            if ($incompleteTasks) {
+                if (!$this->getNextBrick($goalId)) {
+                    $color = Color::PURPLE();
+                } else {
+                    $color = Color::GREEN();
+                }
+                $size = min(3, 0.5 + count($incompleteTasks) / 4);
             } else {
-                $color = Color::GREEN();
+                $color = Color::RED();
+                $size = 2;
             }
 
             $data[] = new ScatterDataSet(
                 [
-                    new ScatterDataPoint($rating->getUrgency(), $rating->getImportance(), 2)
+                    new ScatterDataPoint($rating->getUrgency(), $rating->getImportance(), $size)
                 ],
                 $this->goals[$goalId]['name'],
                 $color);
