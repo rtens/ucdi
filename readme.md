@@ -7,7 +7,7 @@ This is yet another try of fighting procrastination in order to regain and maint
 procrastinate because of their Storyline - something they keep telling themselves with the effect of lowering 
 their confidence.
 
-The critical goal is to change that Storyline my proving it wrong. Through action. Hence I named this tool 
+The critical goal is to change that Storyline by proving it wrong. Through action. Hence I named this tool 
 *U Can Do It* - or short *ucdi*.
 
 The tool aims to help with the following activities.
@@ -22,13 +22,13 @@ The first step is to determine your **Goals** - things you want to achieve, be i
 "File tax report". The list doesn't have to be exhaustive. Just write down what ever comes into your mind right now.
 
 Each Goal should have an objectively verifiable criterion of when it's considered to be *achieved*. For example 
-"Recite *Spanish Romance* in from of at least three friends" or "Tax report sent to ministry of finances".
+"Recite *Spanish Romance* in front of at least three friends" or "Tax report sent to ministry of finances".
 
 Also write down a sentence or two about *why* you want to achieve it - as a reminder if you get demotivated. The more
 personal the better.
 
 For each Goal, outline tasks that will have to be completed in order to achieve it. It's okay if they're rough in
-the beginning. You can always refine them later. If possible, formulate the tasks as verifiable criteria as well
+the beginning, you can always refine them later. If possible, formulate the tasks as verifiable criteria as well
 (aka [Milestones]).
 
 [Milestones]: https://de.wikipedia.org/wiki/Meilensteinplan
@@ -40,7 +40,7 @@ From your list of Goals, select a *winner* - the Goal that is right now most imp
 either follow your gut feeling or use a system like the [Eisenhower Matrix][matrix].
 
 From that winner Goal, take the first Task and make it something small and doable. The smaller the better. It should
-seems almost trivial and you should be able to imagine doing it. Like "Buy a cheap guitar online". That's your **Brick**.
+seem almost trivial and you should be able to imagine doing it. Like "Buy a cheap guitar online". That's your **Brick**.
  
 Next, you need to schedule when you are gonna lay the brick. You can do it right away of course, but in any case make
 it a specific date and time and also decide on a minimum duration. This appointment is non-negotionable and non-canceable. 
@@ -51,7 +51,7 @@ it a specific date and time and also decide on a minimum duration. This appointm
 ## Doing
 
 So far, there hasn't been any actual doing so it should be not too hard for most procrastinators. The doing is usually
-the hard part for it is when the Instant Gratification Monkey takes over the wheel. The first thing you can do is to
+the hard part for it is when the [Instant Gratification Monkey][wbw] takes over the wheel. The first thing you can do is to
 be aware of the Monkey and to expect having to fight him.
 
 If you manage to actually get started on the Brick: congratulations, but the fight is not over yet. Stay aware of the
