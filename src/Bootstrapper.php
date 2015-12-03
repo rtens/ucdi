@@ -132,7 +132,7 @@ class Bootstrapper {
     function addGenericObjectAction(WebApplication $app, callable $executer, $class) {
         $action = new GenericObjectAction($class, $app->types, $app->parser, $executer);
         $app->actions->add((new \ReflectionClass($class))->getShortName(), $action);
-        return $action;
+        return $action->generic();
     }
 
     private function configureMenu(WebApplication $app) {
@@ -144,9 +144,9 @@ class Bootstrapper {
                     ['Logout']);
             })));
 
-        $app->menu->add(new ActionMenuItem($app->actions, 'ShowDashboard'));
-        $app->menu->add(new ActionMenuItem($app->actions, 'CreateGoal'));
-        $app->menu->add(new ActionMenuItem($app->actions, 'ReportEfforts'));
+        $app->menu->add(new ActionMenuItem('Dashboard', 'ShowDashboard'));
+        $app->menu->add(new ActionMenuItem('Create Goal', 'CreateGoal'));
+        $app->menu->add(new ActionMenuItem('Efforts', 'ReportEfforts'));
     }
 
     private function registerLinks(WebApplication $app) {
