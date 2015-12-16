@@ -314,10 +314,9 @@ class Application {
             /** @var \DateTimeImmutable[] $effort */
             $total += $effort['end']->getTimestamp() - $effort['start']->getTimestamp();
         }
-        $totalInterval = (new \DateTime("@$total"))->diff(new \DateTime("@0"));
-
         return [
-            'total' => $totalInterval,
+            'hours' => $total / 3600,
+            'total' => (new \DateTime("@$total"))->diff(new \DateTime("@0")),
             'efforts' => $efforts
         ];
     }
