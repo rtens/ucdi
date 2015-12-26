@@ -120,7 +120,8 @@ class Bootstrapper {
     function addQuery(WebApplication $app, $queryClass) {
         return $this->addGenericObjectAction($app, function ($query) {
             return $this->handler->execute($query);
-        }, $queryClass);
+        }, $queryClass)
+            ->setModifying(false);
     }
 
     function addCommand(WebApplication $app, $commandClass) {

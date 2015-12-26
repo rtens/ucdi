@@ -485,7 +485,7 @@ class Application {
         }
         $goalId = $query->getGoal();
         return array_merge($this->goals[$goalId], [
-            'rating' => isset($this->ratings[$goalId]) ? (string)$this->ratings[$goalId] : null,
+            'rating' => isset($this->ratings[$goalId]) ? $this->ratings[$goalId] : null,
             'notes' => isset($this->notes[$goalId]) ? new Html($this->notes[$goalId]) : null,
             'incompleteTasks' => $this->getIncompleteTasksWithBricks($goalId)
         ]);

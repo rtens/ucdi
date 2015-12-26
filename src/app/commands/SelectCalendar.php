@@ -75,4 +75,11 @@ class SelectCalendar implements Action {
         }
         return 'Calendar set to [' . $settings->calendarId . ']';
     }
+
+    /**
+     * @return boolean True if the action modifies the state of the application
+     */
+    public function isModifying() {
+        return true;
+    }
 }

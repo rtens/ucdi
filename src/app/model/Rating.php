@@ -20,8 +20,8 @@ class Rating {
     private $urgency;
 
     /**
-     * @param int $urgency
-     * @param int $importance
+     * @param [0;10] $urgency
+     * @param [0;10] $importance
      * @throws \Exception
      */
     public function __construct($urgency, $importance) {
@@ -35,16 +35,10 @@ class Rating {
         $this->urgency = $urgency;
     }
 
-    /**
-     * @return int
-     */
     public function getImportance() {
         return $this->importance;
     }
 
-    /**
-     * @return int
-     */
     public function getUrgency() {
         return $this->urgency;
     }

@@ -5,7 +5,6 @@
         "This file is @generated automatically"
     ],
     "hash": "6c7187ab62a6f013651ce46c93714a23",
-    "content-hash": "021859dcabeeb063dd142ca7517a93d3",
     "packages": [
         {
             "name": "google/apiclient",
@@ -101,12 +100,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/rtens/domin.git",
-                "reference": "3a9b3c94515c728ef95e478bf910f0c0bd75f153"
+                "reference": "d21e4b33fa9f265e532bd0040563f89c8e98c400"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rtens/domin/zipball/3a9b3c94515c728ef95e478bf910f0c0bd75f153",
-                "reference": "3a9b3c94515c728ef95e478bf910f0c0bd75f153",
+                "url": "https://api.github.com/repos/rtens/domin/zipball/d21e4b33fa9f265e532bd0040563f89c8e98c400",
+                "reference": "d21e4b33fa9f265e532bd0040563f89c8e98c400",
                 "shasum": ""
             },
             "require": {
@@ -148,7 +147,7 @@
                 "ddd",
                 "domain model"
             ],
-            "time": "2015-12-03 09:33:14"
+            "time": "2015-12-26 20:00:11"
         },
         {
             "name": "watoki/collections",
@@ -201,12 +200,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/watoki/curir.git",
-                "reference": "b6e075bc004c79b79dff9ed3e86a07cdb87543b3"
+                "reference": "9b95b24c600b84c3a4dab61c8ded7c7301aaddf6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/watoki/curir/zipball/b6e075bc004c79b79dff9ed3e86a07cdb87543b3",
-                "reference": "b6e075bc004c79b79dff9ed3e86a07cdb87543b3",
+                "url": "https://api.github.com/repos/watoki/curir/zipball/9b95b24c600b84c3a4dab61c8ded7c7301aaddf6",
+                "reference": "9b95b24c600b84c3a4dab61c8ded7c7301aaddf6",
                 "shasum": ""
             },
             "require": {
@@ -245,7 +244,7 @@
                 "routing",
                 "watoki"
             ],
-            "time": "2015-08-07 14:44:23"
+            "time": "2015-12-15 17:33:23"
         },
         {
             "name": "watoki/deli",
