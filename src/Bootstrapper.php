@@ -59,7 +59,12 @@ class Bootstrapper {
         $this->addCommand($app, \rtens\ucdi\app\commands\AddTask::class);
         $this->addCommand($app, \rtens\ucdi\app\commands\ScheduleBrick::class);
         $this->addCommand($app, \rtens\ucdi\app\commands\LogEffort::class);
-        $this->addCommand($app, \rtens\ucdi\app\commands\RateGoal::class);
+        $this->addCommand($app, \rtens\ucdi\app\commands\RateGoal::class)
+            ->setFill(function ($parameters) {
+                $goal = $this->handler->execute(new ShowGoal($parameters['goal']));
+                $parameters['rating'] = $goal['rating'];
+                return $parameters;
+            });
         $this->addQuery($app, \rtens\ucdi\app\queries\ListGoals::class)
             ->setAfterExecute(function ($goals) {
                 return (new ArrayTable($goals))
