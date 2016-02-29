@@ -4,20 +4,21 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "6c7187ab62a6f013651ce46c93714a23",
+    "hash": "8d5b0706a62d3eaac9fd18d2d04553ca",
+    "content-hash": "116594841387cce62f1302efed5a740c",
     "packages": [
         {
             "name": "google/apiclient",
-            "version": "1.1.6",
+            "version": "1.1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/google/google-api-php-client.git",
-                "reference": "a25dc9d5c109ebb02945ba1ff6336cc937c27628"
+                "reference": "400f250a30ae1dd4c4a0a4f750fe973fc70e6311"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/google/google-api-php-client/zipball/a25dc9d5c109ebb02945ba1ff6336cc937c27628",
-                "reference": "a25dc9d5c109ebb02945ba1ff6336cc937c27628",
+                "url": "https://api.github.com/repos/google/google-api-php-client/zipball/400f250a30ae1dd4c4a0a4f750fe973fc70e6311",
+                "reference": "400f250a30ae1dd4c4a0a4f750fe973fc70e6311",
                 "shasum": ""
             },
             "require": {
@@ -47,7 +48,7 @@
             "keywords": [
                 "google"
             ],
-            "time": "2015-10-16 22:11:08"
+            "time": "2016-02-02 18:50:42"
         },
         {
             "name": "nikic/php-parser",
@@ -55,12 +56,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "f78af2c9c86107aa1a34cd1dbb5bbe9eeb0d9f51"
+                "reference": "c4bbc8e236a1f21b2b17cfbf3d46aa6ece69b9f7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/f78af2c9c86107aa1a34cd1dbb5bbe9eeb0d9f51",
-                "reference": "f78af2c9c86107aa1a34cd1dbb5bbe9eeb0d9f51",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/c4bbc8e236a1f21b2b17cfbf3d46aa6ece69b9f7",
+                "reference": "c4bbc8e236a1f21b2b17cfbf3d46aa6ece69b9f7",
                 "shasum": ""
             },
             "require": {
@@ -92,7 +93,7 @@
                 "parser",
                 "php"
             ],
-            "time": "2015-09-19 14:15:08"
+            "time": "2016-01-15 21:03:42"
         },
         {
             "name": "rtens/domin",
@@ -100,26 +101,28 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/rtens/domin.git",
-                "reference": "25fd19b20547274269557e63db4591ee0f0e657c"
+                "reference": "cce1ab8926c05fb87d66ec4418af18b4b41d4718"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rtens/domin/zipball/25fd19b20547274269557e63db4591ee0f0e657c",
-                "reference": "25fd19b20547274269557e63db4591ee0f0e657c",
+                "url": "https://api.github.com/repos/rtens/domin/zipball/cce1ab8926c05fb87d66ec4418af18b4b41d4718",
+                "reference": "cce1ab8926c05fb87d66ec4418af18b4b41d4718",
                 "shasum": ""
             },
             "require": {
-                "watoki/curir": "dev-master",
-                "watoki/reflect": "dev-master"
+                "watoki/factory": "1.*",
+                "watoki/reflect": "1.*"
             },
             "require-dev": {
-                "rtens/mockster": "dev-master",
-                "rtens/scrut": "dev-master"
+                "rtens/mockster": "3.*",
+                "rtens/scrut": "1.*"
             },
             "suggest": {
                 "erusev/parsedown": "To parse Action and Parameter descriptions for HTML output.",
                 "league/climate": "Used by some CLI components",
-                "mobiledetect/mobiledetectlib": "To enable mobile-specific client-side code only when on mobile."
+                "mobiledetect/mobiledetectlib": "To enable mobile-specific client-side code only when on mobile.",
+                "silex/silex": "Supported delivery system",
+                "watoki/curir": "Supported delivery system."
             },
             "type": "library",
             "autoload": {
@@ -147,7 +150,7 @@
                 "ddd",
                 "domain model"
             ],
-            "time": "2015-12-27 00:46:43"
+            "time": "2016-02-29 10:17:47"
         },
         {
             "name": "watoki/collections",
@@ -200,23 +203,23 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/watoki/curir.git",
-                "reference": "9b95b24c600b84c3a4dab61c8ded7c7301aaddf6"
+                "reference": "6b79793a2d523cd9beaa3e8a0d9f87c06de2f3a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/watoki/curir/zipball/9b95b24c600b84c3a4dab61c8ded7c7301aaddf6",
-                "reference": "9b95b24c600b84c3a4dab61c8ded7c7301aaddf6",
+                "url": "https://api.github.com/repos/watoki/curir/zipball/6b79793a2d523cd9beaa3e8a0d9f87c06de2f3a4",
+                "reference": "6b79793a2d523cd9beaa3e8a0d9f87c06de2f3a4",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.4",
-                "watoki/collections": "dev-master",
+                "watoki/collections": "*",
                 "watoki/deli": "dev-master",
-                "watoki/factory": "dev-master",
-                "watoki/stores": "dev-master"
+                "watoki/factory": "*",
+                "watoki/stores": "*"
             },
             "require-dev": {
-                "watoki/scrut": "0.3"
+                "watoki/scrut": "*"
             },
             "type": "library",
             "autoload": {
@@ -244,7 +247,7 @@
                 "routing",
                 "watoki"
             ],
-            "time": "2015-12-15 17:33:23"
+            "time": "2016-02-18 01:40:26"
         },
         {
             "name": "watoki/deli",
@@ -252,23 +255,23 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/watoki/deli.git",
-                "reference": "1c0b581f7fe02f8e1ea866befcb4393fad2ca6ae"
+                "reference": "af7a672d6208b564c24384bf1014d8c00e91fda4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/watoki/deli/zipball/1c0b581f7fe02f8e1ea866befcb4393fad2ca6ae",
-                "reference": "1c0b581f7fe02f8e1ea866befcb4393fad2ca6ae",
+                "url": "https://api.github.com/repos/watoki/deli/zipball/af7a672d6208b564c24384bf1014d8c00e91fda4",
+                "reference": "af7a672d6208b564c24384bf1014d8c00e91fda4",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.4",
-                "watoki/collections": "dev-master",
-                "watoki/factory": "dev-master",
-                "watoki/reflect": "dev-master",
-                "watoki/stores": "dev-master"
+                "watoki/collections": "*",
+                "watoki/factory": "*",
+                "watoki/reflect": "*",
+                "watoki/stores": "*"
             },
             "require-dev": {
-                "watoki/scrut": "dev-master"
+                "watoki/scrut": "*"
             },
             "type": "library",
             "autoload": {
@@ -296,28 +299,28 @@
                 "routing",
                 "watoki"
             ],
-            "time": "2015-11-25 17:59:09"
+            "time": "2016-02-18 01:43:12"
         },
         {
             "name": "watoki/factory",
-            "version": "dev-master",
+            "version": "v1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/watoki/factory.git",
-                "reference": "a34c667fd7b78d951b4572fcdf887e2ec057509d"
+                "reference": "689d178b1f475ae34e6f1b1bdaa3d17d07cee2f2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/watoki/factory/zipball/a34c667fd7b78d951b4572fcdf887e2ec057509d",
-                "reference": "a34c667fd7b78d951b4572fcdf887e2ec057509d",
+                "url": "https://api.github.com/repos/watoki/factory/zipball/689d178b1f475ae34e6f1b1bdaa3d17d07cee2f2",
+                "reference": "689d178b1f475ae34e6f1b1bdaa3d17d07cee2f2",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.8",
-                "watoki/reflect": "dev-master"
+                "watoki/reflect": "*"
             },
             "require-dev": {
-                "watoki/scrut": "0.3"
+                "watoki/scrut": "*"
             },
             "type": "library",
             "autoload": {
@@ -343,25 +346,25 @@
                 "dependency injection",
                 "watoki"
             ],
-            "time": "2015-07-15 09:56:35"
+            "time": "2016-02-17 05:49:53"
         },
         {
             "name": "watoki/reflect",
-            "version": "dev-master",
+            "version": "v1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/watoki/reflect.git",
-                "reference": "45019668f58c93a9165e0dbfca19c267938ba912"
+                "reference": "1d85de462f942d6d387811cd71ccc7623dc01f12"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/watoki/reflect/zipball/45019668f58c93a9165e0dbfca19c267938ba912",
-                "reference": "45019668f58c93a9165e0dbfca19c267938ba912",
+                "url": "https://api.github.com/repos/watoki/reflect/zipball/1d85de462f942d6d387811cd71ccc7623dc01f12",
+                "reference": "1d85de462f942d6d387811cd71ccc7623dc01f12",
                 "shasum": ""
             },
             "require": {
                 "nikic/php-parser": "1.*",
-                "php": ">=5.3.8",
+                "php": ">=5.4",
                 "watoki/collections": "*"
             },
             "require-dev": {
@@ -392,7 +395,7 @@
                 "type hints",
                 "watoki"
             ],
-            "time": "2015-11-25 17:59:32"
+            "time": "2016-02-13 08:14:45"
         },
         {
             "name": "watoki/smokey",
@@ -444,21 +447,21 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/watoki/stores.git",
-                "reference": "a65fd06e5333c245a176dcd41c7693979fe5dcac"
+                "reference": "a05679818891becb5d7278120a301ac00fd97ade"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/watoki/stores/zipball/a65fd06e5333c245a176dcd41c7693979fe5dcac",
-                "reference": "a65fd06e5333c245a176dcd41c7693979fe5dcac",
+                "url": "https://api.github.com/repos/watoki/stores/zipball/a05679818891becb5d7278120a301ac00fd97ade",
+                "reference": "a05679818891becb5d7278120a301ac00fd97ade",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.4",
-                "watoki/collections": "dev-master",
-                "watoki/reflect": "dev-master"
+                "watoki/collections": "*",
+                "watoki/reflect": "*"
             },
             "require-dev": {
-                "watoki/scrut": "0.3"
+                "watoki/scrut": "*"
             },
             "type": "library",
             "autoload": {
@@ -487,7 +490,7 @@
                 "storage",
                 "watoki"
             ],
-            "time": "2015-11-25 18:05:48"
+            "time": "2016-02-17 17:29:28"
         }
     ],
     "packages-dev": [
@@ -497,21 +500,21 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/rtens/mockster.git",
-                "reference": "468f738364e2f351361a01ee56c86e8ffb092ac0"
+                "reference": "72718947820cf364c71ff2d6ee7f7068b27f07db"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rtens/mockster/zipball/468f738364e2f351361a01ee56c86e8ffb092ac0",
-                "reference": "468f738364e2f351361a01ee56c86e8ffb092ac0",
+                "url": "https://api.github.com/repos/rtens/mockster/zipball/72718947820cf364c71ff2d6ee7f7068b27f07db",
+                "reference": "72718947820cf364c71ff2d6ee7f7068b27f07db",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.6",
-                "watoki/factory": "dev-master",
-                "watoki/reflect": "dev-master"
+                "php": ">=5.5",
+                "watoki/factory": "1.*",
+                "watoki/reflect": "1.*"
             },
             "require-dev": {
-                "rtens/scrut": "dev-master"
+                "rtens/scrut": "*"
             },
             "type": "library",
             "autoload": {
@@ -538,7 +541,7 @@
                 "mocking",
                 "unit testing"
             ],
-            "time": "2015-11-04 17:21:21"
+            "time": "2016-02-17 05:58:18"
         },
         {
             "name": "rtens/scrut",
@@ -546,17 +549,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/rtens/scrut.git",
-                "reference": "575072e7159ecd81dbae05ed34562dedbf4acd78"
+                "reference": "aac4c34f19c93a59fd917175ec7e64b9298c0921"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rtens/scrut/zipball/575072e7159ecd81dbae05ed34562dedbf4acd78",
-                "reference": "575072e7159ecd81dbae05ed34562dedbf4acd78",
+                "url": "https://api.github.com/repos/rtens/scrut/zipball/aac4c34f19c93a59fd917175ec7e64b9298c0921",
+                "reference": "aac4c34f19c93a59fd917175ec7e64b9298c0921",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.5",
-                "watoki/factory": "dev-master"
+                "watoki/factory": "1.*"
             },
             "bin": [
                 "bin/scrut"
@@ -587,13 +590,14 @@
                 "test",
                 "test runner"
             ],
-            "time": "2015-11-03 17:35:30"
+            "time": "2016-02-17 06:03:43"
         }
     ],
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
         "rtens/domin": 20,
+        "watoki/curir": 20,
         "watoki/stores": 20,
         "rtens/scrut": 20,
         "rtens/mockster": 20

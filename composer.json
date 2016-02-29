@@ -5,6 +5,7 @@
     "require": {
         "google/apiclient": "^1.1",
         "rtens/domin": "dev-master",
+        "watoki/curir": "dev-master",
         "watoki/stores": "dev-master"
     },
     "require-dev": {

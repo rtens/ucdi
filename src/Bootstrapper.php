@@ -1,12 +1,12 @@
 <?php namespace rtens\ucdi;
 
+use rtens\domin\delivery\web\adapters\curir\root\IndexResource;
 use rtens\domin\delivery\web\Element;
 use rtens\domin\delivery\web\menu\ActionMenuItem;
 use rtens\domin\delivery\web\menu\CustomMenuItem;
 use rtens\domin\delivery\web\menu\MenuGroup;
 use rtens\domin\delivery\web\renderers\link\types\GenericLink;
 use rtens\domin\delivery\web\renderers\tables\types\ArrayTable;
-use rtens\domin\delivery\web\root\IndexResource;
 use rtens\domin\delivery\web\WebApplication;
 use rtens\domin\reflection\GenericObjectAction;
 use rtens\ucdi\app\Application;
@@ -16,7 +16,6 @@ use rtens\ucdi\app\queries\ShowGoal;
 use rtens\ucdi\es\ApplicationService;
 use rtens\ucdi\es\PersistentEventStore;
 use rtens\ucdi\es\UidGenerator;
-use watoki\curir\delivery\WebRequest;
 use watoki\curir\protocol\Url;
 use watoki\curir\WebDelivery;
 
@@ -46,6 +45,7 @@ class Bootstrapper {
     public function runWebApp() {
         WebDelivery::quickResponse(IndexResource::class, WebApplication::init(function (WebApplication $app) {
             $app->name = 'ucdi';
+            $app->defaultAction = 'ShowDashboard';
             $this->configureMenu($app);
             $this->registerActions($app);
             $this->registerLinks($app);
@@ -144,13 +144,12 @@ class Bootstrapper {
     private function configureMenu(WebApplication $app) {
         $app->menu->setBrand($app->name);
         $app->menu->addRight((new MenuGroup($this->userId))
-            ->add(new CustomMenuItem(function (WebRequest $request) {
+            ->add(new CustomMenuItem(function () {
                 return new Element('a',
-                    ['href' => $request->getContext()->withParameter('logout', '')],
+                    ['href' => '?logout=1'],
                     ['Logout']);
             })));
 
-        $app->menu->add(new ActionMenuItem('Dashboard', 'ShowDashboard'));
         $app->menu->add(new ActionMenuItem('Create Goal', 'CreateGoal'));
         $app->menu->add(new ActionMenuItem('Efforts', 'ReportEfforts'));
     }
